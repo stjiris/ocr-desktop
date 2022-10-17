@@ -58,10 +58,12 @@
             this.MinConfBar = new System.Windows.Forms.TrackBar();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.tesseractUIParametersBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.QualityTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DpiTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinConfBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // LanguagesCheckedListBox
@@ -72,7 +74,7 @@
             this.LanguagesCheckedListBox.MultiColumn = true;
             this.LanguagesCheckedListBox.Name = "LanguagesCheckedListBox";
             this.LanguagesCheckedListBox.Size = new System.Drawing.Size(776, 151);
-            this.LanguagesCheckedListBox.TabIndex = 4;
+            this.LanguagesCheckedListBox.TabIndex = 5;
             this.LanguagesCheckedListBox.SelectedIndexChanged += new System.EventHandler(this.LanguagesCheckedListBox_SelectedIndexChanged);
             // 
             // InputFolderTextBox
@@ -82,7 +84,7 @@
             this.InputFolderTextBox.Name = "InputFolderTextBox";
             this.InputFolderTextBox.ReadOnly = true;
             this.InputFolderTextBox.Size = new System.Drawing.Size(583, 26);
-            this.InputFolderTextBox.TabIndex = 5;
+            this.InputFolderTextBox.TabIndex = 2;
             this.InputFolderTextBox.Click += new System.EventHandler(this.InputFolderClick);
             // 
             // tesseractUIParametersBindingSource
@@ -94,7 +96,7 @@
             this.InputFolderButton.Location = new System.Drawing.Point(12, 32);
             this.InputFolderButton.Name = "InputFolderButton";
             this.InputFolderButton.Size = new System.Drawing.Size(187, 26);
-            this.InputFolderButton.TabIndex = 6;
+            this.InputFolderButton.TabIndex = 1;
             this.InputFolderButton.Text = "Select Input Folder";
             this.InputFolderButton.UseVisualStyleBackColor = true;
             this.InputFolderButton.Click += new System.EventHandler(this.InputFolderClick);
@@ -104,7 +106,7 @@
             this.OutputFolderButton.Location = new System.Drawing.Point(12, 64);
             this.OutputFolderButton.Name = "OutputFolderButton";
             this.OutputFolderButton.Size = new System.Drawing.Size(187, 26);
-            this.OutputFolderButton.TabIndex = 7;
+            this.OutputFolderButton.TabIndex = 3;
             this.OutputFolderButton.Text = "Select Output Folder";
             this.OutputFolderButton.UseVisualStyleBackColor = true;
             this.OutputFolderButton.Click += new System.EventHandler(this.OutputFolderClick);
@@ -116,7 +118,7 @@
             this.OutputFolderTextBox.Name = "OutputFolderTextBox";
             this.OutputFolderTextBox.ReadOnly = true;
             this.OutputFolderTextBox.Size = new System.Drawing.Size(583, 26);
-            this.OutputFolderTextBox.TabIndex = 8;
+            this.OutputFolderTextBox.TabIndex = 4;
             this.OutputFolderTextBox.Click += new System.EventHandler(this.OutputFolderClick);
             // 
             // label1
@@ -125,7 +127,7 @@
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(57, 20);
-            this.label1.TabIndex = 9;
+            this.label1.TabIndex = 0;
             this.label1.Text = "Folders";
             // 
             // label2
@@ -136,7 +138,7 @@
             this.label2.Location = new System.Drawing.Point(205, 10);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(429, 17);
-            this.label2.TabIndex = 10;
+            this.label2.TabIndex = 0;
             this.label2.Text = "(Select the input folder to process files and output folder for the results)";
             // 
             // label3
@@ -145,7 +147,7 @@
             this.label3.Location = new System.Drawing.Point(12, 93);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(80, 20);
-            this.label3.TabIndex = 11;
+            this.label3.TabIndex = 0;
             this.label3.Text = "Languages";
             // 
             // label4
@@ -156,7 +158,7 @@
             this.label4.Location = new System.Drawing.Point(205, 94);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(349, 17);
-            this.label4.TabIndex = 12;
+            this.label4.TabIndex = 0;
             this.label4.Text = "(Select one or more languages that your files may contain)";
             // 
             // label5
@@ -165,7 +167,7 @@
             this.label5.Location = new System.Drawing.Point(12, 270);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(132, 20);
-            this.label5.TabIndex = 13;
+            this.label5.TabIndex = 0;
             this.label5.Text = "Output Parameters";
             // 
             // label6
@@ -174,7 +176,7 @@
             this.label6.Location = new System.Drawing.Point(63, 296);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(35, 20);
-            this.label6.TabIndex = 14;
+            this.label6.TabIndex = 0;
             this.label6.Text = "DPI:";
             // 
             // label7
@@ -185,7 +187,7 @@
             this.label7.Location = new System.Drawing.Point(358, 299);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(430, 17);
-            this.label7.TabIndex = 16;
+            this.label7.TabIndex = 0;
             this.label7.Text = "(Affects the width and height of each page. Minimum: 70 Maximum: 300)";
             // 
             // label8
@@ -194,7 +196,7 @@
             this.label8.Location = new System.Drawing.Point(39, 352);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(59, 20);
-            this.label8.TabIndex = 17;
+            this.label8.TabIndex = 0;
             this.label8.Text = "Quality:";
             // 
             // label9
@@ -205,7 +207,7 @@
             this.label9.Location = new System.Drawing.Point(349, 353);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(439, 17);
-            this.label9.TabIndex = 19;
+            this.label9.TabIndex = 0;
             this.label9.Text = "(Affects the JPEG compression of each image. Minimum: 0 Maximum: 100)";
             // 
             // QualityTrackBar
@@ -217,12 +219,13 @@
             this.QualityTrackBar.Name = "QualityTrackBar";
             this.QualityTrackBar.Size = new System.Drawing.Size(239, 53);
             this.QualityTrackBar.SmallChange = 5;
-            this.QualityTrackBar.TabIndex = 20;
+            this.QualityTrackBar.TabIndex = 7;
             this.QualityTrackBar.Tag = "QUALITY";
             this.QualityTrackBar.TickFrequency = 5;
             this.QualityTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.QualityTrackBar.Value = 100;
             this.QualityTrackBar.Scroll += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
+            this.QualityTrackBar.Enter += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
             this.QualityTrackBar.MouseHover += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
             // 
             // DpiTrackBar
@@ -235,12 +238,13 @@
             this.DpiTrackBar.Name = "DpiTrackBar";
             this.DpiTrackBar.Size = new System.Drawing.Size(239, 53);
             this.DpiTrackBar.SmallChange = 5;
-            this.DpiTrackBar.TabIndex = 21;
+            this.DpiTrackBar.TabIndex = 6;
             this.DpiTrackBar.Tag = "DPI";
             this.DpiTrackBar.TickFrequency = 5;
             this.DpiTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.DpiTrackBar.Value = 100;
             this.DpiTrackBar.Scroll += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
+            this.DpiTrackBar.Enter += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
             this.DpiTrackBar.MouseHover += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
             // 
             // OverwriteBox
@@ -250,7 +254,7 @@
             this.OverwriteBox.Location = new System.Drawing.Point(12, 459);
             this.OverwriteBox.Name = "OverwriteBox";
             this.OverwriteBox.Size = new System.Drawing.Size(92, 24);
-            this.OverwriteBox.TabIndex = 26;
+            this.OverwriteBox.TabIndex = 9;
             this.OverwriteBox.Text = "Overwrite";
             this.OverwriteBox.UseVisualStyleBackColor = true;
             // 
@@ -261,7 +265,7 @@
             this.ClearBox.Location = new System.Drawing.Point(110, 459);
             this.ClearBox.Name = "ClearBox";
             this.ClearBox.Size = new System.Drawing.Size(170, 24);
-            this.ClearBox.TabIndex = 27;
+            this.ClearBox.TabIndex = 10;
             this.ClearBox.Text = "Clear Temporary Files";
             this.ClearBox.UseVisualStyleBackColor = true;
             // 
@@ -270,7 +274,7 @@
             this.StartStopBtn.Location = new System.Drawing.Point(698, 459);
             this.StartStopBtn.Name = "StartStopBtn";
             this.StartStopBtn.Size = new System.Drawing.Size(90, 28);
-            this.StartStopBtn.TabIndex = 29;
+            this.StartStopBtn.TabIndex = 11;
             this.StartStopBtn.Text = "Start";
             this.StartStopBtn.UseVisualStyleBackColor = true;
             this.StartStopBtn.Click += new System.EventHandler(this.StartStopBtn_Click);
@@ -280,7 +284,7 @@
             this.StatusProgressBar.Location = new System.Drawing.Point(12, 509);
             this.StatusProgressBar.Name = "StatusProgressBar";
             this.StatusProgressBar.Size = new System.Drawing.Size(776, 28);
-            this.StatusProgressBar.TabIndex = 30;
+            this.StatusProgressBar.TabIndex = 0;
             // 
             // label10
             // 
@@ -288,7 +292,7 @@
             this.label10.Location = new System.Drawing.Point(12, 486);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(52, 20);
-            this.label10.TabIndex = 31;
+            this.label10.TabIndex = 0;
             this.label10.Text = "Status:";
             // 
             // StatusLabel
@@ -310,7 +314,7 @@
             this.ResetLabel.Location = new System.Drawing.Point(695, 10);
             this.ResetLabel.Name = "ResetLabel";
             this.ResetLabel.Size = new System.Drawing.Size(93, 17);
-            this.ResetLabel.TabIndex = 33;
+            this.ResetLabel.TabIndex = 12;
             this.ResetLabel.Text = "(reset params)";
             this.ResetLabel.Click += new System.EventHandler(this.ResetLabel_Click);
             // 
@@ -323,12 +327,13 @@
             this.MinConfBar.Name = "MinConfBar";
             this.MinConfBar.Size = new System.Drawing.Size(239, 53);
             this.MinConfBar.SmallChange = 5;
-            this.MinConfBar.TabIndex = 36;
+            this.MinConfBar.TabIndex = 8;
             this.MinConfBar.Tag = "MIN CONF";
             this.MinConfBar.TickFrequency = 5;
             this.MinConfBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.MinConfBar.Value = 25;
             this.MinConfBar.Scroll += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
+            this.MinConfBar.Enter += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
             this.MinConfBar.MouseHover += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
             // 
             // label11
@@ -339,7 +344,7 @@
             this.label11.Location = new System.Drawing.Point(383, 414);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(405, 17);
-            this.label11.TabIndex = 35;
+            this.label11.TabIndex = 0;
             this.label11.Text = "(Minimum confidence allowed for each word when creating the PDF)";
             // 
             // label12
@@ -348,8 +353,12 @@
             this.label12.Location = new System.Drawing.Point(26, 411);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(72, 20);
-            this.label12.TabIndex = 34;
+            this.label12.TabIndex = 0;
             this.label12.Text = "Min Conf:";
+            // 
+            // errorProvider1
+            // 
+            this.errorProvider1.ContainerControl = this;
             // 
             // Main
             // 
@@ -390,6 +399,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.QualityTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DpiTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinConfBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -425,5 +435,6 @@
         private TrackBar MinConfBar;
         private Label label11;
         private Label label12;
+        private ErrorProvider errorProvider1;
     }
 }
