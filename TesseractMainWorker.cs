@@ -35,26 +35,41 @@ namespace Tesseract_UI_Tools
             Report("Reading Input Folder", 0);
             foreach (string CurrentFile in Directory.EnumerateFiles(Params.InputFolder))
             {
+                if (CancellationPending) break;
                 ATiffPagesGenerator? Generator = TiffPagesGeneratorProvider.GetTiffPagesGenerator(CurrentFile);
                 if (Generator == null) continue;
 
                 string FileName = Path.GetFileNameWithoutExtension(CurrentFile);
-                string OutputFile = Path.Combine(Params.OutputFolder, $"{FileName}.dpi-{Params.Dpi}.qual-{Params.Quality}.{Params.Language}.pdf");
+                string OutputFile = Path.Combine(Params.OutputFolder, $"{FileName}.dpi-{Params.Dpi}.qual-{Params.Quality}.{Params.Language}.{Params.MinimumConfidence}.pdf");
                 if (File.Exists(OutputFile) && !Params.Overwrite) continue;
                 
                 DirectoryInfo Tmp = Files.CreateSubdirectory(FileName);
                 Report($"Spliting TIFFs of {FileName}", 0);
-                string[] Pages = Generator.GenerateTIFFs(Tmp.FullName, Params.Overwrite, SubProgress);
+                string[] Pages = Generator.GenerateTIFFs(Tmp.FullName, Params.Overwrite, SubProgress, this);
+                if (CancellationPending) break;
 
                 Report($"Creating JPEGs of {FileName}", 0);
-                string[] Jpegs = Generator.GenerateJPEGs(Pages, Tmp.FullName, Params.Dpi, Params.Quality, Params.Overwrite, SubProgress);
+                string[] Jpegs = Generator.GenerateJPEGs(Pages, Tmp.FullName, Params.Dpi, Params.Quality, Params.Overwrite, SubProgress, this);
+                if (CancellationPending) break;
 
                 Report($"Creating HOCRs of {FileName}", 0);
-                string[] Hocrs = Generator.GenerateHocrs(Pages, Tmp.FullName, Params.GetLanguage(), Params.Overwrite, SubProgress);
+                string[] Hocrs = Generator.GenerateTsvs(Pages, Tmp.FullName, Params.GetLanguage(), Params.Overwrite, SubProgress, this);
+                if (CancellationPending) break;
 
                 Report($"Creating PDF of {FileName}", 0);
-                Generator.GeneratePDF(Jpegs, Hocrs, Pages, OutputFile, SubProgress);
+                Generator.GeneratePDF(Jpegs, Hocrs, Pages, OutputFile, Params.MinimumConfidence, SubProgress, this);
+                if (CancellationPending) break;
+
+                if (Params.Clear && !CancellationPending)
+                {
+                    Tmp.Delete(true);
+                }
             }
+            if (CancellationPending)
+            {
+                Report("Stopped", 0);
+            };
+
         }
 
 

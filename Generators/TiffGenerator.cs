@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing.Imaging;
+using System.ComponentModel;
 
 namespace Tesseract_UI_Tools.Generators
 {
@@ -14,14 +15,14 @@ namespace Tesseract_UI_Tools.Generators
 
         private static FrameDimension PAGE = FrameDimension.Page;
 
-        public override string[] GenerateTIFFs(string FolderPath, bool Overwrite = false, IProgress<float>? Progress = null)
+        public override string[] GenerateTIFFs(string FolderPath, bool Overwrite = false, IProgress<float>? Progress = null, BackgroundWorker? worker = null)
         {
             string[] Pages;
             using (Bitmap Tiff = (Bitmap)Image.FromStream(File.OpenText(FilePath).BaseStream))
             {
                 int PagesNumber = Tiff.GetFrameCount(PAGE);
                 Pages = new string[PagesNumber];
-                for (int i = 0; i < PagesNumber; i++)
+                for (int i = 0; i < PagesNumber && (worker == null || !worker.CancellationPending); i++)
                 {
                     if (Progress != null) Progress.Report((float)i / PagesNumber);
 

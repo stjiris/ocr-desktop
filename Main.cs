@@ -98,7 +98,12 @@ namespace Tesseract_UI_Tools
             if (TesseractMainWorkerInstance.CancellationPending) return;
             if( TesseractMainWorkerInstance.IsBusy)
             {
-                TesseractMainWorkerInstance.CancelAsync();
+                DialogResult Result = MessageBox.Show("Are you sure you want to Stop the process ?\nNote: Tesseract might take some time to exit.", "Stopping Tesseract", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                if( Result == DialogResult.OK)
+                {
+                    TesseractMainWorkerInstance.CancelAsync();
+                    StartStopBtn.Enabled = false;
+                }
             }
             else
             {
@@ -117,6 +122,7 @@ namespace Tesseract_UI_Tools
             LanguagesCheckedListBox.Enabled = Enabled;
             DpiTrackBar.Enabled = Enabled;
             QualityTrackBar.Enabled = Enabled;
+            MinConfBar.Enabled = Enabled;
             OverwriteBox.Enabled = Enabled;
             ClearBox.Enabled = Enabled;
             if( Enabled)

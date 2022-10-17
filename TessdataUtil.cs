@@ -1,7 +1,5 @@
-﻿using System.Net;
-using System.IO;
-using System.IO.Compression;
-using Tesseract;
+﻿using System.IO.Compression;
+using OpenCvSharp.Text;
 using System.Configuration;
 
 namespace Tesseract_UI_Tools
@@ -43,9 +41,9 @@ namespace Tesseract_UI_Tools
             return string.Join("+", Languages);
         }
 
-        public static TesseractEngine CreateEngine(string[] Languages)
+        public static OCRTesseract CreateEngine(string[] Languages)
         {
-            return new TesseractEngine(TessdataPath, LanguagesToString(Languages));
+            return OCRTesseract.Create(TessdataPath, LanguagesToString(Languages));
         }
     }
 
@@ -103,6 +101,14 @@ namespace Tesseract_UI_Tools
         {
             get { return (bool)this["Clear"]; }
             set { this["Clear"] = value; }
+        }
+
+        [UserScopedSettingAttribute()]
+        [DefaultSettingValue("25")]
+        public float MinimumConfidence
+        {
+            get { return (float)this["MinimumConfidence"]; }
+            set { this["MinimumConfidence"] = value; }
         }
 
         public void SetLanguage(string[] Languages)

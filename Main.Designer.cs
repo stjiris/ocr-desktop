@@ -55,9 +55,13 @@
             this.label10 = new System.Windows.Forms.Label();
             this.StatusLabel = new System.Windows.Forms.Label();
             this.ResetLabel = new System.Windows.Forms.Label();
+            this.MinConfBar = new System.Windows.Forms.TrackBar();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.tesseractUIParametersBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.QualityTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DpiTrackBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MinConfBar)).BeginInit();
             this.SuspendLayout();
             // 
             // LanguagesCheckedListBox
@@ -167,7 +171,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 295);
+            this.label6.Location = new System.Drawing.Point(63, 296);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(35, 20);
             this.label6.TabIndex = 14;
@@ -178,7 +182,7 @@
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label7.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label7.Location = new System.Drawing.Point(358, 296);
+            this.label7.Location = new System.Drawing.Point(358, 299);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(430, 17);
             this.label7.TabIndex = 16;
@@ -187,7 +191,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(12, 322);
+            this.label8.Location = new System.Drawing.Point(39, 352);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(59, 20);
             this.label8.TabIndex = 17;
@@ -198,17 +202,17 @@
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label9.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label9.Location = new System.Drawing.Point(319, 325);
+            this.label9.Location = new System.Drawing.Point(349, 353);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(469, 17);
+            this.label9.Size = new System.Drawing.Size(439, 17);
             this.label9.TabIndex = 19;
-            this.label9.Text = "(Affects the JPEG compression level of each image. Minimum: 0 Maximum: 100)";
+            this.label9.Text = "(Affects the JPEG compression of each image. Minimum: 0 Maximum: 100)";
             // 
             // QualityTrackBar
             // 
             this.QualityTrackBar.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.tesseractUIParametersBindingSource, "Quality", true));
             this.QualityTrackBar.LargeChange = 10;
-            this.QualityTrackBar.Location = new System.Drawing.Point(74, 325);
+            this.QualityTrackBar.Location = new System.Drawing.Point(104, 352);
             this.QualityTrackBar.Maximum = 100;
             this.QualityTrackBar.Name = "QualityTrackBar";
             this.QualityTrackBar.Size = new System.Drawing.Size(239, 53);
@@ -216,6 +220,7 @@
             this.QualityTrackBar.TabIndex = 20;
             this.QualityTrackBar.Tag = "QUALITY";
             this.QualityTrackBar.TickFrequency = 5;
+            this.QualityTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.QualityTrackBar.Value = 100;
             this.QualityTrackBar.Scroll += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
             this.QualityTrackBar.MouseHover += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
@@ -224,7 +229,7 @@
             // 
             this.DpiTrackBar.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.tesseractUIParametersBindingSource, "Dpi", true));
             this.DpiTrackBar.LargeChange = 20;
-            this.DpiTrackBar.Location = new System.Drawing.Point(74, 293);
+            this.DpiTrackBar.Location = new System.Drawing.Point(104, 293);
             this.DpiTrackBar.Maximum = 300;
             this.DpiTrackBar.Minimum = 70;
             this.DpiTrackBar.Name = "DpiTrackBar";
@@ -233,6 +238,7 @@
             this.DpiTrackBar.TabIndex = 21;
             this.DpiTrackBar.Tag = "DPI";
             this.DpiTrackBar.TickFrequency = 5;
+            this.DpiTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.DpiTrackBar.Value = 100;
             this.DpiTrackBar.Scroll += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
             this.DpiTrackBar.MouseHover += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
@@ -241,7 +247,7 @@
             // 
             this.OverwriteBox.AutoSize = true;
             this.OverwriteBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.tesseractUIParametersBindingSource, "Overwrite", true));
-            this.OverwriteBox.Location = new System.Drawing.Point(12, 354);
+            this.OverwriteBox.Location = new System.Drawing.Point(12, 459);
             this.OverwriteBox.Name = "OverwriteBox";
             this.OverwriteBox.Size = new System.Drawing.Size(92, 24);
             this.OverwriteBox.TabIndex = 26;
@@ -252,7 +258,7 @@
             // 
             this.ClearBox.AutoSize = true;
             this.ClearBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.tesseractUIParametersBindingSource, "Clear", true));
-            this.ClearBox.Location = new System.Drawing.Point(110, 354);
+            this.ClearBox.Location = new System.Drawing.Point(110, 459);
             this.ClearBox.Name = "ClearBox";
             this.ClearBox.Size = new System.Drawing.Size(170, 24);
             this.ClearBox.TabIndex = 27;
@@ -261,7 +267,7 @@
             // 
             // StartStopBtn
             // 
-            this.StartStopBtn.Location = new System.Drawing.Point(698, 351);
+            this.StartStopBtn.Location = new System.Drawing.Point(698, 459);
             this.StartStopBtn.Name = "StartStopBtn";
             this.StartStopBtn.Size = new System.Drawing.Size(90, 28);
             this.StartStopBtn.TabIndex = 29;
@@ -271,7 +277,7 @@
             // 
             // StatusProgressBar
             // 
-            this.StatusProgressBar.Location = new System.Drawing.Point(12, 404);
+            this.StatusProgressBar.Location = new System.Drawing.Point(12, 509);
             this.StatusProgressBar.Name = "StatusProgressBar";
             this.StatusProgressBar.Size = new System.Drawing.Size(776, 28);
             this.StatusProgressBar.TabIndex = 30;
@@ -279,7 +285,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(12, 381);
+            this.label10.Location = new System.Drawing.Point(12, 486);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(52, 20);
             this.label10.TabIndex = 31;
@@ -290,7 +296,7 @@
             this.StatusLabel.AutoSize = true;
             this.StatusLabel.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.StatusLabel.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.StatusLabel.Location = new System.Drawing.Point(70, 382);
+            this.StatusLabel.Location = new System.Drawing.Point(70, 489);
             this.StatusLabel.Name = "StatusLabel";
             this.StatusLabel.Size = new System.Drawing.Size(0, 17);
             this.StatusLabel.TabIndex = 32;
@@ -308,11 +314,51 @@
             this.ResetLabel.Text = "(reset params)";
             this.ResetLabel.Click += new System.EventHandler(this.ResetLabel_Click);
             // 
+            // MinConfBar
+            // 
+            this.MinConfBar.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.tesseractUIParametersBindingSource, "MinimumConfidence", true));
+            this.MinConfBar.LargeChange = 10;
+            this.MinConfBar.Location = new System.Drawing.Point(104, 411);
+            this.MinConfBar.Maximum = 100;
+            this.MinConfBar.Name = "MinConfBar";
+            this.MinConfBar.Size = new System.Drawing.Size(239, 53);
+            this.MinConfBar.SmallChange = 5;
+            this.MinConfBar.TabIndex = 36;
+            this.MinConfBar.Tag = "MIN CONF";
+            this.MinConfBar.TickFrequency = 5;
+            this.MinConfBar.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.MinConfBar.Value = 25;
+            this.MinConfBar.Scroll += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
+            this.MinConfBar.MouseHover += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label11.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.label11.Location = new System.Drawing.Point(383, 414);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(405, 17);
+            this.label11.TabIndex = 35;
+            this.label11.Text = "(Minimum confidence allowed for each word when creating the PDF)";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(26, 411);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(72, 20);
+            this.label12.TabIndex = 34;
+            this.label12.Text = "Min Conf:";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 549);
+            this.Controls.Add(this.MinConfBar);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.label12);
             this.Controls.Add(this.ResetLabel);
             this.Controls.Add(this.StatusLabel);
             this.Controls.Add(this.label10);
@@ -343,6 +389,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.tesseractUIParametersBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.QualityTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DpiTrackBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MinConfBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -375,5 +422,8 @@
         private Label label10;
         private Label StatusLabel;
         private Label ResetLabel;
+        private TrackBar MinConfBar;
+        private Label label11;
+        private Label label12;
     }
 }

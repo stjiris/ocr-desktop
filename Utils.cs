@@ -6,7 +6,7 @@ namespace Tesseract_UI_Tools
 {
     public static class PdfUtil
     {
-        public static void AddTextLayer(XGraphics g, string HocrPath, string Jpeg, string OriginalTiff)
+        public static void AddTextLayer(XGraphics g, string TsvPath, string Jpeg, string OriginalTiff, float MinConf = 25)
         {
             float FinalRes = 1;
             float InitialRes = 1;
@@ -20,44 +20,25 @@ namespace Tesseract_UI_Tools
             }
             float Scale = FinalRes / InitialRes;
             XBrush brush = new XSolidBrush(XColor.FromArgb(100, 0, 0, 0));
-            XmlDocument hocrXml = new XmlDocument();
-            hocrXml.Load(HocrPath);
-            if (hocrXml.DocumentElement == null){ return; }
-            XmlElement root = hocrXml.DocumentElement;
 
-
-            foreach (XmlNode line in root.SelectNodes("//*[@class='ocr_line']"))
+            using (StreamReader reader = new StreamReader(TsvPath))
             {
-                var properties = HocrUtil.ReadTitleProperties(line.Attributes["title"].Value);
-                float[] linebox = { 0, 0, 0, 0 };
-                HocrUtil.FloatArrayFromProp(properties, "bbox", linebox, Scale);
-                float[] baseline = { 0, 0 };
-                HocrUtil.FloatArrayFromProp(properties, "baseline", baseline);
-                float[] size = { 0 };
-                HocrUtil.FloatArrayFromProp(properties, "x_size", size, Scale);
-                baseline[1] = baseline[1] * Scale;
-                string xpath_elements = ".//*[@class='ocrx_word']";
-                if (line.SelectNodes(xpath_elements).Count == 0)
+                reader.ReadLine(); // Drop header
+                while (!reader.EndOfStream)
                 {
-                    xpath_elements = ".";
-                }
-                foreach (XmlNode word in line.SelectNodes(xpath_elements))
-                {
-                    string rawtext = word.InnerText;
-                    if (rawtext == "") continue;
-                    var properties2 = HocrUtil.ReadTitleProperties(word.Attributes["title"].Value);
-                    float[] box = { 0, 0, 0, 0 };
-                    HocrUtil.FloatArrayFromProp(properties2, "bbox", box, Scale);
-                    XFont font;
-                    if (size[0] > 0)
-                    {
-                        font = new XFont(FontFamily.GenericSansSerif, size[0], XFontStyle.Regular);
-                    }
-                    else
-                    {
-                        font = BestFont(g, rawtext, box[2] - box[0], box[3] - box[1]);
-                    }
-                    g.DrawString(rawtext, font, brush, box[0], box[1], XStringFormats.TopLeft);
+                    string Line = reader.ReadLine();
+                    string[] ValueString = Line.Split('\t');
+                    string DebugInfo = ValueString[0];
+                    float X1 = int.Parse(ValueString[1]) * Scale;
+                    float Y1 = int.Parse(ValueString[2]) * Scale;
+                    float X2 = int.Parse(ValueString[3]) * Scale;
+                    float Y2 = int.Parse(ValueString[4]) * Scale;
+                    float Confidence = float.Parse(ValueString[5]);
+                    string Text = ValueString[6];
+                    if (Text == "") continue;
+                    if (Confidence < MinConf) continue;
+                    XFont font = BestFont(g, Text, X2-X1, Y2-Y1);
+                    g.DrawString(Text, font, brush, X1, Y1, XStringFormats.TopLeft);
                 }
             }
         }

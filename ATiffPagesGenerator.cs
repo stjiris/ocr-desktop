@@ -4,6 +4,9 @@ using Tess = Tesseract;
 using PdfSharp.Pdf;
 using PdfSharp.Drawing;
 using System.Xml;
+using OpenCvSharp;
+using OpenCvSharp.Text;
+using System.ComponentModel;
 
 namespace Tesseract_UI_Tools
 {
@@ -27,20 +30,20 @@ namespace Tesseract_UI_Tools
         {
             return $"{I}.{Dpi}.{Quality}.jpeg";
         }
-        public string HocrPage(int I, string Languages)
+        public string TsvPage(int I, string Languages)
         {
-            return $"{I}.{Languages}.hocr";
+            return $"{I}.{Languages}.tsv";
         }
 
-        public abstract string[] GenerateTIFFs(string FolderPath, bool Overwrite=false, IProgress<float>? Progress=null);
-        public string[] GenerateJPEGs(string[] TiffPages, string FolderPath, int Dpi = 100, int Quality = 100, bool Overwrite=false, IProgress<float>? Progress = null)
+        public abstract string[] GenerateTIFFs(string FolderPath, bool Overwrite=false, IProgress<float>? Progress=null, BackgroundWorker? worker=null);
+        public string[] GenerateJPEGs(string[] TiffPages, string FolderPath, int Dpi = 100, int Quality = 100, bool Overwrite=false, IProgress<float>? Progress = null, BackgroundWorker? worker = null)
         {
             QualityEncoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, Quality);
             ImageCodecInfo JpegImageCodecInfo = ImageCodecInfo.GetImageEncoders().First(codec => codec.FormatID == ImageFormat.Jpeg.Guid);
             
             string[] JpegPages = new string[TiffPages.Length];
 
-            for (int i = 0; i < TiffPages.Length; i++)
+            for (int i = 0; i < TiffPages.Length && (worker == null || !worker.CancellationPending); i++)
             {
                 if (Progress != null) Progress.Report((float)i / TiffPages.Length);
 
@@ -51,7 +54,7 @@ namespace Tesseract_UI_Tools
                 using (Bitmap Tiff = (Bitmap)Image.FromStream(File.OpenText(TiffPages[i]).BaseStream))
                 {
                     float Scale = Dpi / Tiff.HorizontalResolution;
-                    using (Bitmap Resize = new Bitmap(Tiff, new Size((int)(Tiff.Width * Scale), (int)(Tiff.Height * Scale))))
+                    using (Bitmap Resize = new Bitmap(Tiff, new System.Drawing.Size((int)(Tiff.Width * Scale), (int)(Tiff.Height * Scale))))
                     {
                         Resize.SetResolution(Dpi, Dpi);
                         Resize.Save(FullName, JpegImageCodecInfo, QualityEncoderParameters);
@@ -62,33 +65,37 @@ namespace Tesseract_UI_Tools
             return JpegPages;
         }
 
-        public string[] GenerateHocrs(string[] TiffPages, string FolderPath, string[] Languages, bool Overwrite=false, IProgress<float>? Progress = null)
+        public string[] GenerateTsvs(string[] TiffPages, string FolderPath, string[] Languages, bool Overwrite=false, IProgress<float>? Progress = null, BackgroundWorker? worker = null)
         {
             string[] HocrPages = new string[TiffPages.Length];
-            using (Tess.TesseractEngine engine = TessdataUtil.CreateEngine(Languages))
+            for (int i = 0; i < TiffPages.Length && (worker == null || !worker.CancellationPending); i++)
             {
-                for( int i = 0; i < TiffPages.Length; i++)
+                if (Progress != null) Progress.Report((float)i / TiffPages.Length);
+
+                string FullName = Path.Combine(FolderPath, TsvPage(i, TessdataUtil.LanguagesToString(Languages)));
+                HocrPages[i] = FullName;
+                if (File.Exists(FullName) && !Overwrite) continue;
+
+                using (ResourcesTracker T = new ResourcesTracker())
                 {
-                    if (Progress != null) Progress.Report((float)i / TiffPages.Length);
+                    Mat TiffMat = T.T(Cv2.ImRead(TiffPages[i]));
+                    OCRTesseract engine = TessdataUtil.CreateEngine(Languages);
+                    OCROutput OutputObj = new OCROutput();
+                    string Text;
+                    engine.Run(TiffMat, out Text, out OutputObj.Rects, componentTexts: out OutputObj.Components, out OutputObj.Confidences);
 
-                    string FullName = Path.Combine(FolderPath, HocrPage(i, TessdataUtil.LanguagesToString(Languages)));
-                    HocrPages[i] = FullName;
-                    if (File.Exists(FullName) && !Overwrite) continue;
-
-                    using (Tess.Pix PixImage = Tess.Pix.LoadFromFile(TiffPages[i]))
-                    using (Tess.Page ProcessedPage = engine.Process(PixImage, pageSegMode: Tess.PageSegMode.AutoOsd))
-                    {
-                        File.WriteAllText(FullName, ProcessedPage.GetHOCRText(i, true));
-                    }
+                    OutputObj.Save(FullName);
                 }
+                //File.WriteAllText(FullName, ProcessedPage.GetHOCRText(i, true));
             }
+
             return HocrPages;
         }
 
-        public void GeneratePDF(string[] Jpegs, string[] Hocrs, string[] OriginalTiffs, string OutputFile, IProgress<float>? Progress)
+        public void GeneratePDF(string[] Jpegs, string[] Tsvs, string[] OriginalTiffs, string OutputFile, float MinConf = 25, IProgress<float>? Progress = null, BackgroundWorker? worker = null)
         {
             PdfDocument doc = new PdfDocument();
-            for (int i = 0; i < Jpegs.Length; i++)
+            for (int i = 0; i < Jpegs.Length && (worker == null || !worker.CancellationPending); i++)
             {
                 if (Progress != null) Progress.Report((float)i / Jpegs.Length);
                 PdfPage Page = doc.AddPage();
@@ -99,9 +106,12 @@ namespace Tesseract_UI_Tools
                     Page.Height = Jpeg.PixelHeight;
                     g.DrawImage(Jpeg, 0, 0, Jpeg.PixelWidth, Jpeg.PixelHeight);
                 }
-                PdfUtil.AddTextLayer(g, Hocrs[i], Jpegs[i], OriginalTiffs[i]);
+                PdfUtil.AddTextLayer(g, Tsvs[i], Jpegs[i], OriginalTiffs[i], MinConf);
             }
-            doc.Save(OutputFile);
+            if((worker == null || !worker.CancellationPending))
+            {
+                doc.Save(OutputFile);
+            }
         }
     }
 
@@ -119,6 +129,26 @@ namespace Tesseract_UI_Tools
 
             
             return (ATiffPagesGenerator)Generator.GetConstructor(new Type[] { typeof(string) }).Invoke(new object[] { FilePath });
+        }
+    }
+
+    public class OCROutput
+    {
+        public Rect[] Rects = new Rect[] {};
+        public string[] Components = new string[] {};
+        public float[] Confidences = new float[] {};
+
+        public void Save(string OutputFile, string Debug = "OCROutput")
+        {
+            System.Diagnostics.Debug.Assert(Rects.Length == Components.Length && Components.Length == Confidences.Length);
+            using( StreamWriter writer = new StreamWriter(OutputFile))
+            {
+                writer.WriteLine($"Origin\tX1\tY1\tX2\tY2\tConfidence\tText");
+                for (int i = 0; i < Rects.Length; i++)
+                {
+                    writer.WriteLine($"{Debug}\t{Rects[i].TopLeft.X}\t{Rects[i].TopLeft.Y}\t{Rects[i].BottomRight.X}\t{Rects[i].BottomRight.Y}\t{Confidences[i]}\t{Components[i]}");
+                }
+            }
         }
     }
 }
