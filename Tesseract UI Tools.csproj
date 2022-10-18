@@ -15,4 +15,10 @@
     <PackageReference Include="Tesseract" Version="4.1.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="plotly-2.14.0.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

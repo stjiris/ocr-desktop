@@ -8,6 +8,7 @@ namespace Tesseract_UI_Tools
     {
         TesseractMainWorkerProgressUserState State = new TesseractMainWorkerProgressUserState("Initialized", 0);
         DirectoryInfo Files = Directory.CreateDirectory(Path.Combine(Application.UserAppDataPath, "Files"));
+        DirectoryInfo Reports = Directory.CreateDirectory(Path.Combine(Application.UserAppDataPath, "Reports"));
         TesseractUIParameters Params;
         Progress<float> SubProgress = new Progress<float>();
 
@@ -24,6 +25,13 @@ namespace Tesseract_UI_Tools
             // Fix XFont problems? https://stackoverflow.com/a/68041013/2573422
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         }
+
+        public void OpenReportsFolder()
+        {
+            System.Diagnostics.Process.Start("explorer.exe", Reports.FullName);
+        }
+
+
 
         private void SubProgress_ProgressChanged(object? sender, float e)
         {
@@ -53,12 +61,16 @@ namespace Tesseract_UI_Tools
                 if (CancellationPending) break;
 
                 Report($"Creating HOCRs of {FileName}", 0);
-                string[] Hocrs = Generator.GenerateTsvs(Pages, Tmp.FullName, Params.GetLanguage(), Params.Overwrite, SubProgress, this);
+                string[] Tsvs = Generator.GenerateTsvs(Pages, Tmp.FullName, Params.GetLanguage(), Params.Overwrite, SubProgress, this);
                 if (CancellationPending) break;
 
                 Report($"Creating PDF of {FileName}", 0);
-                Generator.GeneratePDF(Jpegs, Hocrs, Pages, OutputFile, Params.MinimumConfidence, SubProgress, this);
+                Generator.GeneratePDF(Jpegs, Tsvs, Pages, OutputFile, Params.MinimumConfidence, SubProgress, this);
                 if (CancellationPending) break;
+
+                string ReportFile = Path.Combine(Reports.FullName, $"{FileName}.{Params.Language}.html");
+                Report($"Generating Report of {FileName}", 0);
+                Generator.GenerateReport(Tsvs, Pages, ReportFile);
 
                 if (Params.Clear && !CancellationPending)
                 {

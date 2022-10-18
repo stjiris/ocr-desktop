@@ -150,5 +150,10 @@ namespace Tesseract_UI_Tools
         {
             ToggleForm(true);
         }
+
+        private void ReportsFolderLabel_Click(object sender, EventArgs e)
+        {
+            TesseractMainWorkerInstance.OpenReportsFolder();
+        }
     }
 }

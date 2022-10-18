@@ -67,34 +67,76 @@ namespace Tesseract_UI_Tools
 
         public string[] GenerateTsvs(string[] TiffPages, string FolderPath, string[] Languages, bool Overwrite=false, IProgress<float>? Progress = null, BackgroundWorker? worker = null)
         {
-            string[] HocrPages = new string[TiffPages.Length];
+            OCRTesseract engine = TessdataUtil.CreateEngine(Languages);
+            
+            string[] TsvsPages = new string[TiffPages.Length];
             for (int i = 0; i < TiffPages.Length && (worker == null || !worker.CancellationPending); i++)
             {
                 if (Progress != null) Progress.Report((float)i / TiffPages.Length);
 
                 string FullName = Path.Combine(FolderPath, TsvPage(i, TessdataUtil.LanguagesToString(Languages)));
-                HocrPages[i] = FullName;
+                TsvsPages[i] = FullName;
                 if (File.Exists(FullName) && !Overwrite) continue;
 
-                using (ResourcesTracker T = new ResourcesTracker())
-                {
-                    Mat TiffMat = T.T(Cv2.ImRead(TiffPages[i]));
-                    OCRTesseract engine = TessdataUtil.CreateEngine(Languages);
-                    OCROutput OutputObj = new OCROutput();
-                    string Text;
-                    engine.Run(TiffMat, out Text, out OutputObj.Rects, componentTexts: out OutputObj.Components, out OutputObj.Confidences);
-
-                    OutputObj.Save(FullName);
-                }
-                //File.WriteAllText(FullName, ProcessedPage.GetHOCRText(i, true));
+                OCROutput BestOCR = ProcessTiff.BestOCRProcess(TiffPages[i], engine);
+                BestOCR.Save(FullName);
             }
 
-            return HocrPages;
+            engine.Dispose();
+
+            return TsvsPages;
+        }
+
+        public void GenerateReport(string[] Tsvs, string[] OriginalTiffs, string ReportFile)
+        {
+            string Name = Path.GetFileNameWithoutExtension(ReportFile);
+            using(StreamWriter writer = new StreamWriter(ReportFile))
+            {
+                string ScriptSrc = File.ReadAllText(Path.Join(AppDomain.CurrentDomain.BaseDirectory, "plotly-2.14.0.min.js"));
+                writer.WriteLine($"<script>{ScriptSrc}</script>");
+                writer.WriteLine("<style>table, thead, tbody, tr, th, td {margin: auto; border: 1px solid; text-align: center; min-width:450px;}</style>");
+                writer.WriteLine("<table><thead><tr><th>Image</th><th>Statistics</th></tr></thead>");
+                writer.WriteLine($"<tbody>");
+                for (int i = 0; i < Tsvs.Length; i++)
+                {
+                    writer.WriteLine($"<tr>");
+                    using (Bitmap Tiff = (Bitmap)Image.FromFile(OriginalTiffs[i]))
+                    {
+                        double Scale = 300.0 / Tiff.Height;
+                        using (Bitmap Resized = new Bitmap(Tiff, (int)Math.Floor(Tiff.Width * Scale), (int)Math.Floor(Tiff.Height * Scale)))
+                        {
+                            MemoryStream ms = new MemoryStream();
+                            Resized.Save(ms, ImageFormat.Jpeg);
+                            byte[] B = ms.ToArray();
+                            string Url = "data:image/jpeg;base64," + Convert.ToBase64String(B);
+                            writer.WriteLine($"<td><img src='{Url}'></td>");
+                        }
+                        OCROutput CurrOut = OCROutput.Load(Tsvs[i]);
+                        writer.WriteLine($"<td data-confs='{string.Join(',', CurrOut.Confidences)}' data-origins='{string.Join(',', value: CurrOut.Debug)}'></td>");
+                    }
+                    writer.WriteLine($"</tr>");
+                }
+                writer.WriteLine($"</tbody></table>");
+                writer.WriteLine($"<script>" +
+                    "document.querySelectorAll('[data-confs]').forEach( d => Plotly.newPlot(d, tracesForElement(d),{showlegend:true, barmode: 'stack', margin: {l: 30,r: 30,b: 30,t: 30,pad: 4}, xaxis: {range: [0,100]}}));" +
+                    "function tracesForElement(d){" +
+                    "let traces = {};" +
+                    "for(let origin of d.dataset.origins.split(',')){" +
+                    "traces[origin] = {};" +
+                    "}" +
+                    "for(let origin of Object.keys(traces)){" +
+                    "traces[origin] = {x: d.dataset.confs.split(',').filter( (conf,index) => d.dataset.origins.split(',')[index] == origin ).map(f => parseFloat(f)),name:origin,type:'histogram',xbins:{start:0,end:100,size:5}}" +
+                    "}" +
+                    "return Object.values(traces);" +
+                    "}"+
+                    $"</script>");
+            }
         }
 
         public void GeneratePDF(string[] Jpegs, string[] Tsvs, string[] OriginalTiffs, string OutputFile, float MinConf = 25, IProgress<float>? Progress = null, BackgroundWorker? worker = null)
         {
-            PdfDocument doc = new PdfDocument();
+            PdfDocument doc = new();
+            doc.Tag = "tesseract-ui-tools-generated";
             for (int i = 0; i < Jpegs.Length && (worker == null || !worker.CancellationPending); i++)
             {
                 if (Progress != null) Progress.Report((float)i / Jpegs.Length);
@@ -129,26 +171,6 @@ namespace Tesseract_UI_Tools
 
             
             return (ATiffPagesGenerator)Generator.GetConstructor(new Type[] { typeof(string) }).Invoke(new object[] { FilePath });
-        }
-    }
-
-    public class OCROutput
-    {
-        public Rect[] Rects = new Rect[] {};
-        public string[] Components = new string[] {};
-        public float[] Confidences = new float[] {};
-
-        public void Save(string OutputFile, string Debug = "OCROutput")
-        {
-            System.Diagnostics.Debug.Assert(Rects.Length == Components.Length && Components.Length == Confidences.Length);
-            using( StreamWriter writer = new StreamWriter(OutputFile))
-            {
-                writer.WriteLine($"Origin\tX1\tY1\tX2\tY2\tConfidence\tText");
-                for (int i = 0; i < Rects.Length; i++)
-                {
-                    writer.WriteLine($"{Debug}\t{Rects[i].TopLeft.X}\t{Rects[i].TopLeft.Y}\t{Rects[i].BottomRight.X}\t{Rects[i].BottomRight.Y}\t{Confidences[i]}\t{Components[i]}");
-                }
-            }
         }
     }
 }

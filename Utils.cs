@@ -21,25 +21,16 @@ namespace Tesseract_UI_Tools
             float Scale = FinalRes / InitialRes;
             XBrush brush = new XSolidBrush(XColor.FromArgb(100, 0, 0, 0));
 
-            using (StreamReader reader = new StreamReader(TsvPath))
+            OCROutput OcrObject = OCROutput.Load(TsvPath);
+            for( int i= 0; i < OcrObject.Rects.Length; i++)
             {
-                reader.ReadLine(); // Drop header
-                while (!reader.EndOfStream)
-                {
-                    string Line = reader.ReadLine();
-                    string[] ValueString = Line.Split('\t');
-                    string DebugInfo = ValueString[0];
-                    float X1 = int.Parse(ValueString[1]) * Scale;
-                    float Y1 = int.Parse(ValueString[2]) * Scale;
-                    float X2 = int.Parse(ValueString[3]) * Scale;
-                    float Y2 = int.Parse(ValueString[4]) * Scale;
-                    float Confidence = float.Parse(ValueString[5]);
-                    string Text = ValueString[6];
-                    if (Text == "") continue;
-                    if (Confidence < MinConf) continue;
-                    XFont font = BestFont(g, Text, X2-X1, Y2-Y1);
-                    g.DrawString(Text, font, brush, X1, Y1, XStringFormats.TopLeft);
-                }
+                if (OcrObject.Confidences[i] < MinConf) continue;
+                float X1 = OcrObject.Rects[i].TopLeft.X * Scale;
+                float Y1 = OcrObject.Rects[i].TopLeft.Y * Scale;
+                float X2 = OcrObject.Rects[i].BottomRight.X * Scale;
+                float Y2 = OcrObject.Rects[i].BottomRight.Y * Scale;
+                XFont font = BestFont(g, OcrObject.Components[i], X2 - X1, Y2 - Y1);
+                g.DrawString(OcrObject.Components[i], font, brush, X1, Y1, XStringFormats.TopLeft);
             }
         }
         public static XFont BestFont(XGraphics g, string text, double width, double height)

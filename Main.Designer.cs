@@ -59,6 +59,7 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.ReportsFolderLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.tesseractUIParametersBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.QualityTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DpiTrackBar)).BeginInit();
@@ -251,7 +252,7 @@
             // 
             this.OverwriteBox.AutoSize = true;
             this.OverwriteBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.tesseractUIParametersBindingSource, "Overwrite", true));
-            this.OverwriteBox.Location = new System.Drawing.Point(12, 459);
+            this.OverwriteBox.Location = new System.Drawing.Point(12, 470);
             this.OverwriteBox.Name = "OverwriteBox";
             this.OverwriteBox.Size = new System.Drawing.Size(92, 24);
             this.OverwriteBox.TabIndex = 9;
@@ -262,7 +263,7 @@
             // 
             this.ClearBox.AutoSize = true;
             this.ClearBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.tesseractUIParametersBindingSource, "Clear", true));
-            this.ClearBox.Location = new System.Drawing.Point(110, 459);
+            this.ClearBox.Location = new System.Drawing.Point(110, 470);
             this.ClearBox.Name = "ClearBox";
             this.ClearBox.Size = new System.Drawing.Size(170, 24);
             this.ClearBox.TabIndex = 10;
@@ -271,7 +272,7 @@
             // 
             // StartStopBtn
             // 
-            this.StartStopBtn.Location = new System.Drawing.Point(698, 459);
+            this.StartStopBtn.Location = new System.Drawing.Point(698, 467);
             this.StartStopBtn.Name = "StartStopBtn";
             this.StartStopBtn.Size = new System.Drawing.Size(90, 28);
             this.StartStopBtn.TabIndex = 11;
@@ -281,7 +282,7 @@
             // 
             // StatusProgressBar
             // 
-            this.StatusProgressBar.Location = new System.Drawing.Point(12, 509);
+            this.StatusProgressBar.Location = new System.Drawing.Point(12, 520);
             this.StatusProgressBar.Name = "StatusProgressBar";
             this.StatusProgressBar.Size = new System.Drawing.Size(776, 28);
             this.StatusProgressBar.TabIndex = 0;
@@ -289,7 +290,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(12, 486);
+            this.label10.Location = new System.Drawing.Point(12, 497);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(52, 20);
             this.label10.TabIndex = 0;
@@ -360,11 +361,25 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
+            // ReportsFolderLabel
+            // 
+            this.ReportsFolderLabel.AutoSize = true;
+            this.ReportsFolderLabel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ReportsFolderLabel.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.ReportsFolderLabel.ForeColor = System.Drawing.Color.Gray;
+            this.ReportsFolderLabel.Location = new System.Drawing.Point(560, 473);
+            this.ReportsFolderLabel.Name = "ReportsFolderLabel";
+            this.ReportsFolderLabel.Size = new System.Drawing.Size(132, 17);
+            this.ReportsFolderLabel.TabIndex = 33;
+            this.ReportsFolderLabel.Text = "(open reports folder)";
+            this.ReportsFolderLabel.Click += new System.EventHandler(this.ReportsFolderLabel_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 549);
+            this.ClientSize = new System.Drawing.Size(800, 557);
+            this.Controls.Add(this.ReportsFolderLabel);
             this.Controls.Add(this.MinConfBar);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.label12);
@@ -436,5 +451,6 @@
         private Label label11;
         private Label label12;
         private ErrorProvider errorProvider1;
+        private Label ReportsFolderLabel;
     }
 }
