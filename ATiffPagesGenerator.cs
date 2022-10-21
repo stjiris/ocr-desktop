@@ -13,12 +13,16 @@ namespace Tesseract_UI_Tools
     public abstract class ATiffPagesGenerator
     {
         public static string[] FORMATS = new string[] { };
+        public static readonly string PDG_TAG = "tesseract-ui-tools-generated";
 
         private EncoderParameters QualityEncoderParameters = new EncoderParameters(1);
         protected string FilePath;
+        protected bool _CanRun;
+        public bool CanRun { get { return _CanRun; } protected set { _CanRun = value; } }
         public ATiffPagesGenerator(string FilePath)
         {
             this.FilePath = FilePath;
+            CanRun = true;
         }
 
         public string TiffPage(int I)
@@ -136,7 +140,7 @@ namespace Tesseract_UI_Tools
         public void GeneratePDF(string[] Jpegs, string[] Tsvs, string[] OriginalTiffs, string OutputFile, float MinConf = 25, IProgress<float>? Progress = null, BackgroundWorker? worker = null)
         {
             PdfDocument doc = new();
-            doc.Tag = "tesseract-ui-tools-generated";
+            doc.Tag = PDG_TAG;
             for (int i = 0; i < Jpegs.Length && (worker == null || !worker.CancellationPending); i++)
             {
                 if (Progress != null) Progress.Report((float)i / Jpegs.Length);

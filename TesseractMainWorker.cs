@@ -45,7 +45,7 @@ namespace Tesseract_UI_Tools
             {
                 if (CancellationPending) break;
                 ATiffPagesGenerator? Generator = TiffPagesGeneratorProvider.GetTiffPagesGenerator(CurrentFile);
-                if (Generator == null) continue;
+                if (Generator == null || !Generator.CanRun ) continue;
 
                 string FileName = Path.GetFileNameWithoutExtension(CurrentFile);
                 string OutputFile = Path.Combine(Params.OutputFolder, $"{FileName}.dpi-{Params.Dpi}.qual-{Params.Quality}.{Params.Language}.{Params.MinimumConfidence}.pdf");
