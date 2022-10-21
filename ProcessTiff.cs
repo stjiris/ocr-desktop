@@ -12,7 +12,7 @@ namespace Tesseract_UI_Tools
                 Mat TiffMat = t.T(Cv2.ImRead(TiffFile));
                 OCROutput PlainOutputObj = new OCROutput("Plain");
                 string Text;
-                engine.Run(TiffMat, out Text, out PlainOutputObj.Rects, out PlainOutputObj.Components, out PlainOutputObj.Confidences);
+                engine.Run(TiffMat, out Text, out PlainOutputObj.Rects, out PlainOutputObj.Components, out PlainOutputObj.Confidences, ComponentLevels.Word);
 
                 Mat gray;
                 switch (TiffMat.Channels())
