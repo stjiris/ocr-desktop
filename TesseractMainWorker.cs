@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using OpenCvSharp;
 using System.Drawing.Imaging;
+using Tesseract_UI_Tools.OcrStrategy;
 
 namespace Tesseract_UI_Tools
 {
@@ -48,7 +49,7 @@ namespace Tesseract_UI_Tools
                 if (Generator == null || !Generator.CanRun ) continue;
 
                 string FileName = Path.GetFileNameWithoutExtension(CurrentFile);
-                string OutputFile = Path.Combine(Params.OutputFolder, $"{FileName}.dpi-{Params.Dpi}.qual-{Params.Quality}.{Params.Language}.{Params.MinimumConfidence}.pdf");
+                string OutputFile = Path.Combine(Params.OutputFolder, $"{FileName}.dpi-{Params.Dpi}.qual-{Params.Quality}.{Params.Language}.{Params.MinimumConfidence}.{Params.Strategy}.pdf");
                 if (File.Exists(OutputFile) && !Params.Overwrite) continue;
                 
                 DirectoryInfo Tmp = Files.CreateSubdirectory(FileName);
@@ -61,14 +62,14 @@ namespace Tesseract_UI_Tools
                 if (CancellationPending) break;
 
                 Report($"Creating HOCRs of {FileName}", 0);
-                string[] Tsvs = Generator.GenerateTsvs(Pages, Tmp.FullName, Params.GetLanguage(), Params.Overwrite, SubProgress, this);
+                string[] Tsvs = Generator.GenerateTsvs(Pages, Tmp.FullName, Params.GetLanguage(), Params.Strategy, Params.Overwrite, SubProgress, this);
                 if (CancellationPending) break;
 
                 Report($"Creating PDF of {FileName}", 0);
                 Generator.GeneratePDF(Jpegs, Tsvs, Pages, OutputFile, Params.MinimumConfidence, SubProgress, this);
                 if (CancellationPending) break;
 
-                string ReportFile = Path.Combine(Reports.FullName, $"{FileName}.{Params.Language}.html");
+                string ReportFile = Path.Combine(Reports.FullName, $"{FileName}.{Params.Language}.{Params.Strategy}.html");
                 Report($"Generating Report of {FileName}", 0);
                 Generator.GenerateReport(Tsvs, Pages, ReportFile);
 
@@ -80,7 +81,11 @@ namespace Tesseract_UI_Tools
             if (CancellationPending)
             {
                 Report("Stopped", 0);
-            };
+            }
+            else
+            {
+                Report("Finnished", 0);
+            }
 
         }
 

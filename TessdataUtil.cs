@@ -45,6 +45,14 @@ namespace Tesseract_UI_Tools
         {
             return OCRTesseract.Create(TessdataPath, LanguagesToString(Languages));
         }
+        public static Tesseract.TesseractEngine CreateTesseractEngine(string[] Languages)
+        {
+            return new Tesseract.TesseractEngine(TessdataPath, LanguagesToString(Languages));
+        }
+        public static OCRTesseract CreateOpenCvEngine(string[] Languages)
+        {
+            return OCRTesseract.Create(TessdataPath, LanguagesToString(Languages), ""); // Reset empty whitelist
+        }
     }
 
     public class TesseractUIParameters : ApplicationSettingsBase
@@ -109,6 +117,14 @@ namespace Tesseract_UI_Tools
         {
             get { return (float)this["MinimumConfidence"]; }
             set { this["MinimumConfidence"] = value; }
+        }
+
+        [UserScopedSettingAttribute()]
+        [DefaultSettingValue("Plain")]
+        public string Strategy
+        {
+            get { return (string)this["Strategy"]; }
+            set { this["Strategy"] = value; }
         }
 
         public void SetLanguage(string[] Languages)

@@ -34,9 +34,9 @@ namespace Tesseract_UI_Tools
         {
             return $"{I}.{Dpi}.{Quality}.jpeg";
         }
-        public string TsvPage(int I, string Languages)
+        public string TsvPage(int I, string Strat, string Languages)
         {
-            return $"{I}.{Languages}.tsv";
+            return $"{I}.{Strat}.{Languages}.tsv";
         }
 
         public abstract string[] GenerateTIFFs(string FolderPath, bool Overwrite=false, IProgress<float>? Progress=null, BackgroundWorker? worker=null);
@@ -69,24 +69,20 @@ namespace Tesseract_UI_Tools
             return JpegPages;
         }
 
-        public string[] GenerateTsvs(string[] TiffPages, string FolderPath, string[] Languages, bool Overwrite=false, IProgress<float>? Progress = null, BackgroundWorker? worker = null)
+        public string[] GenerateTsvs(string[] TiffPages, string FolderPath, string[] Languages, string Strategy, bool Overwrite=false, IProgress<float>? Progress = null, BackgroundWorker? worker = null)
         {
-            OCRTesseract engine = TessdataUtil.CreateEngine(Languages);
-            
             string[] TsvsPages = new string[TiffPages.Length];
-            for (int i = 0; i < TiffPages.Length && (worker == null || !worker.CancellationPending); i++)
-            {
-                if (Progress != null) Progress.Report((float)i / TiffPages.Length);
+            using (AOcrStrategy OcrStrategy = AOcrStrategy.GetStrategy(Strategy,Languages))
+                for (int i = 0; i < TiffPages.Length && (worker == null || !worker.CancellationPending); i++)
+                {
+                    if (Progress != null) Progress.Report((float)i / TiffPages.Length);
 
-                string FullName = Path.Combine(FolderPath, TsvPage(i, TessdataUtil.LanguagesToString(Languages)));
-                TsvsPages[i] = FullName;
-                if (File.Exists(FullName) && !Overwrite) continue;
+                    string FullName = Path.Combine(FolderPath, TsvPage(i, Strategy, TessdataUtil.LanguagesToString(Languages)));
+                    TsvsPages[i] = FullName;
+                    if (File.Exists(FullName) && !Overwrite) continue;
 
-                OCROutput BestOCR = ProcessTiff.BestOCRProcess(TiffPages[i], engine);
-                BestOCR.Save(FullName);
-            }
-
-            engine.Dispose();
+                    OcrStrategy.GenerateTsv(TiffPages[i], TsvsPages[i]);
+                }
 
             return TsvsPages;
         }

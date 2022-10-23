@@ -18,7 +18,7 @@ namespace Tesseract_UI_Tools
         public void Save(string OutputFile)
         {
             System.Diagnostics.Debug.Assert(Rects.Length == Components.Length && Components.Length == Confidences.Length);
-            using( StreamWriter writer = new StreamWriter(OutputFile))
+            using( StreamWriter writer = new StreamWriter(OutputFile, false, System.Text.Encoding.UTF8 ))
             {
                 writer.WriteLine($"Origin\tX1\tY1\tX2\tY2\tConfidence\tText");
                 for (int i = 0; i < Rects.Length; i++)
@@ -31,7 +31,7 @@ namespace Tesseract_UI_Tools
         public static OCROutput Load(string OutputFile)
         {
             List<string> Lines = new List<string>();
-            using( StreamReader reader = new StreamReader(OutputFile))
+            using( StreamReader reader = new StreamReader(OutputFile, System.Text.Encoding.UTF8))
             {
                 string? CurrLine;
                 reader.ReadLine(); // Drop Header

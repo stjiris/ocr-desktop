@@ -60,6 +60,11 @@
             this.label12 = new System.Windows.Forms.Label();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.ReportsFolderLabel = new System.Windows.Forms.Label();
+            this.StrategyBox = new System.Windows.Forms.ComboBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.NotifyIconSucess = new System.Windows.Forms.NotifyIcon(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.tesseractUIParametersBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.QualityTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DpiTrackBar)).BeginInit();
@@ -76,7 +81,6 @@
             this.LanguagesCheckedListBox.Name = "LanguagesCheckedListBox";
             this.LanguagesCheckedListBox.Size = new System.Drawing.Size(776, 151);
             this.LanguagesCheckedListBox.TabIndex = 5;
-            this.LanguagesCheckedListBox.SelectedIndexChanged += new System.EventHandler(this.LanguagesCheckedListBox_SelectedIndexChanged);
             // 
             // InputFolderTextBox
             // 
@@ -165,7 +169,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 270);
+            this.label5.Location = new System.Drawing.Point(12, 309);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(132, 20);
             this.label5.TabIndex = 0;
@@ -174,7 +178,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(63, 296);
+            this.label6.Location = new System.Drawing.Point(63, 335);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(35, 20);
             this.label6.TabIndex = 0;
@@ -185,7 +189,7 @@
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label7.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label7.Location = new System.Drawing.Point(358, 299);
+            this.label7.Location = new System.Drawing.Point(358, 338);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(430, 17);
             this.label7.TabIndex = 0;
@@ -194,7 +198,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(39, 352);
+            this.label8.Location = new System.Drawing.Point(39, 391);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(59, 20);
             this.label8.TabIndex = 0;
@@ -205,7 +209,7 @@
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label9.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label9.Location = new System.Drawing.Point(349, 353);
+            this.label9.Location = new System.Drawing.Point(349, 392);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(439, 17);
             this.label9.TabIndex = 0;
@@ -215,12 +219,12 @@
             // 
             this.QualityTrackBar.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.tesseractUIParametersBindingSource, "Quality", true));
             this.QualityTrackBar.LargeChange = 10;
-            this.QualityTrackBar.Location = new System.Drawing.Point(104, 352);
+            this.QualityTrackBar.Location = new System.Drawing.Point(104, 391);
             this.QualityTrackBar.Maximum = 100;
             this.QualityTrackBar.Name = "QualityTrackBar";
             this.QualityTrackBar.Size = new System.Drawing.Size(239, 53);
             this.QualityTrackBar.SmallChange = 5;
-            this.QualityTrackBar.TabIndex = 7;
+            this.QualityTrackBar.TabIndex = 8;
             this.QualityTrackBar.Tag = "QUALITY";
             this.QualityTrackBar.TickFrequency = 5;
             this.QualityTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
@@ -233,13 +237,13 @@
             // 
             this.DpiTrackBar.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.tesseractUIParametersBindingSource, "Dpi", true));
             this.DpiTrackBar.LargeChange = 20;
-            this.DpiTrackBar.Location = new System.Drawing.Point(104, 293);
+            this.DpiTrackBar.Location = new System.Drawing.Point(104, 332);
             this.DpiTrackBar.Maximum = 300;
             this.DpiTrackBar.Minimum = 70;
             this.DpiTrackBar.Name = "DpiTrackBar";
             this.DpiTrackBar.Size = new System.Drawing.Size(239, 53);
             this.DpiTrackBar.SmallChange = 5;
-            this.DpiTrackBar.TabIndex = 6;
+            this.DpiTrackBar.TabIndex = 7;
             this.DpiTrackBar.Tag = "DPI";
             this.DpiTrackBar.TickFrequency = 5;
             this.DpiTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
@@ -252,10 +256,10 @@
             // 
             this.OverwriteBox.AutoSize = true;
             this.OverwriteBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.tesseractUIParametersBindingSource, "Overwrite", true));
-            this.OverwriteBox.Location = new System.Drawing.Point(12, 470);
+            this.OverwriteBox.Location = new System.Drawing.Point(12, 509);
             this.OverwriteBox.Name = "OverwriteBox";
             this.OverwriteBox.Size = new System.Drawing.Size(92, 24);
-            this.OverwriteBox.TabIndex = 9;
+            this.OverwriteBox.TabIndex = 10;
             this.OverwriteBox.Text = "Overwrite";
             this.OverwriteBox.UseVisualStyleBackColor = true;
             // 
@@ -263,26 +267,26 @@
             // 
             this.ClearBox.AutoSize = true;
             this.ClearBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.tesseractUIParametersBindingSource, "Clear", true));
-            this.ClearBox.Location = new System.Drawing.Point(110, 470);
+            this.ClearBox.Location = new System.Drawing.Point(110, 509);
             this.ClearBox.Name = "ClearBox";
             this.ClearBox.Size = new System.Drawing.Size(170, 24);
-            this.ClearBox.TabIndex = 10;
+            this.ClearBox.TabIndex = 11;
             this.ClearBox.Text = "Clear Temporary Files";
             this.ClearBox.UseVisualStyleBackColor = true;
             // 
             // StartStopBtn
             // 
-            this.StartStopBtn.Location = new System.Drawing.Point(698, 467);
+            this.StartStopBtn.Location = new System.Drawing.Point(698, 506);
             this.StartStopBtn.Name = "StartStopBtn";
             this.StartStopBtn.Size = new System.Drawing.Size(90, 28);
-            this.StartStopBtn.TabIndex = 11;
+            this.StartStopBtn.TabIndex = 12;
             this.StartStopBtn.Text = "Start";
             this.StartStopBtn.UseVisualStyleBackColor = true;
             this.StartStopBtn.Click += new System.EventHandler(this.StartStopBtn_Click);
             // 
             // StatusProgressBar
             // 
-            this.StatusProgressBar.Location = new System.Drawing.Point(12, 520);
+            this.StatusProgressBar.Location = new System.Drawing.Point(12, 559);
             this.StatusProgressBar.Name = "StatusProgressBar";
             this.StatusProgressBar.Size = new System.Drawing.Size(776, 28);
             this.StatusProgressBar.TabIndex = 0;
@@ -290,7 +294,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(12, 497);
+            this.label10.Location = new System.Drawing.Point(12, 536);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(52, 20);
             this.label10.TabIndex = 0;
@@ -301,7 +305,7 @@
             this.StatusLabel.AutoSize = true;
             this.StatusLabel.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.StatusLabel.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.StatusLabel.Location = new System.Drawing.Point(70, 500);
+            this.StatusLabel.Location = new System.Drawing.Point(70, 539);
             this.StatusLabel.Name = "StatusLabel";
             this.StatusLabel.Size = new System.Drawing.Size(0, 17);
             this.StatusLabel.TabIndex = 32;
@@ -323,12 +327,12 @@
             // 
             this.MinConfBar.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.tesseractUIParametersBindingSource, "MinimumConfidence", true));
             this.MinConfBar.LargeChange = 10;
-            this.MinConfBar.Location = new System.Drawing.Point(104, 411);
+            this.MinConfBar.Location = new System.Drawing.Point(104, 450);
             this.MinConfBar.Maximum = 100;
             this.MinConfBar.Name = "MinConfBar";
             this.MinConfBar.Size = new System.Drawing.Size(239, 53);
             this.MinConfBar.SmallChange = 5;
-            this.MinConfBar.TabIndex = 8;
+            this.MinConfBar.TabIndex = 9;
             this.MinConfBar.Tag = "MIN CONF";
             this.MinConfBar.TickFrequency = 5;
             this.MinConfBar.TickStyle = System.Windows.Forms.TickStyle.Both;
@@ -342,7 +346,7 @@
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label11.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label11.Location = new System.Drawing.Point(383, 414);
+            this.label11.Location = new System.Drawing.Point(383, 453);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(405, 17);
             this.label11.TabIndex = 0;
@@ -351,7 +355,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(26, 411);
+            this.label12.Location = new System.Drawing.Point(26, 450);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(72, 20);
             this.label12.TabIndex = 0;
@@ -367,18 +371,69 @@
             this.ReportsFolderLabel.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ReportsFolderLabel.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ReportsFolderLabel.ForeColor = System.Drawing.Color.Gray;
-            this.ReportsFolderLabel.Location = new System.Drawing.Point(560, 473);
+            this.ReportsFolderLabel.Location = new System.Drawing.Point(560, 512);
             this.ReportsFolderLabel.Name = "ReportsFolderLabel";
             this.ReportsFolderLabel.Size = new System.Drawing.Size(132, 17);
             this.ReportsFolderLabel.TabIndex = 33;
             this.ReportsFolderLabel.Text = "(open reports folder)";
             this.ReportsFolderLabel.Click += new System.EventHandler(this.ReportsFolderLabel_Click);
             // 
+            // StrategyBox
+            // 
+            this.StrategyBox.FormattingEnabled = true;
+            this.StrategyBox.Location = new System.Drawing.Point(179, 273);
+            this.StrategyBox.Name = "StrategyBox";
+            this.StrategyBox.Size = new System.Drawing.Size(187, 27);
+            this.StrategyBox.TabIndex = 6;
+            this.StrategyBox.SelectedIndexChanged += new System.EventHandler(this.StrategyBox_SelectedIndexChanged);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(12, 276);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(161, 20);
+            this.label13.TabIndex = 35;
+            this.label13.Text = "Preprocessing strategy:";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label14.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.label14.Location = new System.Drawing.Point(548, 283);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(240, 17);
+            this.label14.TabIndex = 36;
+            this.label14.Text = "(Select preprocessing strategy for OCR)";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.tesseractUIParametersBindingSource, "Language", true));
+            this.label15.Location = new System.Drawing.Point(560, 93);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(58, 20);
+            this.label15.TabIndex = 37;
+            this.label15.Text = "label15";
+            // 
+            // NotifyIconSucess
+            // 
+            this.NotifyIconSucess.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.NotifyIconSucess.BalloonTipText = "OCR Finished";
+            this.NotifyIconSucess.BalloonTipTitle = "OCR Sucess";
+            this.NotifyIconSucess.Text = "NotifySucess";
+            this.NotifyIconSucess.Visible = true;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 557);
+            this.ClientSize = new System.Drawing.Size(800, 592);
+            this.Controls.Add(this.label15);
+            this.Controls.Add(this.label14);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.StrategyBox);
             this.Controls.Add(this.ReportsFolderLabel);
             this.Controls.Add(this.MinConfBar);
             this.Controls.Add(this.label11);
@@ -452,5 +507,10 @@
         private Label label12;
         private ErrorProvider errorProvider1;
         private Label ReportsFolderLabel;
+        private ComboBox StrategyBox;
+        private Label label13;
+        private Label label14;
+        private Label label15;
+        private NotifyIcon NotifyIconSucess;
     }
 }

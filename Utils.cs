@@ -45,7 +45,6 @@ namespace Tesseract_UI_Tools
                 font = new XFont(font.FontFamily.Name, font.Size - 1, XFontStyle.Regular);
             }
             return font;
-
         }
     }
 

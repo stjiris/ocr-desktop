@@ -12,13 +12,23 @@ namespace Tesseract_UI_Tools
             InitializeComponent();
             TessParams.PropertyChanged += TessParams_PropertyChanged;
             tesseractUIParametersBindingSource.DataSource = TessParams;
-            StartStopBtn.Enabled = TessParams.Validate();
 
             TesseractMainWorkerInstance = new TesseractMainWorker(TessParams);
             TesseractMainWorkerInstance.RunWorkerCompleted += TesseractMainWorkerInstance_RunWorkerCompleted;
             TesseractMainWorkerInstance.ProgressChanged += TesseractMainWorkerInstance_ProgressChanged;
 
             TesseractMainWorkerInstance.Report();
+
+            foreach( string Strat in AOcrStrategy.Strategies())
+            {
+                StrategyBox.Items.Add(Strat);
+                if( TessParams.Strategy == Strat)
+                {
+                    StrategyBox.SelectedIndex = StrategyBox.Items.Count - 1;
+                }
+            }
+
+            StartStopBtn.Enabled = TessParams.Validate();
         }
 
         private void TessParams_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -52,6 +62,7 @@ namespace Tesseract_UI_Tools
         {
             string[] langs = await TessdataUtil.Setup();
             langs.ToList().ForEach( lang => LanguagesCheckedListBox.Items.Add( lang, TessParams.GetLanguage().Any(l => l == lang) ) );
+            LanguagesCheckedListBox.ItemCheck += LanguagesCheckedListBox_ItemCheck;
         }
 
         private void InputFolderClick(object sender, EventArgs e)
@@ -83,9 +94,28 @@ namespace Tesseract_UI_Tools
             ScrollTip.SetToolTip(senderObj, $"{senderObj.Tag} {senderObj.Value}");
         }
 
-        private void LanguagesCheckedListBox_SelectedIndexChanged(object sender, EventArgs e)
+
+        private void LanguagesCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            TessParams.SetLanguage(LanguagesCheckedListBox.CheckedItems.OfType<string>().ToArray());
+            // This triggers BEFORE LanguagesCheckedListBox is updated there are workarounds with begin Invoke
+            // TessParams also trigger this we need to prevent recursion.
+            string LangChanged = LanguagesCheckedListBox.Items[e.Index].ToString();
+            IEnumerable<string> CurrLangs = LanguagesCheckedListBox.CheckedItems.OfType<string>();
+            if ( e.NewValue == CheckState.Checked && !TessParams.GetLanguage().Contains(LangChanged) )
+            {
+                TessParams.SetLanguage(CurrLangs.Append(LangChanged).ToArray());
+            }
+            else if( e.NewValue == CheckState.Unchecked && TessParams.GetLanguage().Contains(LangChanged) )
+            {
+                TessParams.SetLanguage(CurrLangs.Where(Lang => Lang != LangChanged).ToArray());
+            }
+            ToggleForm(true);
+        }
+
+        private void StrategyBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (StrategyBox.SelectedItem == null) return;
+            TessParams.Strategy = StrategyBox.SelectedItem.ToString();
         }
 
         private void ResetLabel_Click(object sender, EventArgs e)
@@ -125,6 +155,7 @@ namespace Tesseract_UI_Tools
             MinConfBar.Enabled = Enabled;
             OverwriteBox.Enabled = Enabled;
             ClearBox.Enabled = Enabled;
+            StrategyBox.Enabled = Enabled;
             if( Enabled)
             {
                 StartStopBtn.Text = "Start";
@@ -135,6 +166,11 @@ namespace Tesseract_UI_Tools
                 StartStopBtn.Text = "Stop";
                 StartStopBtn.Enabled = true;
             }
+        }
+
+        private void ReportsFolderLabel_Click(object sender, EventArgs e)
+        {
+            TesseractMainWorkerInstance.OpenReportsFolder();
         }
 
         /* WORKER EVENTS */
@@ -149,11 +185,6 @@ namespace Tesseract_UI_Tools
         private void TesseractMainWorkerInstance_RunWorkerCompleted(object? sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             ToggleForm(true);
-        }
-
-        private void ReportsFolderLabel_Click(object sender, EventArgs e)
-        {
-            TesseractMainWorkerInstance.OpenReportsFolder();
         }
     }
 }
