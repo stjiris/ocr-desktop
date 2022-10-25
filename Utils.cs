@@ -19,7 +19,7 @@ namespace Tesseract_UI_Tools
                 InitialRes = TiffImage.HorizontalResolution;
             }
             float Scale = FinalRes / InitialRes;
-            XBrush brush = new XSolidBrush(XColor.FromArgb(100, 0, 0, 0));
+            XBrush brush = new XSolidBrush(XColor.FromArgb(0, 0, 0, 0));
 
             OCROutput OcrObject = OCROutput.Load(TsvPath);
             for( int i= 0; i < OcrObject.Rects.Length; i++)
@@ -29,6 +29,7 @@ namespace Tesseract_UI_Tools
                 float Y1 = OcrObject.Rects[i].TopLeft.Y * Scale;
                 float X2 = OcrObject.Rects[i].BottomRight.X * Scale;
                 float Y2 = OcrObject.Rects[i].BottomRight.Y * Scale;
+                var Watch = new System.Diagnostics.Stopwatch();
                 XFont font = BestFont(g, OcrObject.Components[i], X2 - X1, Y2 - Y1);
                 g.DrawString(OcrObject.Components[i], font, brush, X1, Y1, XStringFormats.TopLeft);
             }
