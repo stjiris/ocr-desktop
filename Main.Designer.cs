@@ -58,18 +58,23 @@
             this.MinConfBar = new System.Windows.Forms.TrackBar();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
-            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.ReportsFolderLabel = new System.Windows.Forms.Label();
             this.StrategyBox = new System.Windows.Forms.ComboBox();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.NotifyIconSucess = new System.Windows.Forms.NotifyIcon(this.components);
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.mailBox = new System.Windows.Forms.TextBox();
+            this.emailUIParametersBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.tesseractUIParametersBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.QualityTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DpiTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinConfBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emailUIParametersBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // LanguagesCheckedListBox
@@ -286,7 +291,7 @@
             // 
             // StatusProgressBar
             // 
-            this.StatusProgressBar.Location = new System.Drawing.Point(12, 559);
+            this.StatusProgressBar.Location = new System.Drawing.Point(12, 584);
             this.StatusProgressBar.Name = "StatusProgressBar";
             this.StatusProgressBar.Size = new System.Drawing.Size(776, 28);
             this.StatusProgressBar.TabIndex = 0;
@@ -294,7 +299,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(12, 536);
+            this.label10.Location = new System.Drawing.Point(11, 561);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(52, 20);
             this.label10.TabIndex = 0;
@@ -305,10 +310,11 @@
             this.StatusLabel.AutoSize = true;
             this.StatusLabel.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.StatusLabel.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.StatusLabel.Location = new System.Drawing.Point(70, 539);
+            this.StatusLabel.Location = new System.Drawing.Point(63, 562);
             this.StatusLabel.Name = "StatusLabel";
-            this.StatusLabel.Size = new System.Drawing.Size(0, 17);
+            this.StatusLabel.Size = new System.Drawing.Size(65, 17);
             this.StatusLabel.TabIndex = 32;
+            this.StatusLabel.Text = "Initializing";
             // 
             // ResetLabel
             // 
@@ -360,10 +366,6 @@
             this.label12.Size = new System.Drawing.Size(72, 20);
             this.label12.TabIndex = 0;
             this.label12.Text = "Min Conf:";
-            // 
-            // errorProvider1
-            // 
-            this.errorProvider1.ContainerControl = this;
             // 
             // ReportsFolderLabel
             // 
@@ -425,11 +427,51 @@
             this.NotifyIconSucess.Text = "NotifySucess";
             this.NotifyIconSucess.Visible = true;
             // 
+            // errorProvider1
+            // 
+            this.errorProvider1.ContainerControl = this;
+            // 
+            // mailBox
+            // 
+            this.mailBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.emailUIParametersBindingSource, "EmailTo", true));
+            this.mailBox.Location = new System.Drawing.Point(110, 535);
+            this.mailBox.Name = "mailBox";
+            this.mailBox.Size = new System.Drawing.Size(446, 26);
+            this.mailBox.TabIndex = 38;
+            // 
+            // emailUIParametersBindingSource
+            // 
+            this.emailUIParametersBindingSource.DataSource = typeof(Tesseract_UI_Tools.EmailUIParameters);
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(10, 538);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(94, 20);
+            this.label16.TabIndex = 39;
+            this.label16.Text = "Notify Email:";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label17.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.label17.Location = new System.Drawing.Point(562, 541);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(130, 17);
+            this.label17.TabIndex = 40;
+            this.label17.Text = "(open email settings)";
+            this.label17.Click += new System.EventHandler(this.OpenMailSettingsClick);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 592);
+            this.ClientSize = new System.Drawing.Size(800, 624);
+            this.Controls.Add(this.label17);
+            this.Controls.Add(this.label16);
+            this.Controls.Add(this.mailBox);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.label13);
@@ -470,6 +512,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.DpiTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinConfBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emailUIParametersBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -505,12 +548,16 @@
         private TrackBar MinConfBar;
         private Label label11;
         private Label label12;
-        private ErrorProvider errorProvider1;
         private Label ReportsFolderLabel;
         private ComboBox StrategyBox;
         private Label label13;
         private Label label14;
         private Label label15;
         private NotifyIcon NotifyIconSucess;
+        private ErrorProvider errorProvider1;
+        private Label label17;
+        private Label label16;
+        private TextBox mailBox;
+        private BindingSource emailUIParametersBindingSource;
     }
 }

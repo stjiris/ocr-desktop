@@ -6,11 +6,14 @@ namespace Tesseract_UI_Tools
     {
         private TesseractUIParameters TessParams = new TesseractUIParameters();
         private TesseractMainWorker TesseractMainWorkerInstance;
+        private EmailUIParameters EmailParams = new EmailUIParameters();
 
         public Main()
         {
             InitializeComponent();
+
             TessParams.PropertyChanged += TessParams_PropertyChanged;
+            emailUIParametersBindingSource.DataSource = EmailParams;
             tesseractUIParametersBindingSource.DataSource = TessParams;
 
             TesseractMainWorkerInstance = new TesseractMainWorker(TessParams);
@@ -86,6 +89,7 @@ namespace Tesseract_UI_Tools
         private void MainForm_Closing(object sender, FormClosingEventArgs e)
         {
             TessParams.Save();
+            EmailParams.Save();
         }
 
         private void TrackBar_Scroll_Tooltip(object sender, EventArgs e)
@@ -173,6 +177,21 @@ namespace Tesseract_UI_Tools
             TesseractMainWorkerInstance.OpenReportsFolder();
         }
 
+        private void SendMail(string sub, string txt)
+        {
+            EmailUIParameters Params = new EmailUIParameters();
+            if (Params.EmailTo == "") return;
+            try{
+                var client = new System.Net.Mail.SmtpClient(Params.Host, Params.Port);
+                client.SendAsync(Params.EmailTo, Params.EmailTo, sub, txt, null);
+                client.SendCompleted += delegate { client.Dispose(); };
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+        }
+
         /* WORKER EVENTS */
         private void TesseractMainWorkerInstance_ProgressChanged(object? sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
@@ -185,6 +204,26 @@ namespace Tesseract_UI_Tools
         private void TesseractMainWorkerInstance_RunWorkerCompleted(object? sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             ToggleForm(true);
+
+            if( e.Cancelled)
+            {
+                // User cancelled
+            }
+            else if( e.Error != null )
+            {
+                System.Diagnostics.Debug.WriteLine("Error! " + e.Error.Message);
+                SendMail("OCR Error!", e.Error.Message);
+            }
+            else
+            {
+                SendMail("OCR Success!", $"No errors to report.");
+            }
+        }
+
+        private void OpenMailSettingsClick(object sender, EventArgs e)
+        {
+            var form = new MailSettingsForm(EmailParams);
+            form.ShowDialog();
         }
     }
 }
