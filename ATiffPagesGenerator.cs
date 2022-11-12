@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using System.Drawing.Imaging;
-using Tess = Tesseract;
 using PdfSharp.Pdf;
 using PdfSharp.Drawing;
 using System.Xml;

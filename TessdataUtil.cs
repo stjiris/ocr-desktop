@@ -41,10 +41,6 @@ namespace Tesseract_UI_Tools
             return string.Join("+", Languages);
         }
 
-        public static Tesseract.TesseractEngine CreateTesseractEngine(string[] Languages)
-        {
-            return new Tesseract.TesseractEngine(TessdataPath, LanguagesToString(Languages));
-        }
         public static OCRTesseract CreateOpenCvEngine(string[] Languages)
         {
             return OCRTesseract.Create(TessdataPath, LanguagesToString(Languages), ""); // Reset empty whitelist
