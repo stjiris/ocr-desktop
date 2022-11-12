@@ -23,7 +23,10 @@ namespace Tesseract_UI_Tools
                 writer.WriteLine($"Origin\tX1\tY1\tX2\tY2\tConfidence\tText");
                 for (int i = 0; i < Rects.Length; i++)
                 {
-                    writer.WriteLine($"{(Debug.Length > 0 ? Debug[i] : DebugString)}\t{Rects[i].TopLeft.X}\t{Rects[i].TopLeft.Y}\t{Rects[i].BottomRight.X}\t{Rects[i].BottomRight.Y}\t{Confidences[i]}\t{Components[i]}");
+                    if(Components[i].Trim() != "")
+                    {
+                        writer.WriteLine($"{(Debug.Length > 0 ? Debug[i] : DebugString)}\t{Rects[i].TopLeft.X}\t{Rects[i].TopLeft.Y}\t{Rects[i].BottomRight.X}\t{Rects[i].BottomRight.Y}\t{Confidences[i]}\t{Components[i]}");
+                    }
                 }
             }
         }
@@ -37,7 +40,10 @@ namespace Tesseract_UI_Tools
                 reader.ReadLine(); // Drop Header
                 while((CurrLine = reader.ReadLine()) != null)
                 {
-                    Lines.Add(CurrLine);
+                    if( CurrLine.Split('\t').Last().Trim() != "")
+                    {
+                        Lines.Add(CurrLine);
+                    }
                 }
             }
             OCROutput Output = new OCROutput();
