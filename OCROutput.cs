@@ -15,12 +15,12 @@ namespace Tesseract_UI_Tools
             DebugString = Debug;
         }
 
-        public void Save(string OutputFile)
+        public void Save(string OutputFile, string Extra="")
         {
             System.Diagnostics.Debug.Assert(Rects.Length == Components.Length && Components.Length == Confidences.Length);
             using( StreamWriter writer = new StreamWriter(OutputFile, false, System.Text.Encoding.UTF8 ))
             {
-                writer.WriteLine($"Origin\tX1\tY1\tX2\tY2\tConfidence\tText");
+                writer.WriteLine($"Origin\tX1\tY1\tX2\tY2\tConfidence\tText\t{Extra}");
                 for (int i = 0; i < Rects.Length; i++)
                 {
                     if(Components[i].Trim() != "")

@@ -3,11 +3,11 @@ using OpenCvSharp.Text;
 
 namespace Tesseract_UI_Tools.OcrStrategy
 {
-    public class PreprocessCombineOcrStartegy : AOcrStrategy
+    public class GaussianStrategy : AOcrStrategy
     {
-        public static string StrategyName = "Merge Plain & Preprocess";
+        public static string StrategyName = "Gaussian";
         private OCRTesseract OpenCvEngineInstance;
-        public PreprocessCombineOcrStartegy(string[] Languages) : base(Languages)
+        public GaussianStrategy(string[] Languages) : base(Languages)
         {
             OpenCvEngineInstance = TessdataUtil.CreateOpenCvEngine(Languages);
         }
@@ -20,11 +20,13 @@ namespace Tesseract_UI_Tools.OcrStrategy
 
         public override void GenerateTsv(string TiffPage, string TsvPage)
         {
-            OCROutput OcrOutput;
-
+            OCROutput OcrOut = new OCROutput(StrategyName);
+            var watch = new System.Diagnostics.Stopwatch();
             using (ResourcesTracker t = new ResourcesTracker())
             {
-                Mat TiffMat = t.T(Cv2.ImRead(TiffPage));
+                watch.Start();
+                Mat FullMat = t.T(Cv2.ImRead(TiffPage));
+                Mat TiffMat = t.T(FullMat.Resize(OpenCvSharp.Size.Zero, 0.5, 0.5));
                 Mat Gray;
                 switch (TiffMat.Channels())
                 {
@@ -40,10 +42,8 @@ namespace Tesseract_UI_Tools.OcrStrategy
                     default:
                         throw new Exception($"Cannot handle number of channels specified ({TiffMat.Channels()})");
                 }
-                OCROutput Plain = new OCROutput("Plain");
-                OpenCvEngineInstance.Run(Gray, out _, out Plain.Rects, out Plain.Components, out Plain.Confidences, ComponentLevels.Word);
                 Mat redn = t.T(Gray.GaussianBlur(new OpenCvSharp.Size(3, 3), 0));
-                Mat thre = t.T(redn.AdaptiveThreshold(255, AdaptiveThresholdTypes.GaussianC, ThresholdTypes.Binary, 17, 27));
+                Mat thre = t.T(redn.AdaptiveThreshold(255, AdaptiveThresholdTypes.GaussianC, ThresholdTypes.Binary, 13, 10));
                 Mat strcDilate = t.T(new Mat(3, 3, MatType.CV_8UC1, new int[] {
                     1,1,1,
                     1,0,1,
@@ -52,11 +52,16 @@ namespace Tesseract_UI_Tools.OcrStrategy
                 Mat strcErode = t.T(Cv2.GetStructuringElement(MorphShapes.Rect, new OpenCvSharp.Size(3, 3)));
                 Mat dilated = t.T(thre.Dilate(strcDilate)); // Open = Dilate + Erude; Close = Erude + Dilate
                 Mat eroded = t.T(dilated.Erode(strcErode));
-                OCROutput Prep = new OCROutput("Prep");
-                OpenCvEngineInstance.Run(eroded, out _, out Prep.Rects, out Prep.Components, out Prep.Confidences, ComponentLevels.Word);
-                OcrOutput = OCROutput.MergeBest(Plain, Prep);
+                OpenCvEngineInstance.Run(eroded, out _, out OcrOut.Rects, out OcrOut.Components, out OcrOut.Confidences, ComponentLevels.Word);
             }
-            OcrOutput.Save(TsvPage);
+
+            for (int i = 0; i < OcrOut.Rects.Length; i++)
+            {
+                Rect Curr = OcrOut.Rects[i];
+                OcrOut.Rects[i] = new Rect(Curr.X * 2, Curr.Y * 2, Curr.Width * 2, Curr.Height * 2);
+            }
+            watch.Stop();
+            OcrOut.Save(TsvPage, $"{watch.ElapsedMilliseconds}");
         }
     }
 }
