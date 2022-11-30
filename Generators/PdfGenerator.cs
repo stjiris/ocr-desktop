@@ -16,10 +16,7 @@ namespace Tesseract_UI_Tools.Generators
 
         public PdfGenerator(string FilePath) : base(FilePath){
             PdfDocument doc = PdfSharp.Pdf.IO.PdfReader.Open(FilePath);
-            if (doc.Tag != null && (string)doc.Tag == PDG_TAG)
-            {
-                CanRun = false;
-            }
+            CanRun = doc.Info.Creator != PDF_TAG;
             doc.Close();
         }
 

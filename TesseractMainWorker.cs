@@ -49,7 +49,7 @@ namespace Tesseract_UI_Tools
                 if (Generator == null || !Generator.CanRun ) continue;
 
                 string FileName = Path.GetFileNameWithoutExtension(CurrentFile);
-                string OutputFile = Path.Combine(Params.OutputFolder, $"{FileName}.dpi-{Params.Dpi}.qual-{Params.Quality}.{Params.Language}.{Params.MinimumConfidence}.{Params.Strategy}.pdf");
+                string OutputFile = Path.Combine(Params.OutputFolder, $"{FileName}.dpi-{Params.Dpi}.qual-{Params.Quality}.{Uri.EscapeDataString(Params.Language)}.{Params.MinimumConfidence}.{Params.Strategy}.pdf");
                 if (File.Exists(OutputFile) && !Params.Overwrite) continue;
                 
                 DirectoryInfo Tmp = Files.CreateSubdirectory(FileName);
@@ -69,7 +69,7 @@ namespace Tesseract_UI_Tools
                 Generator.GeneratePDF(Jpegs, Tsvs, Pages, OutputFile, Params.MinimumConfidence, SubProgress, this);
                 if (CancellationPending) break;
 
-                string ReportFile = Path.Combine(Reports.FullName, $"{FileName}.{Params.Language}.{Params.Strategy}.html");
+                string ReportFile = Path.Combine(Reports.FullName, $"{FileName}.{Uri.EscapeDataString(Params.Language)}.{Params.Strategy}.html");
                 Report($"Generating Report of {FileName}", 0);
                 Generator.GenerateReport(Tsvs, Pages, ReportFile);
 

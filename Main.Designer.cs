@@ -69,6 +69,7 @@
             this.emailUIParametersBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
+            this.ResetLangs = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.tesseractUIParametersBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.QualityTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DpiTrackBar)).BeginInit();
@@ -79,7 +80,7 @@
             // 
             // LanguagesCheckedListBox
             // 
-            this.LanguagesCheckedListBox.ColumnWidth = 150;
+            this.LanguagesCheckedListBox.ColumnWidth = 220;
             this.LanguagesCheckedListBox.FormattingEnabled = true;
             this.LanguagesCheckedListBox.Location = new System.Drawing.Point(12, 116);
             this.LanguagesCheckedListBox.MultiColumn = true;
@@ -464,11 +465,25 @@
             this.label17.Text = "(open email settings)";
             this.label17.Click += new System.EventHandler(this.OpenMailSettingsClick);
             // 
+            // ResetLangs
+            // 
+            this.ResetLangs.AutoSize = true;
+            this.ResetLangs.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ResetLangs.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.ResetLangs.ForeColor = System.Drawing.Color.Red;
+            this.ResetLangs.Location = new System.Drawing.Point(98, 94);
+            this.ResetLangs.Name = "ResetLangs";
+            this.ResetLangs.Size = new System.Drawing.Size(64, 17);
+            this.ResetLangs.TabIndex = 41;
+            this.ResetLangs.Text = "(deselect)";
+            this.ResetLangs.Click += new System.EventHandler(this.ResetLangs_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 624);
+            this.Controls.Add(this.ResetLangs);
             this.Controls.Add(this.label17);
             this.Controls.Add(this.label16);
             this.Controls.Add(this.mailBox);
@@ -559,5 +574,6 @@
         private Label label16;
         private TextBox mailBox;
         private BindingSource emailUIParametersBindingSource;
+        private Label ResetLangs;
     }
 }

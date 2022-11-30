@@ -12,7 +12,7 @@ namespace Tesseract_UI_Tools
     public abstract class ATiffPagesGenerator
     {
         public static string[] FORMATS = new string[] { };
-        public static readonly string PDG_TAG = "tesseract-ui-tools-generated";
+        public static readonly string PDF_TAG = "tesseract-ui-tools-generated";
 
         private EncoderParameters QualityEncoderParameters = new EncoderParameters(1);
         protected string FilePath;
@@ -35,7 +35,7 @@ namespace Tesseract_UI_Tools
         }
         public string TsvPage(int I, string Strat, string Languages)
         {
-            return $"{I}.{Strat}.{Languages}.tsv";
+            return $"{I}.{Strat}.{Uri.EscapeDataString(Languages)}.tsv";
         }
 
         public abstract string[] GenerateTIFFs(string FolderPath, bool Overwrite=false, IProgress<float>? Progress=null, BackgroundWorker? worker=null);
@@ -88,7 +88,6 @@ namespace Tesseract_UI_Tools
 
         public void GenerateReport(string[] Tsvs, string[] OriginalTiffs, string ReportFile)
         {
-            string Name = Path.GetFileNameWithoutExtension(ReportFile);
             using(StreamWriter writer = new StreamWriter(ReportFile))
             {
                 string ScriptSrc = File.ReadAllText(Path.Join(AppDomain.CurrentDomain.BaseDirectory, "plotly-2.14.0.min.js"));
@@ -135,7 +134,15 @@ namespace Tesseract_UI_Tools
         public void GeneratePDF(string[] Jpegs, string[] Tsvs, string[] OriginalTiffs, string OutputFile, float MinConf = 25, IProgress<float>? Progress = null, BackgroundWorker? worker = null)
         {
             PdfDocument doc = new();
-            doc.Tag = PDG_TAG;
+            doc.Info.Creator = PDF_TAG;
+            
+            doc.Options.FlateEncodeMode = PdfFlateEncodeMode.BestCompression;
+            doc.Options.UseFlateDecoderForJpegImages = PdfUseFlateDecoderForJpegImages.Automatic;
+            doc.Options.NoCompression = false;
+            // Defaults to false in debug build,
+            // so we set it to true.
+            doc.Options.CompressContentStreams = true;
+
             for (int i = 0; i < Jpegs.Length && (worker == null || !worker.CancellationPending); i++)
             {
                 if (Progress != null) Progress.Report((float)i / Jpegs.Length);

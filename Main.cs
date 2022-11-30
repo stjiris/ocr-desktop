@@ -41,7 +41,7 @@ namespace Tesseract_UI_Tools
                 string[] SelectedLangs = TessParams.GetLanguage();
                 for(int i = 0; i < LanguagesCheckedListBox.Items.Count; i++)
                 {
-                    if( SelectedLangs.Any( l => l == LanguagesCheckedListBox.Items[i].ToString() ) ){
+                    if( SelectedLangs.Any( l => TessdataUtil.Code2Lang(l) == LanguagesCheckedListBox.Items[i].ToString() ) ){
                         LanguagesCheckedListBox.SetItemChecked(i, true);   
                     }
                     else
@@ -51,20 +51,15 @@ namespace Tesseract_UI_Tools
 
                 }
             }
-            if( TessParams.Validate() || TesseractMainWorkerInstance != null)
-            {
-                StartStopBtn.Enabled = true;
-            }
-            else
-            {
-                StartStopBtn.Enabled = false;
-            }
+            StartStopBtn.Enabled = TessParams.Validate();
         }
 
         private async void MainForm_Load(object sender, EventArgs e)
         {
             string[] langs = await TessdataUtil.Setup();
-            langs.ToList().ForEach( lang => LanguagesCheckedListBox.Items.Add( lang, TessParams.GetLanguage().Any(l => l == lang) ) );
+            // some languages first
+            var L = new List<string>(new string[] {"eng","spa","fra","ara","chi_sim","rus"}).Concat(langs).ToList();
+            L.ForEach( lang => LanguagesCheckedListBox.Items.Add( TessdataUtil.Code2Lang(lang), TessParams.GetLanguage().Any(l => l == lang) ) );
             LanguagesCheckedListBox.ItemCheck += LanguagesCheckedListBox_ItemCheck;
         }
 
@@ -103,8 +98,8 @@ namespace Tesseract_UI_Tools
         {
             // This triggers BEFORE LanguagesCheckedListBox is updated there are workarounds with begin Invoke
             // TessParams also trigger this we need to prevent recursion.
-            string LangChanged = LanguagesCheckedListBox.Items[e.Index].ToString();
-            IEnumerable<string> CurrLangs = LanguagesCheckedListBox.CheckedItems.OfType<string>();
+            string LangChanged = TessdataUtil.Lang2Code(LanguagesCheckedListBox.Items[e.Index].ToString());
+            IEnumerable<string> CurrLangs = LanguagesCheckedListBox.CheckedItems.OfType<string>().Select(l => TessdataUtil.Lang2Code(l));
             if ( e.NewValue == CheckState.Checked && !TessParams.GetLanguage().Contains(LangChanged) )
             {
                 TessParams.SetLanguage(CurrLangs.Append(LangChanged).ToArray());
@@ -224,6 +219,11 @@ namespace Tesseract_UI_Tools
         {
             var form = new MailSettingsForm(EmailParams);
             form.ShowDialog();
+        }
+
+        private void ResetLangs_Click(object sender, EventArgs e)
+        {
+            TessParams.SetLanguage(new string[] { });
         }
     }
 }
