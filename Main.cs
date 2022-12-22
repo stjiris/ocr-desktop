@@ -1,5 +1,3 @@
-using System.Configuration;
-
 namespace Tesseract_UI_Tools
 {
     public partial class Main : Form
@@ -8,6 +6,11 @@ namespace Tesseract_UI_Tools
         private TesseractMainWorker TesseractMainWorkerInstance;
         private EmailUIParameters EmailParams = new EmailUIParameters();
 
+        /// <summary>
+        /// Initialize form
+        /// </summary>
+        /// Set binding sources for <see cref="TesseractUIParameters"/> and <see cref="EmailUIParameters"/> with UI and events
+        /// Get strategies <see cref="AOcrStrategy"/>
         public Main()
         {
             InitializeComponent();
@@ -34,6 +37,12 @@ namespace Tesseract_UI_Tools
             StartStopBtn.Enabled = TessParams.Validate();
         }
 
+        /// <summary>
+        /// Handle property changes of <seealso cref="TesseractUIParameters"/> to reflect them on the UI.
+        /// </summary>
+        /// Currently <see cref="TesseractUIParameters.Language"/> is represented as a <see cref="ListBox"/> on the UI. This handles that transformation
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TessParams_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if( e.PropertyName == "Language" )
@@ -54,6 +63,11 @@ namespace Tesseract_UI_Tools
             StartStopBtn.Enabled = TessParams.Validate();
         }
 
+        /// <summary>
+        /// Downloads if needed the tessdata folder.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void MainForm_Load(object sender, EventArgs e)
         {
             string[] langs = await TessdataUtil.Setup();
@@ -63,6 +77,11 @@ namespace Tesseract_UI_Tools
             LanguagesCheckedListBox.ItemCheck += LanguagesCheckedListBox_ItemCheck;
         }
 
+        /// <summary>
+        /// Select Input folder
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void InputFolderClick(object sender, EventArgs e)
         {
             DialogResult result = FolderBrowserDialogInput.ShowDialog();
@@ -72,6 +91,11 @@ namespace Tesseract_UI_Tools
             }
         }
 
+        /// <summary>
+        /// Select Output folder
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OutputFolderClick(object sender, EventArgs e)
         {
             DialogResult result = FolderBrowserDialogInput.ShowDialog();
@@ -81,19 +105,33 @@ namespace Tesseract_UI_Tools
             }
         }
 
+        /// <summary>
+        /// Save <see cref="TesseractUIParameters">TessParams</see> and <see cref="EmailUIParameters">EmailParams</see>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MainForm_Closing(object sender, FormClosingEventArgs e)
         {
             TessParams.Save();
             EmailParams.Save();
         }
 
+        /// <summary>
+        /// Display tooltip with units for the trackbars
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TrackBar_Scroll_Tooltip(object sender, EventArgs e)
         {
             TrackBar senderObj = (TrackBar)sender;
             ScrollTip.SetToolTip(senderObj, $"{senderObj.Tag} {senderObj.Value}");
         }
 
-
+        /// <summary>
+        /// Handle UI changes on the ListBox to reflect them on <seealso cref="TesseractUIParameters.Language"/>.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LanguagesCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             // This triggers BEFORE LanguagesCheckedListBox is updated there are workarounds with begin Invoke
@@ -111,17 +149,32 @@ namespace Tesseract_UI_Tools
             ToggleForm(true);
         }
 
+        /// <summary>
+        /// Handle UI changes on the SelectBox to reflect them on <seealso cref="TesseractUIParameters"/>.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StrategyBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (StrategyBox.SelectedItem == null) return;
             TessParams.Strategy = StrategyBox.SelectedItem.ToString();
         }
 
+        /// <summary>
+        /// Applies <seealso cref="System.Configuration.ApplicationSettingsBase.Reset"/> on <seealso cref="TesseractUIParameters"/>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ResetLabel_Click(object sender, EventArgs e)
         {
             TessParams.Reset();
         }
 
+        /// <summary>
+        /// Toggles <see cref="TesseractMainWorker"/> to run or stop
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StartStopBtn_Click(object sender, EventArgs e)
         {
             if (TesseractMainWorkerInstance.CancellationPending) return;
@@ -141,6 +194,10 @@ namespace Tesseract_UI_Tools
             }
         }
 
+        /// <summary>
+        /// Enables or disables the whole form.
+        /// </summary>
+        /// <param name="Enabled"></param>
         private void ToggleForm(bool Enabled)
         {
             ResetLabel.Enabled = Enabled;
@@ -167,11 +224,21 @@ namespace Tesseract_UI_Tools
             }
         }
 
+        /// <summary>
+        /// Starts a process to one the file explorer on the reports folder location. <see cref="TesseractMainWorker.OpenReportsFolder"/>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ReportsFolderLabel_Click(object sender, EventArgs e)
         {
             TesseractMainWorkerInstance.OpenReportsFolder();
         }
 
+        /// <summary>
+        /// Sends email using <see cref="EmailUIParameters"/> configuration.
+        /// </summary>
+        /// <param name="sub">Subject</param>
+        /// <param name="txt">Text to Send</param>
         private void SendMail(string sub, string txt)
         {
             EmailUIParameters Params = new EmailUIParameters();
@@ -188,6 +255,12 @@ namespace Tesseract_UI_Tools
         }
 
         /* WORKER EVENTS */
+        /// <summary>
+        /// Handle progess changes of <see cref="TesseractMainWorker"/> to reflect them on the UI.
+        /// Uses <see cref="TesseractMainWorkerProgressUserState"/>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TesseractMainWorkerInstance_ProgressChanged(object? sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
             if (e.UserState == null) return;
@@ -196,6 +269,12 @@ namespace Tesseract_UI_Tools
             StatusLabel.Text = State.Text;
             StatusProgressBar.Value = State.Value;
         }
+
+        /// <summary>
+        /// Handle work completed of <seealso cref="TesseractMainWorker"/>. Tries to send email with result.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TesseractMainWorkerInstance_RunWorkerCompleted(object? sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             ToggleForm(true);
@@ -215,12 +294,22 @@ namespace Tesseract_UI_Tools
             }
         }
 
+        /// <summary>
+        /// Shows new form to change <see cref="EmailUIParameters"/>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OpenMailSettingsClick(object sender, EventArgs e)
         {
             var form = new MailSettingsForm(EmailParams);
             form.ShowDialog();
         }
 
+        /// <summary>
+        /// Resets <see cref="TesseractUIParameters.Language"/>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ResetLangs_Click(object sender, EventArgs e)
         {
             TessParams.SetLanguage(new string[] { });

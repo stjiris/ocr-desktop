@@ -7,12 +7,17 @@ namespace Tesseract_UI_Tools
 {
     internal class TesseractMainWorker : BackgroundWorker
     {
+        // setup state and directories
         TesseractMainWorkerProgressUserState State = new TesseractMainWorkerProgressUserState("Initialized", 0);
         DirectoryInfo Files = Directory.CreateDirectory(Path.Combine(Application.UserAppDataPath, "Files"));
         DirectoryInfo Reports = Directory.CreateDirectory(Path.Combine(Application.UserAppDataPath, "Reports"));
         TesseractUIParameters Params;
         Progress<float> SubProgress = new Progress<float>();
 
+        /// <summary>
+        /// Initialize worker with access to <see cref="TesseractUIParameters"/>
+        /// </summary>
+        /// <param name="Params"></param>
         public TesseractMainWorker(TesseractUIParameters Params)
         {
             this.Params = Params;
@@ -27,13 +32,20 @@ namespace Tesseract_UI_Tools
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         }
 
+        /// <summary>
+        /// Open file explorer on <see cref="Reports"/> folder
+        /// </summary>
         public void OpenReportsFolder()
         {
             System.Diagnostics.Process.Start("explorer.exe", Reports.FullName);
         }
 
 
-
+        /// <summary>
+        /// Emit subprogress
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SubProgress_ProgressChanged(object? sender, float e)
         {
             Report((int)Math.Floor(e * 100));
@@ -49,7 +61,7 @@ namespace Tesseract_UI_Tools
                 if (Generator == null || !Generator.CanRun ) continue;
 
                 string FileName = Path.GetFileNameWithoutExtension(CurrentFile);
-                string OutputFile = Path.Combine(Params.OutputFolder, $"{FileName}.dpi-{Params.Dpi}.qual-{Params.Quality}.{Uri.EscapeDataString(Params.Language)}.{Params.MinimumConfidence}.{Params.Strategy}.pdf");
+                string OutputFile = Path.Combine(Params.OutputFolder, $"{FileName}.pdf");
                 if (File.Exists(OutputFile) && !Params.Overwrite) continue;
                 
                 DirectoryInfo Tmp = Files.CreateSubdirectory(FileName);
