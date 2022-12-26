@@ -278,20 +278,28 @@ namespace Tesseract_UI_Tools
         private void TesseractMainWorkerInstance_RunWorkerCompleted(object? sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             ToggleForm(true);
+            StatusProgressBar.Value = 0;
+            string report = "";
 
             if( e.Cancelled)
             {
-                // User cancelled
+                report = "User Cancelled";
+                
             }
             else if( e.Error != null )
             {
+                report = "Error: " + e.Error.Message;
                 System.Diagnostics.Debug.WriteLine("Error! " + e.Error.Message);
                 SendMail("OCR Error!", e.Error.Message);
+                MessageBox.Show(e.ToString(),"Error Information",MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
             else
             {
                 SendMail("OCR Success!", $"No errors to report.");
+                report = "Success";
             }
+            StatusLabel.Text = report;
+
         }
 
         /// <summary>

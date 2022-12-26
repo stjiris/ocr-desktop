@@ -38,7 +38,7 @@ namespace Tesseract_UI_Tools
 
         public static string LanguagesToString(string[] Languages)
         {
-            return string.Join("+", Languages);
+            return string.Join("+", Languages.Distinct() );
         }
 
         private static Dictionary<string, string> _code2lang = new Dictionary<string, string>()

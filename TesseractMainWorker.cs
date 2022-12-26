@@ -2,6 +2,7 @@
 using OpenCvSharp;
 using System.Drawing.Imaging;
 using Tesseract_UI_Tools.OcrStrategy;
+using System.Threading;
 
 namespace Tesseract_UI_Tools
 {
@@ -56,6 +57,7 @@ namespace Tesseract_UI_Tools
             Report("Reading Input Folder", 0);
             foreach (string CurrentFile in Directory.EnumerateFiles(Params.InputFolder))
             {
+                throw new Exception("Test");
                 if (CancellationPending) break;
                 ATiffPagesGenerator? Generator = TiffPagesGeneratorProvider.GetTiffPagesGenerator(CurrentFile);
                 if (Generator == null || !Generator.CanRun ) continue;
@@ -63,42 +65,42 @@ namespace Tesseract_UI_Tools
                 string FileName = Path.GetFileNameWithoutExtension(CurrentFile);
                 string OutputFile = Path.Combine(Params.OutputFolder, $"{FileName}.pdf");
                 if (File.Exists(OutputFile) && !Params.Overwrite) continue;
-                
-                DirectoryInfo Tmp = Files.CreateSubdirectory(FileName);
-                Report($"Spliting TIFFs of {FileName}", 0);
-                string[] Pages = Generator.GenerateTIFFs(Tmp.FullName, Params.Overwrite, SubProgress, this);
-                if (CancellationPending) break;
 
-                Report($"Creating JPEGs of {FileName}", 0);
-                string[] Jpegs = Generator.GenerateJPEGs(Pages, Tmp.FullName, Params.Dpi, Params.Quality, Params.Overwrite, SubProgress, this);
-                if (CancellationPending) break;
-
-                Report($"Creating HOCRs of {FileName}", 0);
-                string[] Tsvs = Generator.GenerateTsvs(Pages, Tmp.FullName, Params.GetLanguage(), Params.Strategy, Params.Overwrite, SubProgress, this);
-                if (CancellationPending) break;
-
-                Report($"Creating PDF of {FileName}", 0);
-                Generator.GeneratePDF(Jpegs, Tsvs, Pages, OutputFile, Params.MinimumConfidence, SubProgress, this);
-                if (CancellationPending) break;
-
-                string ReportFile = Path.Combine(Reports.FullName, $"{FileName}.{Uri.EscapeDataString(Params.Language)}.{Params.Strategy}.html");
-                Report($"Generating Report of {FileName}", 0);
-                Generator.GenerateReport(Tsvs, Pages, ReportFile);
-
-                if (Params.Clear && !CancellationPending)
+                CancellationTokenSource ctsrc = new CancellationTokenSource();
+                ctsrc.CancelAfter(10000);
+                Task running = new Task(() =>
                 {
-                    Tmp.Delete(true);
-                }
-            }
-            if (CancellationPending)
-            {
-                Report("Stopped", 0);
-            }
-            else
-            {
-                Report("Finnished", 0);
-            }
+                    DirectoryInfo Tmp = Files.CreateSubdirectory(FileName);
+                    Report($"Spliting TIFFs of {FileName}", 0);
+                    string[] Pages = Generator.GenerateTIFFs(Tmp.FullName, Params.Overwrite, SubProgress, this);
+                    if (CancellationPending) return;
 
+                    Report($"Creating JPEGs of {FileName}", 0);
+                    string[] Jpegs = Generator.GenerateJPEGs(Pages, Tmp.FullName, Params.Dpi, Params.Quality, Params.Overwrite, SubProgress, this);
+                    if (CancellationPending) return;
+
+                    Report($"Creating HOCRs of {FileName}", 0);
+                    string[] Tsvs = Generator.GenerateTsvs(Pages, Tmp.FullName, Params.GetLanguage(), Params.Strategy, Params.Overwrite, SubProgress, this);
+                    if (CancellationPending) return;
+
+                    Report($"Creating PDF of {FileName}", 0);
+                    Generator.GeneratePDF(Jpegs, Tsvs, Pages, OutputFile, Params.MinimumConfidence, SubProgress, this);
+                    if (CancellationPending) return;
+
+                    string ReportFile = Path.Combine(Reports.FullName, $"{FileName}.{Uri.EscapeDataString(Params.Language)}.{Params.Strategy}.html");
+                    Report($"Generating Report of {FileName}", 0);
+                    Generator.GenerateReport(Tsvs, Pages, ReportFile);
+
+                    if (Params.Clear && !CancellationPending)
+                    {
+                        Tmp.Delete(true);
+                    }
+                }, ctsrc.Token);
+
+                running.Wait();
+
+            }
+            Report("", 0);
         }
 
 

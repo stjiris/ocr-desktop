@@ -70,12 +70,18 @@
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.ResetLangs = new System.Windows.Forms.Label();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.tesseractUIParametersBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.QualityTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DpiTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinConfBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emailUIParametersBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
             this.SuspendLayout();
             // 
             // LanguagesCheckedListBox
@@ -184,7 +190,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(63, 335);
+            this.label6.Location = new System.Drawing.Point(63, 340);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(35, 20);
             this.label6.TabIndex = 0;
@@ -195,7 +201,7 @@
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label7.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label7.Location = new System.Drawing.Point(358, 338);
+            this.label7.Location = new System.Drawing.Point(358, 343);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(430, 17);
             this.label7.TabIndex = 0;
@@ -204,7 +210,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(39, 391);
+            this.label8.Location = new System.Drawing.Point(39, 398);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(59, 20);
             this.label8.TabIndex = 0;
@@ -215,20 +221,20 @@
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label9.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label9.Location = new System.Drawing.Point(349, 392);
+            this.label9.Location = new System.Drawing.Point(356, 401);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(439, 17);
+            this.label9.Size = new System.Drawing.Size(432, 17);
             this.label9.TabIndex = 0;
-            this.label9.Text = "(Affects the JPEG compression of each image. Minimum: 0 Maximum: 100)";
+            this.label9.Text = "(Affects the JPG compression of each image. Minimum: 0 Maximum: 100)";
             // 
             // QualityTrackBar
             // 
-            this.QualityTrackBar.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.tesseractUIParametersBindingSource, "Quality", true));
+            this.QualityTrackBar.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.tesseractUIParametersBindingSource, "Quality", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.QualityTrackBar.LargeChange = 10;
             this.QualityTrackBar.Location = new System.Drawing.Point(104, 391);
             this.QualityTrackBar.Maximum = 100;
             this.QualityTrackBar.Name = "QualityTrackBar";
-            this.QualityTrackBar.Size = new System.Drawing.Size(239, 53);
+            this.QualityTrackBar.Size = new System.Drawing.Size(176, 53);
             this.QualityTrackBar.SmallChange = 5;
             this.QualityTrackBar.TabIndex = 8;
             this.QualityTrackBar.Tag = "QUALITY";
@@ -241,13 +247,13 @@
             // 
             // DpiTrackBar
             // 
-            this.DpiTrackBar.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.tesseractUIParametersBindingSource, "Dpi", true));
+            this.DpiTrackBar.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.tesseractUIParametersBindingSource, "Dpi", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.DpiTrackBar.LargeChange = 20;
             this.DpiTrackBar.Location = new System.Drawing.Point(104, 332);
             this.DpiTrackBar.Maximum = 300;
             this.DpiTrackBar.Minimum = 70;
             this.DpiTrackBar.Name = "DpiTrackBar";
-            this.DpiTrackBar.Size = new System.Drawing.Size(239, 53);
+            this.DpiTrackBar.Size = new System.Drawing.Size(176, 53);
             this.DpiTrackBar.SmallChange = 5;
             this.DpiTrackBar.TabIndex = 7;
             this.DpiTrackBar.Tag = "DPI";
@@ -332,12 +338,12 @@
             // 
             // MinConfBar
             // 
-            this.MinConfBar.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.tesseractUIParametersBindingSource, "MinimumConfidence", true));
+            this.MinConfBar.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.tesseractUIParametersBindingSource, "MinimumConfidence", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.MinConfBar.LargeChange = 10;
             this.MinConfBar.Location = new System.Drawing.Point(104, 450);
             this.MinConfBar.Maximum = 100;
             this.MinConfBar.Name = "MinConfBar";
-            this.MinConfBar.Size = new System.Drawing.Size(239, 53);
+            this.MinConfBar.Size = new System.Drawing.Size(176, 53);
             this.MinConfBar.SmallChange = 5;
             this.MinConfBar.TabIndex = 9;
             this.MinConfBar.Tag = "MIN CONF";
@@ -353,7 +359,7 @@
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label11.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label11.Location = new System.Drawing.Point(383, 453);
+            this.label11.Location = new System.Drawing.Point(383, 463);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(405, 17);
             this.label11.TabIndex = 0;
@@ -362,7 +368,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(26, 450);
+            this.label12.Location = new System.Drawing.Point(26, 462);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(72, 20);
             this.label12.TabIndex = 0;
@@ -373,7 +379,7 @@
             this.ReportsFolderLabel.AutoSize = true;
             this.ReportsFolderLabel.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ReportsFolderLabel.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.ReportsFolderLabel.ForeColor = System.Drawing.Color.Gray;
+            this.ReportsFolderLabel.ForeColor = System.Drawing.SystemColors.Highlight;
             this.ReportsFolderLabel.Location = new System.Drawing.Point(560, 512);
             this.ReportsFolderLabel.Name = "ReportsFolderLabel";
             this.ReportsFolderLabel.Size = new System.Drawing.Size(132, 17);
@@ -404,7 +410,7 @@
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label14.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label14.Location = new System.Drawing.Point(548, 283);
+            this.label14.Location = new System.Drawing.Point(548, 277);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(240, 17);
             this.label14.TabIndex = 36;
@@ -456,8 +462,9 @@
             // label17
             // 
             this.label17.AutoSize = true;
+            this.label17.Cursor = System.Windows.Forms.Cursors.Hand;
             this.label17.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label17.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.label17.ForeColor = System.Drawing.SystemColors.Highlight;
             this.label17.Location = new System.Drawing.Point(562, 541);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(130, 17);
@@ -478,11 +485,63 @@
             this.ResetLangs.Text = "(deselect)";
             this.ResetLangs.Click += new System.EventHandler(this.ResetLangs_Click);
             // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.tesseractUIParametersBindingSource, "Dpi", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.numericUpDown1.Location = new System.Drawing.Point(286, 338);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Minimum = new decimal(new int[] {
+            70,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(66, 26);
+            this.numericUpDown1.TabIndex = 42;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDown2
+            // 
+            this.numericUpDown2.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.tesseractUIParametersBindingSource, "Quality", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.numericUpDown2.Location = new System.Drawing.Point(286, 396);
+            this.numericUpDown2.Name = "numericUpDown2";
+            this.numericUpDown2.Size = new System.Drawing.Size(66, 26);
+            this.numericUpDown2.TabIndex = 43;
+            this.numericUpDown2.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDown3
+            // 
+            this.numericUpDown3.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.tesseractUIParametersBindingSource, "MinimumConfidence", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.numericUpDown3.Location = new System.Drawing.Point(286, 460);
+            this.numericUpDown3.Name = "numericUpDown3";
+            this.numericUpDown3.Size = new System.Drawing.Size(66, 26);
+            this.numericUpDown3.TabIndex = 44;
+            this.numericUpDown3.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 624);
+            this.Controls.Add(this.numericUpDown3);
+            this.Controls.Add(this.numericUpDown2);
+            this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.ResetLangs);
             this.Controls.Add(this.label17);
             this.Controls.Add(this.label16);
@@ -528,6 +587,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.MinConfBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emailUIParametersBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -575,5 +637,8 @@
         private TextBox mailBox;
         private BindingSource emailUIParametersBindingSource;
         private Label ResetLangs;
+        private NumericUpDown numericUpDown1;
+        private NumericUpDown numericUpDown2;
+        private NumericUpDown numericUpDown3;
     }
 }
