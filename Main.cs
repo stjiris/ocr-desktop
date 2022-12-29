@@ -117,17 +117,6 @@ namespace Tesseract_UI_Tools
         }
 
         /// <summary>
-        /// Display tooltip with units for the trackbars
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void TrackBar_Scroll_Tooltip(object sender, EventArgs e)
-        {
-            TrackBar senderObj = (TrackBar)sender;
-            ScrollTip.SetToolTip(senderObj, $"{senderObj.Tag} {senderObj.Value}");
-        }
-
-        /// <summary>
         /// Handle UI changes on the ListBox to reflect them on <seealso cref="TesseractUIParameters.Language"/>.
         /// </summary>
         /// <param name="sender"></param>
@@ -238,14 +227,18 @@ namespace Tesseract_UI_Tools
         /// Sends email using <see cref="EmailUIParameters"/> configuration.
         /// </summary>
         /// <param name="sub">Subject</param>
-        /// <param name="txt">Text to Send</param>
-        private void SendMail(string sub, string txt)
+        /// <param name="txt">Text (with html) to Send</param>
+        private void SendMail(string sub, string htmlBody)
         {
             EmailUIParameters Params = new EmailUIParameters();
             if (Params.EmailTo == "") return;
             try{
                 var client = new System.Net.Mail.SmtpClient(Params.Host, Params.Port);
-                client.SendAsync(Params.EmailTo, Params.EmailTo, sub, txt, null);
+                var mail = new System.Net.Mail.MailMessage(Params.EmailTo, Params.EmailTo);
+                mail.IsBodyHtml = true;
+                mail.Body = htmlBody;
+                mail.Subject = sub;
+                client.SendAsync(mail,null);
                 client.SendCompleted += delegate { client.Dispose(); };
             }
             catch (Exception e)
@@ -290,13 +283,13 @@ namespace Tesseract_UI_Tools
             {
                 report = "Error: " + e.Error.Message;
                 System.Diagnostics.Debug.WriteLine("Error! " + e.Error.Message);
-                SendMail("OCR Error!", e.Error.Message);
-                MessageBox.Show(e.ToString(),"Error Information",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                SendMail("OCR Error", e.Error.Message);
+                MessageBox.Show(e.Error.ToString(),"Error Information",MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
             else
             {
-                SendMail("OCR Success!", $"No errors to report.");
-                report = "Success";
+                SendMail("OCR Report", File.ReadAllText(e.Result.ToString()));
+                report = "Terminated";
             }
             StatusLabel.Text = report;
 

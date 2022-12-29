@@ -86,8 +86,10 @@ namespace Tesseract_UI_Tools
             return TsvsPages;
         }
 
-        public void GenerateReport(string[] Tsvs, string[] OriginalTiffs, string ReportFile)
+        public float GenerateReport(string[] Tsvs, string[] OriginalTiffs, string ReportFile)
         {
+            float conf = 0;
+            float n = 0;
             using(StreamWriter writer = new StreamWriter(ReportFile))
             {
                 string ScriptSrc = File.ReadAllText(Path.Join(AppDomain.CurrentDomain.BaseDirectory, "plotly-2.14.0.min.js"));
@@ -111,6 +113,8 @@ namespace Tesseract_UI_Tools
                         }
                         OCROutput CurrOut = OCROutput.Load(Tsvs[i]);
                         writer.WriteLine($"<td data-confs='{string.Join(',', CurrOut.Confidences)}' data-origins='{string.Join(',', value: CurrOut.Debug)}'></td>");
+                        conf += CurrOut.Confidences.Sum();
+                        n += CurrOut.Confidences.Length;
                     }
                     writer.WriteLine($"</tr>");
                 }
@@ -129,10 +133,12 @@ namespace Tesseract_UI_Tools
                     "}"+
                     $"</script>");
             }
+            return conf / n;
         }
 
-        public void GeneratePDF(string[] Jpegs, string[] Tsvs, string[] OriginalTiffs, string OutputFile, float MinConf = 25, IProgress<float>? Progress = null, BackgroundWorker? worker = null)
+        public int GeneratePDF(string[] Jpegs, string[] Tsvs, string[] OriginalTiffs, string OutputFile, float MinConf = 25, bool DebugPDF = false, IProgress<float>? Progress = null, BackgroundWorker? worker = null)
         {
+            int n = 0;
             PdfDocument doc = new();
             doc.Info.Creator = PDF_TAG;
             
@@ -154,12 +160,13 @@ namespace Tesseract_UI_Tools
                     Page.Height = Jpeg.PixelHeight;
                     g.DrawImage(Jpeg, 0, 0, Jpeg.PixelWidth, Jpeg.PixelHeight);
                 }
-                PdfUtil.AddTextLayer(g, Tsvs[i], Jpegs[i], OriginalTiffs[i], MinConf);
+                n+= PdfUtil.AddTextLayer(g, Tsvs[i], Jpegs[i], OriginalTiffs[i], MinConf, DebugPDF);
             }
             if((worker == null || !worker.CancellationPending))
             {
                 doc.Save(OutputFile);
             }
+            return n;
         }
     }
 

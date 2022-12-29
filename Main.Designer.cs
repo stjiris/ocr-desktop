@@ -73,6 +73,7 @@
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.tesseractUIParametersBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.QualityTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DpiTrackBar)).BeginInit();
@@ -241,9 +242,6 @@
             this.QualityTrackBar.TickFrequency = 5;
             this.QualityTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.QualityTrackBar.Value = 100;
-            this.QualityTrackBar.Scroll += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
-            this.QualityTrackBar.Enter += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
-            this.QualityTrackBar.MouseHover += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
             // 
             // DpiTrackBar
             // 
@@ -260,9 +258,6 @@
             this.DpiTrackBar.TickFrequency = 5;
             this.DpiTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.DpiTrackBar.Value = 100;
-            this.DpiTrackBar.Scroll += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
-            this.DpiTrackBar.Enter += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
-            this.DpiTrackBar.MouseHover += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
             // 
             // OverwriteBox
             // 
@@ -350,9 +345,6 @@
             this.MinConfBar.TickFrequency = 5;
             this.MinConfBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.MinConfBar.Value = 25;
-            this.MinConfBar.Scroll += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
-            this.MinConfBar.Enter += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
-            this.MinConfBar.MouseHover += new System.EventHandler(this.TrackBar_Scroll_Tooltip);
             // 
             // label11
             // 
@@ -534,11 +526,23 @@
             0,
             0});
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.tesseractUIParametersBindingSource, "DebugPDF", true));
+            this.checkBox1.Location = new System.Drawing.Point(286, 509);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(133, 24);
+            this.checkBox1.TabIndex = 45;
+            this.checkBox1.Text = "Confidence PDF";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 624);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.numericUpDown3);
             this.Controls.Add(this.numericUpDown2);
             this.Controls.Add(this.numericUpDown1);
@@ -640,5 +644,6 @@
         private NumericUpDown numericUpDown1;
         private NumericUpDown numericUpDown2;
         private NumericUpDown numericUpDown3;
+        private CheckBox checkBox1;
     }
 }

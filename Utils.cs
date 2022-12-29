@@ -6,8 +6,9 @@ namespace Tesseract_UI_Tools
 {
     public static class PdfUtil
     {
-        public static void AddTextLayer(XGraphics g, string TsvPath, string Jpeg, string OriginalTiff, float MinConf = 25)
+        public static int AddTextLayer(XGraphics g, string TsvPath, string Jpeg, string OriginalTiff, float MinConf = 25, bool DebugPDF = false)
         {
+            int n = 0;
             float FinalRes = 1;
             float InitialRes = 1;
             using(Image JpegImage = Image.FromFile(Jpeg))
@@ -19,20 +20,37 @@ namespace Tesseract_UI_Tools
                 InitialRes = TiffImage.HorizontalResolution;
             }
             float Scale = FinalRes / InitialRes;
-            XBrush brush = new XSolidBrush(XColor.FromArgb(0, 0, 0, 0));
+            XBrush brush = !DebugPDF ? new XSolidBrush(XColor.FromArgb(0, 0, 0, 0)) : XBrushes.Black;
 
             OCROutput OcrObject = OCROutput.Load(TsvPath);
             for( int i= 0; i < OcrObject.Rects.Length; i++)
             {
-                if (OcrObject.Confidences[i] < MinConf) continue;
+                if (OcrObject.Confidences[i] < MinConf && !DebugPDF) continue;
+                n += 1;
                 float X1 = OcrObject.Rects[i].TopLeft.X * Scale;
                 float Y1 = OcrObject.Rects[i].TopLeft.Y * Scale;
                 float X2 = OcrObject.Rects[i].BottomRight.X * Scale;
                 float Y2 = OcrObject.Rects[i].BottomRight.Y * Scale;
-                var Watch = new System.Diagnostics.Stopwatch();
+                if( DebugPDF)
+                {
+                    float conf = OcrObject.Confidences[i];
+                    if( conf < 0.5)
+                    {
+                        g.DrawRectangle(new XSolidBrush(XColor.FromArgb(255, 255, 0, 0)), X1,Y1, X2-X1, Y2-Y1);
+                    }
+                    else if( conf < 0.75)
+                    {
+                        g.DrawRectangle(new XSolidBrush(XColor.FromArgb(255, 255, 255, 0)), X1, Y1, X2 - X1, Y2 - Y1);
+                    }
+                    else
+                    {
+                        g.DrawRectangle(new XSolidBrush(XColor.FromArgb(255, 0, 255, 0)), X1, Y1, X2 - X1, Y2 - Y1);
+                    }
+                }
                 XFont font = BestFont(g, OcrObject.Components[i], X2 - X1, Y2 - Y1);
                 g.DrawString(OcrObject.Components[i], font, brush, X1, Y1, XStringFormats.TopLeft);
             }
+            return n;
         }
         public static XFont BestFont(XGraphics g, string text, double width, double height)
         {

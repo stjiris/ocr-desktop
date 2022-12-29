@@ -54,25 +54,26 @@ namespace Tesseract_UI_Tools
 
         private void Start(object? sender, DoWorkEventArgs e)
         {
+            AdvancedReportTable report = new AdvancedReportTable(Reports.FullName, Params);
             Report("Reading Input Folder", 0);
             foreach (string CurrentFile in Directory.EnumerateFiles(Params.InputFolder))
             {
-                throw new Exception("Test");
-                if (CancellationPending) break;
-                ATiffPagesGenerator? Generator = TiffPagesGeneratorProvider.GetTiffPagesGenerator(CurrentFile);
-                if (Generator == null || !Generator.CanRun ) continue;
-
                 string FileName = Path.GetFileNameWithoutExtension(CurrentFile);
                 string OutputFile = Path.Combine(Params.OutputFolder, $"{FileName}.pdf");
-                if (File.Exists(OutputFile) && !Params.Overwrite) continue;
-
-                CancellationTokenSource ctsrc = new CancellationTokenSource();
-                ctsrc.CancelAfter(10000);
-                Task running = new Task(() =>
+                string ReportFile = Path.Combine(Reports.FullName, $"{FileName}.{Uri.EscapeDataString(Params.Language)}.{Params.Strategy}.html");
+                try
                 {
+                    if (CancellationPending) break;
+                    ATiffPagesGenerator? Generator = TiffPagesGeneratorProvider.GetTiffPagesGenerator(CurrentFile);
+                    if (Generator == null || !Generator.CanRun ) continue;
+
+                    if (File.Exists(OutputFile) && !Params.Overwrite) continue;
+
+                    report.StartFile(FileName);
                     DirectoryInfo Tmp = Files.CreateSubdirectory(FileName);
                     Report($"Spliting TIFFs of {FileName}", 0);
                     string[] Pages = Generator.GenerateTIFFs(Tmp.FullName, Params.Overwrite, SubProgress, this);
+                    report.Pages(Pages.Length);
                     if (CancellationPending) return;
 
                     Report($"Creating JPEGs of {FileName}", 0);
@@ -84,23 +85,29 @@ namespace Tesseract_UI_Tools
                     if (CancellationPending) return;
 
                     Report($"Creating PDF of {FileName}", 0);
-                    Generator.GeneratePDF(Jpegs, Tsvs, Pages, OutputFile, Params.MinimumConfidence, SubProgress, this);
+                    int words = Generator.GeneratePDF(Jpegs, Tsvs, Pages, OutputFile, Params.MinimumConfidence, Params.DebugPDF, SubProgress, this);
                     if (CancellationPending) return;
 
-                    string ReportFile = Path.Combine(Reports.FullName, $"{FileName}.{Uri.EscapeDataString(Params.Language)}.{Params.Strategy}.html");
+                    
+
                     Report($"Generating Report of {FileName}", 0);
-                    Generator.GenerateReport(Tsvs, Pages, ReportFile);
+                    float meanConf = Generator.GenerateReport(Tsvs, Pages, ReportFile);
+
+                    report.Stop(words, meanConf);
 
                     if (Params.Clear && !CancellationPending)
                     {
                         Tmp.Delete(true);
                     }
-                }, ctsrc.Token);
-
-                running.Wait();
-
+                }
+                catch (Exception ex)
+                {
+                    report.SetError(ex);
+                }
             }
+            report.Close();
             Report("", 0);
+            e.Result = report.FullPath;
         }
 
 
@@ -131,6 +138,7 @@ namespace Tesseract_UI_Tools
     {
         public string Text { get; internal set; }
         public int Value { get; internal set; }
+        public string ReportPath { get; internal set; }
 
         public TesseractMainWorkerProgressUserState(string text, int value)
         {
