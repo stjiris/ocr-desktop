@@ -86,6 +86,7 @@
             {
                 case AdvancedReportTableState.STARTED:
                     streamWriter.WriteLine($"<td>n/a</td>");
+                    state = AdvancedReportTableState.PAGEAWARE;
                     Stop(ex.ToString());
                     break;
                 case AdvancedReportTableState.PAGEAWARE:

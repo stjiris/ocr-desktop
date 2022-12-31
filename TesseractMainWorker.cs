@@ -88,8 +88,6 @@ namespace Tesseract_UI_Tools
                     int words = Generator.GeneratePDF(Jpegs, Tsvs, Pages, OutputFile, Params.MinimumConfidence, Params.DebugPDF, SubProgress, this);
                     if (CancellationPending) return;
 
-                    
-
                     Report($"Generating Report of {FileName}", 0);
                     float meanConf = Generator.GenerateReport(Tsvs, Pages, ReportFile);
 

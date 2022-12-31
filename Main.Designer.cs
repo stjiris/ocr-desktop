@@ -73,7 +73,7 @@
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.ConfidenceBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.tesseractUIParametersBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.QualityTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DpiTrackBar)).BeginInit();
@@ -93,7 +93,7 @@
             this.LanguagesCheckedListBox.MultiColumn = true;
             this.LanguagesCheckedListBox.Name = "LanguagesCheckedListBox";
             this.LanguagesCheckedListBox.Size = new System.Drawing.Size(776, 151);
-            this.LanguagesCheckedListBox.TabIndex = 5;
+            this.LanguagesCheckedListBox.TabIndex = 2;
             // 
             // InputFolderTextBox
             // 
@@ -102,7 +102,8 @@
             this.InputFolderTextBox.Name = "InputFolderTextBox";
             this.InputFolderTextBox.ReadOnly = true;
             this.InputFolderTextBox.Size = new System.Drawing.Size(583, 26);
-            this.InputFolderTextBox.TabIndex = 2;
+            this.InputFolderTextBox.TabIndex = 0;
+            this.InputFolderTextBox.TabStop = false;
             this.InputFolderTextBox.Click += new System.EventHandler(this.InputFolderClick);
             // 
             // tesseractUIParametersBindingSource
@@ -114,7 +115,7 @@
             this.InputFolderButton.Location = new System.Drawing.Point(12, 32);
             this.InputFolderButton.Name = "InputFolderButton";
             this.InputFolderButton.Size = new System.Drawing.Size(187, 26);
-            this.InputFolderButton.TabIndex = 1;
+            this.InputFolderButton.TabIndex = 0;
             this.InputFolderButton.Text = "Select Input Folder";
             this.InputFolderButton.UseVisualStyleBackColor = true;
             this.InputFolderButton.Click += new System.EventHandler(this.InputFolderClick);
@@ -124,7 +125,7 @@
             this.OutputFolderButton.Location = new System.Drawing.Point(12, 64);
             this.OutputFolderButton.Name = "OutputFolderButton";
             this.OutputFolderButton.Size = new System.Drawing.Size(187, 26);
-            this.OutputFolderButton.TabIndex = 3;
+            this.OutputFolderButton.TabIndex = 1;
             this.OutputFolderButton.Text = "Select Output Folder";
             this.OutputFolderButton.UseVisualStyleBackColor = true;
             this.OutputFolderButton.Click += new System.EventHandler(this.OutputFolderClick);
@@ -136,7 +137,8 @@
             this.OutputFolderTextBox.Name = "OutputFolderTextBox";
             this.OutputFolderTextBox.ReadOnly = true;
             this.OutputFolderTextBox.Size = new System.Drawing.Size(583, 26);
-            this.OutputFolderTextBox.TabIndex = 4;
+            this.OutputFolderTextBox.TabIndex = 0;
+            this.OutputFolderTextBox.TabStop = false;
             this.OutputFolderTextBox.Click += new System.EventHandler(this.OutputFolderClick);
             // 
             // label1
@@ -237,7 +239,7 @@
             this.QualityTrackBar.Name = "QualityTrackBar";
             this.QualityTrackBar.Size = new System.Drawing.Size(176, 53);
             this.QualityTrackBar.SmallChange = 5;
-            this.QualityTrackBar.TabIndex = 8;
+            this.QualityTrackBar.TabIndex = 5;
             this.QualityTrackBar.Tag = "QUALITY";
             this.QualityTrackBar.TickFrequency = 5;
             this.QualityTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
@@ -253,7 +255,7 @@
             this.DpiTrackBar.Name = "DpiTrackBar";
             this.DpiTrackBar.Size = new System.Drawing.Size(176, 53);
             this.DpiTrackBar.SmallChange = 5;
-            this.DpiTrackBar.TabIndex = 7;
+            this.DpiTrackBar.TabIndex = 4;
             this.DpiTrackBar.Tag = "DPI";
             this.DpiTrackBar.TickFrequency = 5;
             this.DpiTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
@@ -266,7 +268,7 @@
             this.OverwriteBox.Location = new System.Drawing.Point(12, 509);
             this.OverwriteBox.Name = "OverwriteBox";
             this.OverwriteBox.Size = new System.Drawing.Size(92, 24);
-            this.OverwriteBox.TabIndex = 10;
+            this.OverwriteBox.TabIndex = 7;
             this.OverwriteBox.Text = "Overwrite";
             this.OverwriteBox.UseVisualStyleBackColor = true;
             // 
@@ -277,7 +279,7 @@
             this.ClearBox.Location = new System.Drawing.Point(110, 509);
             this.ClearBox.Name = "ClearBox";
             this.ClearBox.Size = new System.Drawing.Size(170, 24);
-            this.ClearBox.TabIndex = 11;
+            this.ClearBox.TabIndex = 8;
             this.ClearBox.Text = "Clear Temporary Files";
             this.ClearBox.UseVisualStyleBackColor = true;
             // 
@@ -286,7 +288,7 @@
             this.StartStopBtn.Location = new System.Drawing.Point(698, 506);
             this.StartStopBtn.Name = "StartStopBtn";
             this.StartStopBtn.Size = new System.Drawing.Size(90, 28);
-            this.StartStopBtn.TabIndex = 12;
+            this.StartStopBtn.TabIndex = 11;
             this.StartStopBtn.Text = "Start";
             this.StartStopBtn.UseVisualStyleBackColor = true;
             this.StartStopBtn.Click += new System.EventHandler(this.StartStopBtn_Click);
@@ -315,7 +317,7 @@
             this.StatusLabel.Location = new System.Drawing.Point(63, 562);
             this.StatusLabel.Name = "StatusLabel";
             this.StatusLabel.Size = new System.Drawing.Size(65, 17);
-            this.StatusLabel.TabIndex = 32;
+            this.StatusLabel.TabIndex = 0;
             this.StatusLabel.Text = "Initializing";
             // 
             // ResetLabel
@@ -327,7 +329,7 @@
             this.ResetLabel.Location = new System.Drawing.Point(695, 10);
             this.ResetLabel.Name = "ResetLabel";
             this.ResetLabel.Size = new System.Drawing.Size(93, 17);
-            this.ResetLabel.TabIndex = 12;
+            this.ResetLabel.TabIndex = 0;
             this.ResetLabel.Text = "(reset params)";
             this.ResetLabel.Click += new System.EventHandler(this.ResetLabel_Click);
             // 
@@ -340,7 +342,7 @@
             this.MinConfBar.Name = "MinConfBar";
             this.MinConfBar.Size = new System.Drawing.Size(176, 53);
             this.MinConfBar.SmallChange = 5;
-            this.MinConfBar.TabIndex = 9;
+            this.MinConfBar.TabIndex = 6;
             this.MinConfBar.Tag = "MIN CONF";
             this.MinConfBar.TickFrequency = 5;
             this.MinConfBar.TickStyle = System.Windows.Forms.TickStyle.Both;
@@ -375,7 +377,7 @@
             this.ReportsFolderLabel.Location = new System.Drawing.Point(560, 512);
             this.ReportsFolderLabel.Name = "ReportsFolderLabel";
             this.ReportsFolderLabel.Size = new System.Drawing.Size(132, 17);
-            this.ReportsFolderLabel.TabIndex = 33;
+            this.ReportsFolderLabel.TabIndex = 0;
             this.ReportsFolderLabel.Text = "(open reports folder)";
             this.ReportsFolderLabel.Click += new System.EventHandler(this.ReportsFolderLabel_Click);
             // 
@@ -385,7 +387,7 @@
             this.StrategyBox.Location = new System.Drawing.Point(179, 273);
             this.StrategyBox.Name = "StrategyBox";
             this.StrategyBox.Size = new System.Drawing.Size(187, 27);
-            this.StrategyBox.TabIndex = 6;
+            this.StrategyBox.TabIndex = 3;
             this.StrategyBox.SelectedIndexChanged += new System.EventHandler(this.StrategyBox_SelectedIndexChanged);
             // 
             // label13
@@ -394,7 +396,7 @@
             this.label13.Location = new System.Drawing.Point(12, 276);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(161, 20);
-            this.label13.TabIndex = 35;
+            this.label13.TabIndex = 0;
             this.label13.Text = "Preprocessing strategy:";
             // 
             // label14
@@ -405,7 +407,7 @@
             this.label14.Location = new System.Drawing.Point(548, 277);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(240, 17);
-            this.label14.TabIndex = 36;
+            this.label14.TabIndex = 0;
             this.label14.Text = "(Select preprocessing strategy for OCR)";
             // 
             // label15
@@ -415,7 +417,7 @@
             this.label15.Location = new System.Drawing.Point(560, 93);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(58, 20);
-            this.label15.TabIndex = 37;
+            this.label15.TabIndex = 0;
             this.label15.Text = "label15";
             // 
             // NotifyIconSucess
@@ -436,7 +438,7 @@
             this.mailBox.Location = new System.Drawing.Point(110, 535);
             this.mailBox.Name = "mailBox";
             this.mailBox.Size = new System.Drawing.Size(446, 26);
-            this.mailBox.TabIndex = 38;
+            this.mailBox.TabIndex = 10;
             // 
             // emailUIParametersBindingSource
             // 
@@ -448,7 +450,7 @@
             this.label16.Location = new System.Drawing.Point(10, 538);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(94, 20);
-            this.label16.TabIndex = 39;
+            this.label16.TabIndex = 0;
             this.label16.Text = "Notify Email:";
             // 
             // label17
@@ -460,7 +462,7 @@
             this.label17.Location = new System.Drawing.Point(562, 541);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(130, 17);
-            this.label17.TabIndex = 40;
+            this.label17.TabIndex = 0;
             this.label17.Text = "(open email settings)";
             this.label17.Click += new System.EventHandler(this.OpenMailSettingsClick);
             // 
@@ -473,7 +475,7 @@
             this.ResetLangs.Location = new System.Drawing.Point(98, 94);
             this.ResetLangs.Name = "ResetLangs";
             this.ResetLangs.Size = new System.Drawing.Size(64, 17);
-            this.ResetLangs.TabIndex = 41;
+            this.ResetLangs.TabIndex = 0;
             this.ResetLangs.Text = "(deselect)";
             this.ResetLangs.Click += new System.EventHandler(this.ResetLangs_Click);
             // 
@@ -493,7 +495,8 @@
             0});
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(66, 26);
-            this.numericUpDown1.TabIndex = 42;
+            this.numericUpDown1.TabIndex = 5;
+            this.numericUpDown1.TabStop = false;
             this.numericUpDown1.Value = new decimal(new int[] {
             100,
             0,
@@ -506,7 +509,8 @@
             this.numericUpDown2.Location = new System.Drawing.Point(286, 396);
             this.numericUpDown2.Name = "numericUpDown2";
             this.numericUpDown2.Size = new System.Drawing.Size(66, 26);
-            this.numericUpDown2.TabIndex = 43;
+            this.numericUpDown2.TabIndex = 6;
+            this.numericUpDown2.TabStop = false;
             this.numericUpDown2.Value = new decimal(new int[] {
             100,
             0,
@@ -519,30 +523,31 @@
             this.numericUpDown3.Location = new System.Drawing.Point(286, 460);
             this.numericUpDown3.Name = "numericUpDown3";
             this.numericUpDown3.Size = new System.Drawing.Size(66, 26);
-            this.numericUpDown3.TabIndex = 44;
+            this.numericUpDown3.TabIndex = 7;
+            this.numericUpDown3.TabStop = false;
             this.numericUpDown3.Value = new decimal(new int[] {
             100,
             0,
             0,
             0});
             // 
-            // checkBox1
+            // ConfidenceBox
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.tesseractUIParametersBindingSource, "DebugPDF", true));
-            this.checkBox1.Location = new System.Drawing.Point(286, 509);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(133, 24);
-            this.checkBox1.TabIndex = 45;
-            this.checkBox1.Text = "Confidence PDF";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.ConfidenceBox.AutoSize = true;
+            this.ConfidenceBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.tesseractUIParametersBindingSource, "DebugPDF", true));
+            this.ConfidenceBox.Location = new System.Drawing.Point(286, 509);
+            this.ConfidenceBox.Name = "ConfidenceBox";
+            this.ConfidenceBox.Size = new System.Drawing.Size(133, 24);
+            this.ConfidenceBox.TabIndex = 9;
+            this.ConfidenceBox.Text = "Confidence PDF";
+            this.ConfidenceBox.UseVisualStyleBackColor = true;
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 624);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.ConfidenceBox);
             this.Controls.Add(this.numericUpDown3);
             this.Controls.Add(this.numericUpDown2);
             this.Controls.Add(this.numericUpDown1);
@@ -582,7 +587,7 @@
             this.Controls.Add(this.InputFolderTextBox);
             this.Controls.Add(this.LanguagesCheckedListBox);
             this.Name = "Main";
-            this.Text = "Tesseract UI";
+            this.Text = "0";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_Closing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.tesseractUIParametersBindingSource)).EndInit();
@@ -645,5 +650,6 @@
         private NumericUpDown numericUpDown2;
         private NumericUpDown numericUpDown3;
         private CheckBox checkBox1;
+        private CheckBox ConfidenceBox;
     }
 }
