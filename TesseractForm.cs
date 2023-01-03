@@ -1,30 +1,25 @@
 namespace Tesseract_UI_Tools
 {
-    public partial class Main : Form
+    public partial class TesseractForm : Form
     {
-        private TesseractUIParameters TessParams = new TesseractUIParameters();
-        private TesseractMainWorker TesseractMainWorkerInstance;
-        private EmailUIParameters EmailParams = new EmailUIParameters();
-
+        public TesseractUIParameters TessParams {
+            get;
+            private set;
+        } = new TesseractUIParameters();
         /// <summary>
         /// Initialize form
         /// </summary>
-        /// Set binding sources for <see cref="TesseractUIParameters"/> and <see cref="EmailUIParameters"/> with UI and events
+        /// Set binding sources for <see cref="TesseractUIParameters"/> with UI and events
         /// Get strategies <see cref="AOcrStrategy"/>
-        public Main()
+        public TesseractForm()
         {
             InitializeComponent();
+            DialogResult = DialogResult.Cancel;
 
             TessParams.PropertyChanged += TessParams_PropertyChanged;
-            emailUIParametersBindingSource.DataSource = EmailParams;
             tesseractUIParametersBindingSource.DataSource = TessParams;
 
-            TesseractMainWorkerInstance = new TesseractMainWorker(TessParams);
-            TesseractMainWorkerInstance.RunWorkerCompleted += TesseractMainWorkerInstance_RunWorkerCompleted;
-            TesseractMainWorkerInstance.ProgressChanged += TesseractMainWorkerInstance_ProgressChanged;
-
-            TesseractMainWorkerInstance.Report();
-
+            StrategyBox.Items.Add("");
             foreach( string Strat in AOcrStrategy.Strategies())
             {
                 StrategyBox.Items.Add(Strat);
@@ -34,7 +29,7 @@ namespace Tesseract_UI_Tools
                 }
             }
 
-            StartStopBtn.Enabled = TessParams.Validate();
+            ConfirmBtn.Enabled = TessParams.Validate();
         }
 
         /// <summary>
@@ -60,7 +55,7 @@ namespace Tesseract_UI_Tools
 
                 }
             }
-            StartStopBtn.Enabled = TessParams.Validate();
+            ConfirmBtn.Enabled = TessParams.Validate();
         }
 
         /// <summary>
@@ -106,17 +101,6 @@ namespace Tesseract_UI_Tools
         }
 
         /// <summary>
-        /// Save <see cref="TesseractUIParameters">TessParams</see> and <see cref="EmailUIParameters">EmailParams</see>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MainForm_Closing(object sender, FormClosingEventArgs e)
-        {
-            TessParams.Save();
-            EmailParams.Save();
-        }
-
-        /// <summary>
         /// Handle UI changes on the ListBox to reflect them on <seealso cref="TesseractUIParameters.Language"/>.
         /// </summary>
         /// <param name="sender"></param>
@@ -159,28 +143,15 @@ namespace Tesseract_UI_Tools
             TessParams.Reset();
         }
 
-        /// <summary>
-        /// Toggles <see cref="TesseractMainWorker"/> to run or stop
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void StartStopBtn_Click(object sender, EventArgs e)
+        private void ConfirmBtn_Click(object sender, EventArgs e)
         {
-            if (TesseractMainWorkerInstance.CancellationPending) return;
-            if( TesseractMainWorkerInstance.IsBusy)
-            {
-                DialogResult Result = MessageBox.Show("Are you sure you want to Stop the process ?\nNote: Tesseract might take some time to exit.", "Stopping Tesseract", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-                if( Result == DialogResult.OK)
-                {
-                    TesseractMainWorkerInstance.CancelAsync();
-                    StartStopBtn.Enabled = false;
-                }
-            }
-            else
-            {
-                TesseractMainWorkerInstance.RunWorkerAsync();
-                ToggleForm(false);
-            }
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+        private void CancelBtn_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         /// <summary>
@@ -204,107 +175,8 @@ namespace Tesseract_UI_Tools
             ConfidenceBox.Enabled = Enabled;
             if( Enabled)
             {
-                StartStopBtn.Text = "Start";
-                StartStopBtn.Enabled = TessParams.Validate();
+                ConfirmBtn.Enabled = TessParams.Validate();
             }
-            else
-            {
-                StartStopBtn.Text = "Stop";
-                StartStopBtn.Enabled = true;
-            }
-        }
-
-        /// <summary>
-        /// Starts a process to one the file explorer on the reports folder location. <see cref="TesseractMainWorker.OpenReportsFolder"/>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ReportsFolderLabel_Click(object sender, EventArgs e)
-        {
-            TesseractMainWorkerInstance.OpenReportsFolder();
-        }
-
-        /// <summary>
-        /// Sends email using <see cref="EmailUIParameters"/> configuration.
-        /// </summary>
-        /// <param name="sub">Subject</param>
-        /// <param name="txt">Text (with html) to Send</param>
-        private void SendMail(string sub, string htmlBody)
-        {
-            EmailUIParameters Params = new EmailUIParameters();
-            if (Params.EmailTo == "") return;
-            try{
-                var client = new System.Net.Mail.SmtpClient(Params.Host, Params.Port);
-                var mail = new System.Net.Mail.MailMessage(Params.EmailTo, Params.EmailTo);
-                mail.IsBodyHtml = true;
-                mail.Body = htmlBody;
-                mail.Subject = sub;
-                client.SendAsync(mail,null);
-                client.SendCompleted += delegate { client.Dispose(); };
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.ToString());
-            }
-        }
-
-        /* WORKER EVENTS */
-        /// <summary>
-        /// Handle progess changes of <see cref="TesseractMainWorker"/> to reflect them on the UI.
-        /// Uses <see cref="TesseractMainWorkerProgressUserState"/>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void TesseractMainWorkerInstance_ProgressChanged(object? sender, System.ComponentModel.ProgressChangedEventArgs e)
-        {
-            if (e.UserState == null) return;
-
-            TesseractMainWorkerProgressUserState State = (TesseractMainWorkerProgressUserState)e.UserState;
-            StatusLabel.Text = State.Text;
-            StatusProgressBar.Value = State.Value;
-        }
-
-        /// <summary>
-        /// Handle work completed of <seealso cref="TesseractMainWorker"/>. Tries to send email with result.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void TesseractMainWorkerInstance_RunWorkerCompleted(object? sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
-        {
-            ToggleForm(true);
-            StatusProgressBar.Value = 0;
-            string report = "";
-
-            if( e.Cancelled)
-            {
-                report = "User Cancelled";
-                
-            }
-            else if( e.Error != null )
-            {
-                report = "Error: " + e.Error.Message;
-                System.Diagnostics.Debug.WriteLine("Error! " + e.Error.Message);
-                SendMail("OCR Error", e.Error.Message);
-                MessageBox.Show(e.Error.ToString(),"Error Information",MessageBoxButtons.OK,MessageBoxIcon.Error);
-            }
-            else
-            {
-                SendMail("OCR Report", File.ReadAllText(e.Result.ToString()));
-                report = "Terminated";
-            }
-            StatusLabel.Text = report;
-
-        }
-
-        /// <summary>
-        /// Shows new form to change <see cref="EmailUIParameters"/>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OpenMailSettingsClick(object sender, EventArgs e)
-        {
-            var form = new MailSettingsForm(EmailParams);
-            form.ShowDialog();
         }
 
         /// <summary>

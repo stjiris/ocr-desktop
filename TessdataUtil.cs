@@ -1,6 +1,7 @@
 ﻿using System.IO.Compression;
 using OpenCvSharp.Text;
 using System.Configuration;
+using System.ComponentModel;
 
 namespace Tesseract_UI_Tools
 {
@@ -198,86 +199,92 @@ namespace Tesseract_UI_Tools
         }
     }
 
-    public class TesseractUIParameters : ApplicationSettingsBase
+    public class TesseractUIParameters : INotifyPropertyChanged
     {
-        [UserScopedSettingAttribute()]
-        [DefaultSettingValue("")]
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private Dictionary<string, object> keyPair = new Dictionary<string, object>();
+        private object this[string prop]
+        {
+            get => keyPair[prop];
+            set {
+                if (keyPair.ContainsKey(prop) && EqualityComparer<object>.Default.Equals(keyPair[prop], value)) return;
+                keyPair[prop] = value;
+                if( PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs(prop));
+                }
+            }
+        }
+        public TesseractUIParameters()
+        {
+            Reset();
+        }
+
+        public void Reset()
+        {
+            InputFolder = "";
+            OutputFolder = "";
+            Language = "eng";
+            Dpi = 100;
+            Quality = 100;
+            MinimumConfidence = 25;
+            Overwrite = false;
+            Clear = false;
+            DebugPDF = false;
+            Strategy = "";
+        }
+
         public string InputFolder
         {
             get { return (string)this["InputFolder"]; }
             set { this["InputFolder"] = value; }
         }
-
-        [UserScopedSettingAttribute()]
-        [DefaultSettingValue("")]
         public string OutputFolder
         {
             get { return (string)this["OutputFolder"]; }
             set { this["OutputFolder"] = value; }
         }
-
-        [UserScopedSettingAttribute()]
-        [DefaultSettingValue("eng")]
         public string Language
         {
             get { return (string)this["Language"]; }
             set { this["Language"] = value; }
         }
-        [UserScopedSettingAttribute()]
-        [DefaultSettingValue("100")]
         public int Dpi
         {
             get { return (int)this["Dpi"]; }
             set { this["Dpi"] = value; }
         }
-        [UserScopedSettingAttribute()]
-        [DefaultSettingValue("100")]
         public int Quality
         {
             get { return (int)this["Quality"]; }
             set { this["Quality"] = value; }
         }
-
-        [UserScopedSettingAttribute()]
-        [DefaultSettingValue("false")]
         public bool Overwrite
         {
             get { return (bool)this["Overwrite"]; }
             set { this["Overwrite"] = value; }
         }
-
-        [UserScopedSettingAttribute()]
-        [DefaultSettingValue("false")]
         public bool Clear
         {
             get { return (bool)this["Clear"]; }
             set { this["Clear"] = value; }
         }
-
-        [UserScopedSettingAttribute()]
-        [DefaultSettingValue("25")]
         public float MinimumConfidence
         {
             get { return (float)this["MinimumConfidence"]; }
             set { this["MinimumConfidence"] = value; }
         }
-
-        [UserScopedSettingAttribute()]
-        [DefaultSettingValue("Plain")]
         public string Strategy
         {
             get { return (string)this["Strategy"]; }
             set { this["Strategy"] = value; }
         }
-
-        [UserScopedSettingAttribute()]
-        [DefaultSettingValue("false")]
         public bool DebugPDF
         {
             get { return (bool)this["DebugPDF"]; }
             set { this["DebugPDF"] = value; }
         }
-
         public void SetLanguage(string[] Languages)
         {
             Language = TessdataUtil.LanguagesToString(Languages);
@@ -294,9 +301,15 @@ namespace Tesseract_UI_Tools
                 Directory.Exists(InputFolder) &&
                 Directory.Exists(OutputFolder) &&
                 Language != string.Empty &&
+                Strategy != string.Empty &&
                 Dpi >= 70 && Dpi <= 300 &&
                 Quality >= 0 && Quality <= 100 &&
                 Language.Length > 0;
+        }
+
+        public override string ToString()
+        {
+            return System.Text.Json.JsonSerializer.Serialize(keyPair);
         }
     }
 }

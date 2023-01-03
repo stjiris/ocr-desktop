@@ -1,6 +1,6 @@
 ﻿namespace Tesseract_UI_Tools
 {
-    partial class Main
+    partial class TesseractForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -40,9 +40,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
+            this.outputParamsLeftLbl = new System.Windows.Forms.Label();
+            this.dpiLeftLbl = new System.Windows.Forms.Label();
+            this.dpiRightLbl = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.QualityTrackBar = new System.Windows.Forms.TrackBar();
@@ -50,36 +50,25 @@
             this.ScrollTip = new System.Windows.Forms.ToolTip(this.components);
             this.OverwriteBox = new System.Windows.Forms.CheckBox();
             this.ClearBox = new System.Windows.Forms.CheckBox();
-            this.StartStopBtn = new System.Windows.Forms.Button();
-            this.StatusProgressBar = new System.Windows.Forms.ProgressBar();
-            this.label10 = new System.Windows.Forms.Label();
-            this.StatusLabel = new System.Windows.Forms.Label();
+            this.ConfirmBtn = new System.Windows.Forms.Button();
             this.ResetLabel = new System.Windows.Forms.Label();
             this.MinConfBar = new System.Windows.Forms.TrackBar();
             this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.ReportsFolderLabel = new System.Windows.Forms.Label();
+            this.minConfLeftLbl = new System.Windows.Forms.Label();
             this.StrategyBox = new System.Windows.Forms.ComboBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
+            this.preproStratLeftLbl = new System.Windows.Forms.Label();
+            this.preproStratRightLbl = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
-            this.NotifyIconSucess = new System.Windows.Forms.NotifyIcon(this.components);
-            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.mailBox = new System.Windows.Forms.TextBox();
-            this.emailUIParametersBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.label16 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
             this.ResetLangs = new System.Windows.Forms.Label();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
             this.ConfidenceBox = new System.Windows.Forms.CheckBox();
+            this.cancelBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.tesseractUIParametersBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.QualityTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DpiTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinConfBar)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emailUIParametersBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
@@ -181,34 +170,34 @@
             this.label4.TabIndex = 0;
             this.label4.Text = "(Select one or more languages that your files may contain)";
             // 
-            // label5
+            // outputParamsLeftLbl
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 309);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(132, 20);
-            this.label5.TabIndex = 0;
-            this.label5.Text = "Output Parameters";
+            this.outputParamsLeftLbl.AutoSize = true;
+            this.outputParamsLeftLbl.Location = new System.Drawing.Point(12, 309);
+            this.outputParamsLeftLbl.Name = "outputParamsLeftLbl";
+            this.outputParamsLeftLbl.Size = new System.Drawing.Size(132, 20);
+            this.outputParamsLeftLbl.TabIndex = 0;
+            this.outputParamsLeftLbl.Text = "Output Parameters";
             // 
-            // label6
+            // dpiLeftLbl
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(63, 340);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(35, 20);
-            this.label6.TabIndex = 0;
-            this.label6.Text = "DPI:";
+            this.dpiLeftLbl.AutoSize = true;
+            this.dpiLeftLbl.Location = new System.Drawing.Point(63, 340);
+            this.dpiLeftLbl.Name = "dpiLeftLbl";
+            this.dpiLeftLbl.Size = new System.Drawing.Size(35, 20);
+            this.dpiLeftLbl.TabIndex = 0;
+            this.dpiLeftLbl.Text = "DPI:";
             // 
-            // label7
+            // dpiRightLbl
             // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label7.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label7.Location = new System.Drawing.Point(358, 343);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(430, 17);
-            this.label7.TabIndex = 0;
-            this.label7.Text = "(Affects the width and height of each page. Minimum: 70 Maximum: 300)";
+            this.dpiRightLbl.AutoSize = true;
+            this.dpiRightLbl.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.dpiRightLbl.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.dpiRightLbl.Location = new System.Drawing.Point(358, 343);
+            this.dpiRightLbl.Name = "dpiRightLbl";
+            this.dpiRightLbl.Size = new System.Drawing.Size(430, 17);
+            this.dpiRightLbl.TabIndex = 0;
+            this.dpiRightLbl.Text = "(Affects the width and height of each page. Minimum: 70 Maximum: 300)";
             // 
             // label8
             // 
@@ -283,42 +272,15 @@
             this.ClearBox.Text = "Clear Temporary Files";
             this.ClearBox.UseVisualStyleBackColor = true;
             // 
-            // StartStopBtn
+            // ConfirmBtn
             // 
-            this.StartStopBtn.Location = new System.Drawing.Point(698, 506);
-            this.StartStopBtn.Name = "StartStopBtn";
-            this.StartStopBtn.Size = new System.Drawing.Size(90, 28);
-            this.StartStopBtn.TabIndex = 11;
-            this.StartStopBtn.Text = "Start";
-            this.StartStopBtn.UseVisualStyleBackColor = true;
-            this.StartStopBtn.Click += new System.EventHandler(this.StartStopBtn_Click);
-            // 
-            // StatusProgressBar
-            // 
-            this.StatusProgressBar.Location = new System.Drawing.Point(12, 584);
-            this.StatusProgressBar.Name = "StatusProgressBar";
-            this.StatusProgressBar.Size = new System.Drawing.Size(776, 28);
-            this.StatusProgressBar.TabIndex = 0;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(11, 561);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(52, 20);
-            this.label10.TabIndex = 0;
-            this.label10.Text = "Status:";
-            // 
-            // StatusLabel
-            // 
-            this.StatusLabel.AutoSize = true;
-            this.StatusLabel.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.StatusLabel.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.StatusLabel.Location = new System.Drawing.Point(63, 562);
-            this.StatusLabel.Name = "StatusLabel";
-            this.StatusLabel.Size = new System.Drawing.Size(65, 17);
-            this.StatusLabel.TabIndex = 0;
-            this.StatusLabel.Text = "Initializing";
+            this.ConfirmBtn.Location = new System.Drawing.Point(425, 509);
+            this.ConfirmBtn.Name = "ConfirmBtn";
+            this.ConfirmBtn.Size = new System.Drawing.Size(193, 24);
+            this.ConfirmBtn.TabIndex = 10;
+            this.ConfirmBtn.Text = "Add Job";
+            this.ConfirmBtn.UseVisualStyleBackColor = true;
+            this.ConfirmBtn.Click += new System.EventHandler(this.ConfirmBtn_Click);
             // 
             // ResetLabel
             // 
@@ -359,27 +321,14 @@
             this.label11.TabIndex = 0;
             this.label11.Text = "(Minimum confidence allowed for each word when creating the PDF)";
             // 
-            // label12
+            // minConfLeftLbl
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(26, 462);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(72, 20);
-            this.label12.TabIndex = 0;
-            this.label12.Text = "Min Conf:";
-            // 
-            // ReportsFolderLabel
-            // 
-            this.ReportsFolderLabel.AutoSize = true;
-            this.ReportsFolderLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.ReportsFolderLabel.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.ReportsFolderLabel.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.ReportsFolderLabel.Location = new System.Drawing.Point(560, 512);
-            this.ReportsFolderLabel.Name = "ReportsFolderLabel";
-            this.ReportsFolderLabel.Size = new System.Drawing.Size(132, 17);
-            this.ReportsFolderLabel.TabIndex = 0;
-            this.ReportsFolderLabel.Text = "(open reports folder)";
-            this.ReportsFolderLabel.Click += new System.EventHandler(this.ReportsFolderLabel_Click);
+            this.minConfLeftLbl.AutoSize = true;
+            this.minConfLeftLbl.Location = new System.Drawing.Point(26, 462);
+            this.minConfLeftLbl.Name = "minConfLeftLbl";
+            this.minConfLeftLbl.Size = new System.Drawing.Size(72, 20);
+            this.minConfLeftLbl.TabIndex = 0;
+            this.minConfLeftLbl.Text = "Min Conf:";
             // 
             // StrategyBox
             // 
@@ -390,25 +339,25 @@
             this.StrategyBox.TabIndex = 3;
             this.StrategyBox.SelectedIndexChanged += new System.EventHandler(this.StrategyBox_SelectedIndexChanged);
             // 
-            // label13
+            // preproStratLeftLbl
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(12, 276);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(161, 20);
-            this.label13.TabIndex = 0;
-            this.label13.Text = "Preprocessing strategy:";
+            this.preproStratLeftLbl.AutoSize = true;
+            this.preproStratLeftLbl.Location = new System.Drawing.Point(12, 276);
+            this.preproStratLeftLbl.Name = "preproStratLeftLbl";
+            this.preproStratLeftLbl.Size = new System.Drawing.Size(161, 20);
+            this.preproStratLeftLbl.TabIndex = 0;
+            this.preproStratLeftLbl.Text = "Preprocessing strategy:";
             // 
-            // label14
+            // preproStratRightLbl
             // 
-            this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label14.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label14.Location = new System.Drawing.Point(548, 277);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(240, 17);
-            this.label14.TabIndex = 0;
-            this.label14.Text = "(Select preprocessing strategy for OCR)";
+            this.preproStratRightLbl.AutoSize = true;
+            this.preproStratRightLbl.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.preproStratRightLbl.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.preproStratRightLbl.Location = new System.Drawing.Point(548, 277);
+            this.preproStratRightLbl.Name = "preproStratRightLbl";
+            this.preproStratRightLbl.Size = new System.Drawing.Size(240, 17);
+            this.preproStratRightLbl.TabIndex = 0;
+            this.preproStratRightLbl.Text = "(Select preprocessing strategy for OCR)";
             // 
             // label15
             // 
@@ -419,52 +368,6 @@
             this.label15.Size = new System.Drawing.Size(58, 20);
             this.label15.TabIndex = 0;
             this.label15.Text = "label15";
-            // 
-            // NotifyIconSucess
-            // 
-            this.NotifyIconSucess.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.NotifyIconSucess.BalloonTipText = "OCR Finished";
-            this.NotifyIconSucess.BalloonTipTitle = "OCR Sucess";
-            this.NotifyIconSucess.Text = "NotifySucess";
-            this.NotifyIconSucess.Visible = true;
-            // 
-            // errorProvider1
-            // 
-            this.errorProvider1.ContainerControl = this;
-            // 
-            // mailBox
-            // 
-            this.mailBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.emailUIParametersBindingSource, "EmailTo", true));
-            this.mailBox.Location = new System.Drawing.Point(110, 535);
-            this.mailBox.Name = "mailBox";
-            this.mailBox.Size = new System.Drawing.Size(446, 26);
-            this.mailBox.TabIndex = 10;
-            // 
-            // emailUIParametersBindingSource
-            // 
-            this.emailUIParametersBindingSource.DataSource = typeof(Tesseract_UI_Tools.EmailUIParameters);
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(10, 538);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(94, 20);
-            this.label16.TabIndex = 0;
-            this.label16.Text = "Notify Email:";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.label17.Font = new System.Drawing.Font("Segoe UI", 8.139131F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label17.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.label17.Location = new System.Drawing.Point(562, 541);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(130, 17);
-            this.label17.TabIndex = 0;
-            this.label17.Text = "(open email settings)";
-            this.label17.Click += new System.EventHandler(this.OpenMailSettingsClick);
             // 
             // ResetLangs
             // 
@@ -542,41 +445,45 @@
             this.ConfidenceBox.Text = "Confidence PDF";
             this.ConfidenceBox.UseVisualStyleBackColor = true;
             // 
-            // Main
+            // cancelBtn
+            // 
+            this.cancelBtn.Location = new System.Drawing.Point(624, 509);
+            this.cancelBtn.Name = "cancelBtn";
+            this.cancelBtn.Size = new System.Drawing.Size(164, 24);
+            this.cancelBtn.TabIndex = 11;
+            this.cancelBtn.Text = "Cancel";
+            this.cancelBtn.UseVisualStyleBackColor = true;
+            this.cancelBtn.Click += new System.EventHandler(this.CancelBtn_Click);
+            // 
+            // TesseractForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 624);
+            this.ClientSize = new System.Drawing.Size(800, 549);
+            this.Controls.Add(this.cancelBtn);
             this.Controls.Add(this.ConfidenceBox);
             this.Controls.Add(this.numericUpDown3);
             this.Controls.Add(this.numericUpDown2);
             this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.ResetLangs);
-            this.Controls.Add(this.label17);
-            this.Controls.Add(this.label16);
-            this.Controls.Add(this.mailBox);
             this.Controls.Add(this.label15);
-            this.Controls.Add(this.label14);
-            this.Controls.Add(this.label13);
+            this.Controls.Add(this.preproStratRightLbl);
+            this.Controls.Add(this.preproStratLeftLbl);
             this.Controls.Add(this.StrategyBox);
-            this.Controls.Add(this.ReportsFolderLabel);
             this.Controls.Add(this.MinConfBar);
             this.Controls.Add(this.label11);
-            this.Controls.Add(this.label12);
+            this.Controls.Add(this.minConfLeftLbl);
             this.Controls.Add(this.ResetLabel);
-            this.Controls.Add(this.StatusLabel);
-            this.Controls.Add(this.label10);
-            this.Controls.Add(this.StatusProgressBar);
-            this.Controls.Add(this.StartStopBtn);
+            this.Controls.Add(this.ConfirmBtn);
             this.Controls.Add(this.ClearBox);
             this.Controls.Add(this.OverwriteBox);
             this.Controls.Add(this.QualityTrackBar);
             this.Controls.Add(this.DpiTrackBar);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
+            this.Controls.Add(this.dpiRightLbl);
+            this.Controls.Add(this.dpiLeftLbl);
+            this.Controls.Add(this.outputParamsLeftLbl);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -586,16 +493,13 @@
             this.Controls.Add(this.InputFolderButton);
             this.Controls.Add(this.InputFolderTextBox);
             this.Controls.Add(this.LanguagesCheckedListBox);
-            this.Name = "Main";
-            this.Text = "0";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_Closing);
+            this.Name = "TesseractForm";
+            this.Text = "Select Parameters";
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.tesseractUIParametersBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.QualityTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DpiTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinConfBar)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emailUIParametersBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
@@ -615,9 +519,9 @@
         private Label label2;
         private Label label3;
         private Label label4;
-        private Label label5;
-        private Label label6;
-        private Label label7;
+        private Label outputParamsLeftLbl;
+        private Label dpiLeftLbl;
+        private Label dpiRightLbl;
         private Label label8;
         private Label label9;
         private TrackBar QualityTrackBar;
@@ -626,30 +530,21 @@
         private ToolTip ScrollTip;
         private CheckBox OverwriteBox;
         private CheckBox ClearBox;
-        private Button StartStopBtn;
-        private ProgressBar StatusProgressBar;
-        private Label label10;
-        private Label StatusLabel;
+        private Button ConfirmBtn;
         private Label ResetLabel;
         private TrackBar MinConfBar;
         private Label label11;
-        private Label label12;
-        private Label ReportsFolderLabel;
+        private Label minConfLeftLbl;
         private ComboBox StrategyBox;
-        private Label label13;
-        private Label label14;
+        private Label preproStratLeftLbl;
+        private Label preproStratRightLbl;
         private Label label15;
-        private NotifyIcon NotifyIconSucess;
-        private ErrorProvider errorProvider1;
-        private Label label17;
-        private Label label16;
-        private TextBox mailBox;
-        private BindingSource emailUIParametersBindingSource;
         private Label ResetLangs;
         private NumericUpDown numericUpDown1;
         private NumericUpDown numericUpDown2;
         private NumericUpDown numericUpDown3;
         private CheckBox checkBox1;
         private CheckBox ConfidenceBox;
+        private Button cancelBtn;
     }
 }
