@@ -60,7 +60,7 @@ namespace Tesseract_UI_Tools
             {
                 string FileName = Path.GetFileNameWithoutExtension(CurrentFile);
                 string OutputFile = Path.Combine(Params.OutputFolder, $"{FileName}.pdf");
-                string ReportFile = Path.Combine(Reports.FullName, $"{FileName}.{Uri.EscapeDataString(Params.Language)}.{Params.Strategy}.html");
+                string ReportFile = Path.Combine(Reports.FullName, $"{FileName}.{Uri.EscapeDataString(Params.Language)}.{Params.Strategy}.pdf");
                 try
                 {
                     if (CancellationPending) break;
@@ -85,14 +85,16 @@ namespace Tesseract_UI_Tools
                     if (CancellationPending) return;
 
                     Report($"Creating PDF of {FileName}", 0);
-                    int words = Generator.GeneratePDF(Jpegs, Tsvs, Pages, OutputFile, Params.MinimumConfidence, Params.DebugPDF, SubProgress, this);
+                    Generator.GeneratePDF(Jpegs, Tsvs, Pages, OutputFile, Params.MinimumConfidence, false, SubProgress, this);
                     if (CancellationPending) return;
 
                     Report($"Generating Report of {FileName}", 0);
-                    float meanConf = Generator.GenerateReport(Tsvs, Pages, ReportFile);
+                    Generator.GeneratePDF(Jpegs, Tsvs, Pages, ReportFile, 0, true, SubProgress, this);
 
-                    report.Stop(words, meanConf);
 
+                    (int, int, float, float) stats = Generator.GetStatistics(Tsvs, Params.MinimumConfidence, SubProgress, this);
+                    report.Stop(stats.Item1, stats.Item2, stats.Item3, stats.Item4);
+            
                     if (Params.Clear && !CancellationPending)
                     {
                         Tmp.Delete(true);

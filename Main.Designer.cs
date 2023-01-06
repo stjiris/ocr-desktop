@@ -73,7 +73,6 @@
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
-            this.ConfidenceBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.tesseractUIParametersBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.QualityTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DpiTrackBar)).BeginInit();
@@ -531,23 +530,11 @@
             0,
             0});
             // 
-            // ConfidenceBox
-            // 
-            this.ConfidenceBox.AutoSize = true;
-            this.ConfidenceBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.tesseractUIParametersBindingSource, "DebugPDF", true));
-            this.ConfidenceBox.Location = new System.Drawing.Point(286, 509);
-            this.ConfidenceBox.Name = "ConfidenceBox";
-            this.ConfidenceBox.Size = new System.Drawing.Size(133, 24);
-            this.ConfidenceBox.TabIndex = 9;
-            this.ConfidenceBox.Text = "Confidence PDF";
-            this.ConfidenceBox.UseVisualStyleBackColor = true;
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 624);
-            this.Controls.Add(this.ConfidenceBox);
             this.Controls.Add(this.numericUpDown3);
             this.Controls.Add(this.numericUpDown2);
             this.Controls.Add(this.numericUpDown1);
@@ -650,6 +637,5 @@
         private NumericUpDown numericUpDown2;
         private NumericUpDown numericUpDown3;
         private CheckBox checkBox1;
-        private CheckBox ConfidenceBox;
     }
 }

@@ -269,15 +269,6 @@ namespace Tesseract_UI_Tools
             get { return (string)this["Strategy"]; }
             set { this["Strategy"] = value; }
         }
-
-        [UserScopedSettingAttribute()]
-        [DefaultSettingValue("false")]
-        public bool DebugPDF
-        {
-            get { return (bool)this["DebugPDF"]; }
-            set { this["DebugPDF"] = value; }
-        }
-
         public void SetLanguage(string[] Languages)
         {
             Language = TessdataUtil.LanguagesToString(Languages);

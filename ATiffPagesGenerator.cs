@@ -82,63 +82,11 @@ namespace Tesseract_UI_Tools
 
                     OcrStrategy.GenerateTsv(TiffPages[i], TsvsPages[i]);
                 }
-
             return TsvsPages;
         }
 
-        public float GenerateReport(string[] Tsvs, string[] OriginalTiffs, string ReportFile)
+        public void GeneratePDF(string[] Jpegs, string[] Tsvs, string[] OriginalTiffs, string OutputFile, float MinConf = 25, bool DebugPDF = false, IProgress<float>? Progress = null, BackgroundWorker? worker = null)
         {
-            float conf = 0;
-            float n = 0;
-            using(StreamWriter writer = new StreamWriter(ReportFile))
-            {
-                string ScriptSrc = File.ReadAllText(Path.Join(AppDomain.CurrentDomain.BaseDirectory, "plotly-2.14.0.min.js"));
-                writer.WriteLine($"<script>{ScriptSrc}</script>");
-                writer.WriteLine("<style>table, thead, tbody, tr, th, td {margin: auto; border: 1px solid; text-align: center; min-width:450px;}</style>");
-                writer.WriteLine("<table><thead><tr><th>Image</th><th>Statistics</th></tr></thead>");
-                writer.WriteLine($"<tbody>");
-                for (int i = 0; i < Tsvs.Length; i++)
-                {
-                    writer.WriteLine($"<tr>");
-                    using (Bitmap Tiff = (Bitmap)Image.FromFile(OriginalTiffs[i]))
-                    {
-                        double Scale = 300.0 / Tiff.Height;
-                        using (Bitmap Resized = new Bitmap(Tiff, (int)Math.Floor(Tiff.Width * Scale), (int)Math.Floor(Tiff.Height * Scale)))
-                        {
-                            MemoryStream ms = new MemoryStream();
-                            Resized.Save(ms, ImageFormat.Jpeg);
-                            byte[] B = ms.ToArray();
-                            string Url = "data:image/jpeg;base64," + Convert.ToBase64String(B);
-                            writer.WriteLine($"<td><img src='{Url}'></td>");
-                        }
-                        OCROutput CurrOut = OCROutput.Load(Tsvs[i]);
-                        writer.WriteLine($"<td data-confs='{string.Join(',', CurrOut.Confidences)}' data-origins='{string.Join(',', value: CurrOut.Debug)}'></td>");
-                        conf += CurrOut.Confidences.Sum();
-                        n += CurrOut.Confidences.Length;
-                    }
-                    writer.WriteLine($"</tr>");
-                }
-                writer.WriteLine($"</tbody></table>");
-                writer.WriteLine($"<script>" +
-                    "document.querySelectorAll('[data-confs]').forEach( d => Plotly.newPlot(d, tracesForElement(d),{showlegend:true, barmode: 'stack', margin: {l: 30,r: 30,b: 30,t: 30,pad: 4}, xaxis: {range: [0,100]}}));" +
-                    "function tracesForElement(d){" +
-                    "let traces = {};" +
-                    "for(let origin of d.dataset.origins.split(',')){" +
-                    "traces[origin] = {};" +
-                    "}" +
-                    "for(let origin of Object.keys(traces)){" +
-                    "traces[origin] = {x: d.dataset.confs.split(',').filter( (conf,index) => d.dataset.origins.split(',')[index] == origin ).map(f => parseFloat(f)),name:origin,type:'histogram',xbins:{start:0,end:100,size:5}}" +
-                    "}" +
-                    "return Object.values(traces);" +
-                    "}"+
-                    $"</script>");
-            }
-            return conf / n;
-        }
-
-        public int GeneratePDF(string[] Jpegs, string[] Tsvs, string[] OriginalTiffs, string OutputFile, float MinConf = 25, bool DebugPDF = false, IProgress<float>? Progress = null, BackgroundWorker? worker = null)
-        {
-            int n = 0;
             PdfDocument doc = new();
             doc.Info.Creator = PDF_TAG;
             
@@ -160,13 +108,31 @@ namespace Tesseract_UI_Tools
                     Page.Height = Jpeg.PixelHeight;
                     g.DrawImage(Jpeg, 0, 0, Jpeg.PixelWidth, Jpeg.PixelHeight);
                 }
-                n+= PdfUtil.AddTextLayer(g, Tsvs[i], Jpegs[i], OriginalTiffs[i], MinConf, DebugPDF);
+                PdfUtil.AddTextLayer(g, Tsvs[i], Jpegs[i], OriginalTiffs[i], MinConf, DebugPDF);
             }
             if((worker == null || !worker.CancellationPending))
             {
                 doc.Save(OutputFile);
             }
-            return n;
+        }
+
+        internal (int, int, float, float) GetStatistics(string[] Tsvs, float MinConf = 25, IProgress<float>? Progress = null, BackgroundWorker? worker = null)
+        {
+            int wordsThresh = 0;
+            int wordsTotal = 0;
+            float meanConfThresh = 0;
+            float meanConfTotal = 0;
+            for (int i = 0; i < Tsvs.Length && (worker == null || !worker.CancellationPending); i++)
+            {
+                if (Progress != null) Progress.Report((float)i / Tsvs.Length);
+                float[] confidencesTotal = OCROutput.Load(Tsvs[i]).Confidences;
+                float[] confidencesThresh = confidencesTotal.Where(c => c >= MinConf).ToArray();
+                wordsTotal += confidencesTotal.Length;
+                wordsThresh += confidencesThresh.Length;
+                meanConfTotal += confidencesTotal.Sum();
+                meanConfThresh += confidencesThresh.Sum();
+            }
+            return (wordsThresh, wordsTotal, meanConfThresh / wordsThresh, meanConfTotal / wordsTotal);
         }
     }
 

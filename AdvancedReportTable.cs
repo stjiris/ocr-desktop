@@ -37,7 +37,7 @@
             streamWriter.WriteLine($"  <hr/>");
             streamWriter.WriteLine($"  <table style='font-family: monospace; white-space: pre; text-align: left'>");
             streamWriter.WriteLine($"    <thead>");
-            streamWriter.WriteLine($"      <tr><th>Start Time</th><th>Filename</th><th>Pages</th><th>Time Ellapsed</th><th>Words</th><th>Mean Confidence</th></tr>");
+            streamWriter.WriteLine($"      <tr><th>Start Time</th><th>Filename</th><th>Pages</th><th>Time Ellapsed</th><th>Words Threshold / Words Total</th><th>Confidence Mean Threshold / Confidence Mean Total</th></tr>");
             streamWriter.WriteLine($"    </thead>");
             streamWriter.WriteLine($"    <tbody>");
         }
@@ -55,12 +55,12 @@
             state = AdvancedReportTableState.PAGEAWARE;
             streamWriter.Write($"<td>{pages}</td>");
         }
-        public void Stop(int words, float meanConf)
+        public void Stop(int wordsThreshold, int wordsTotal, float meanConfThreshold, float meanConfTotal)
         {
             if (state != AdvancedReportTableState.PAGEAWARE) throw new Exception("Stop was called on" + state);
             state = AdvancedReportTableState.STOPPED;
             var ellapsed = DateTime.Now - startFileTime;
-            streamWriter.WriteLine($"<td>{ellapsed.Seconds}s</td><td>{words}</td><td>{meanConf}</td></tr>");
+            streamWriter.WriteLine($"<td>{ellapsed.Seconds}s</td><td>{wordsThreshold} / {wordsTotal}</td><td>{meanConfThreshold} / {meanConfTotal}</td></tr>");
         }
         public void Stop(string txt)
         {

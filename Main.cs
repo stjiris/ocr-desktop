@@ -201,7 +201,6 @@ namespace Tesseract_UI_Tools
             OverwriteBox.Enabled = Enabled;
             ClearBox.Enabled = Enabled;
             StrategyBox.Enabled = Enabled;
-            ConfidenceBox.Enabled = Enabled;
             if( Enabled)
             {
                 StartStopBtn.Text = "Start";
