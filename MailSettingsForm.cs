@@ -33,6 +33,15 @@ namespace Tesseract_UI_Tools
             set { this["EmailTo"] = value; }
         }
 
+
+        [UserScopedSettingAttribute()]
+        [DefaultSettingValue("")]
+        public string EmailFrom
+        {
+            get { return (string)this["EmailFrom"]; }
+            set { this["EmailFrom"] = value; }
+        }
+
         [UserScopedSettingAttribute()]
         [DefaultSettingValue("")]
         public string Host

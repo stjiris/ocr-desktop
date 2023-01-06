@@ -234,16 +234,39 @@ namespace Tesseract_UI_Tools
             if (Params.EmailTo == "") return;
             try{
                 var client = new System.Net.Mail.SmtpClient(Params.Host, Params.Port);
-                var mail = new System.Net.Mail.MailMessage(Params.EmailTo, Params.EmailTo);
+                var mail = new System.Net.Mail.MailMessage(Params.EmailFrom, Params.EmailTo);
                 mail.IsBodyHtml = true;
                 mail.Body = htmlBody;
                 mail.Subject = sub;
+                client.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
+                client.SendCompleted += SendMailCompleted;
                 client.SendAsync(mail,null);
-                client.SendCompleted += delegate { client.Dispose(); };
+                MessageBox.Show($"Smtp client to {client.Host}:{client.Port}\n" +
+                    $"From: {mail.To}\n" +
+                    $"To: {mail.From}\n" +
+                    $"Subject: {mail.Subject}\n");
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.ToString());
+            }
+        }
+
+        private void SendMailCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs args) {
+            if (args.Error != null)
+            {
+                System.Diagnostics.Debug.WriteLine(args.Error.ToString());
+                MessageBox.Show(args.Error.ToString(), "Email Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (args.Cancelled)
+            {
+                System.Diagnostics.Debug.WriteLine("Cancelled");
+                MessageBox.Show("Mail cancelled", "Email Cancelled!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("OK");
+                MessageBox.Show("Mail sent without an error.", "Email Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
