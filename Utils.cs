@@ -6,9 +6,8 @@ namespace Tesseract_UI_Tools
 {
     public static class PdfUtil
     {
-        public static int AddTextLayer(XGraphics g, string TsvPath, string Jpeg, string OriginalTiff, float MinConf = 25, bool DebugPDF = false)
+        public static void AddTextLayer(XGraphics g, string TsvPath, string Jpeg, string OriginalTiff, float MinConf = 25, bool DebugPDF = false)
         {
-            int n = 0;
             float FinalRes = 1;
             float InitialRes = 1;
             using(Image JpegImage = Image.FromFile(Jpeg))
@@ -26,7 +25,6 @@ namespace Tesseract_UI_Tools
             for( int i= 0; i < OcrObject.Rects.Length; i++)
             {
                 if (OcrObject.Confidences[i] < MinConf && !DebugPDF) continue;
-                n += 1;
                 float X1 = OcrObject.Rects[i].TopLeft.X * Scale;
                 float Y1 = OcrObject.Rects[i].TopLeft.Y * Scale;
                 float X2 = OcrObject.Rects[i].BottomRight.X * Scale;
@@ -50,7 +48,6 @@ namespace Tesseract_UI_Tools
                 XFont font = BestFont(g, OcrObject.Components[i], X2 - X1, Y2 - Y1);
                 g.DrawString(OcrObject.Components[i], font, brush, X1, Y1, XStringFormats.TopLeft);
             }
-            return n;
         }
         public static XFont BestFont(XGraphics g, string text, double width, double height)
         {

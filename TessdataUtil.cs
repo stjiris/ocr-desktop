@@ -231,7 +231,6 @@ namespace Tesseract_UI_Tools
             MinimumConfidence = 25;
             Overwrite = false;
             Clear = false;
-            DebugPDF = false;
             Strategy = "";
         }
 
@@ -279,11 +278,6 @@ namespace Tesseract_UI_Tools
         {
             get { return (string)this["Strategy"]; }
             set { this["Strategy"] = value; }
-        }
-        public bool DebugPDF
-        {
-            get { return (bool)this["DebugPDF"]; }
-            set { this["DebugPDF"] = value; }
         }
         public void SetLanguage(string[] Languages)
         {
