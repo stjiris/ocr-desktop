@@ -2,6 +2,7 @@
 using OpenCvSharp.Text;
 using System.Configuration;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace Tesseract_UI_Tools
 {
@@ -199,7 +200,7 @@ namespace Tesseract_UI_Tools
         }
     }
 
-    public class TesseractUIParameters : INotifyPropertyChanged
+    public class TesseractUIParameters : INotifyPropertyChanged, ICloneable
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -219,7 +220,7 @@ namespace Tesseract_UI_Tools
         public TesseractUIParameters()
         {
             Reset();
-        }
+        } 
 
         public void Reset()
         {
@@ -304,6 +305,13 @@ namespace Tesseract_UI_Tools
         public override string ToString()
         {
             return System.Text.Json.JsonSerializer.Serialize(keyPair);
+        }
+
+        public object Clone()
+        {
+            var parameters = new TesseractUIParameters();
+            parameters.keyPair = new Dictionary<string, object>(keyPair);
+            return parameters;
         }
     }
 }

@@ -12,21 +12,23 @@ namespace Tesseract_UI_Tools
 {
     public partial class QueueForm : Form
     {
+        TesseractUIParameters LastParameters = new TesseractUIParameters();
         BindingList<QueueItem> queue = new BindingList<QueueItem>();
         public QueueForm()
         {
             InitializeComponent();
-            listBox1.DataSource = queue;
-            listBox1.DisplayMember = "tesseractParams";
+            queueBox.DataSource = queue;
+            queueBox.DisplayMember = "tesseractParams.InputFolder";
+            queueBox.ValueMember = "tesseractParams";
         }
 
         private void addJobBtn_Click(object sender, EventArgs e)
         {
-            var tesseractForm = new TesseractForm();
+            var tesseractForm = new TesseractForm(LastParameters);
             DialogResult r = tesseractForm.ShowDialog();
             if( r == DialogResult.OK )
             {
-                queue.Add(new QueueItem(tesseractForm.TessParams));
+                queue.Add(new QueueItem(LastParameters.Clone() as TesseractUIParameters));
             }
         }
     }
@@ -41,7 +43,7 @@ namespace Tesseract_UI_Tools
 
     class QueueItem : Control, INotifyPropertyChanged
     {
-        public TesseractUIParameters tesseractParams;
+        public TesseractUIParameters tesseractParams { get; private set; }
         DateTime queued;
         QueueItemStatus queueItemStatus;
 

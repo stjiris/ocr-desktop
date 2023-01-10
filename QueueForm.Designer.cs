@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.addJobBtn = new System.Windows.Forms.Button();
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.queueBox = new System.Windows.Forms.ListBox();
             this.statusProgressBar = new System.Windows.Forms.ProgressBar();
             this.statusLbl = new System.Windows.Forms.Label();
             this.queueLbl = new System.Windows.Forms.Label();
@@ -45,14 +45,14 @@
             this.addJobBtn.UseVisualStyleBackColor = true;
             this.addJobBtn.Click += new System.EventHandler(this.addJobBtn_Click);
             // 
-            // listBox1
+            // queueBox
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 19;
-            this.listBox1.Location = new System.Drawing.Point(12, 32);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(347, 346);
-            this.listBox1.TabIndex = 1;
+            this.queueBox.FormattingEnabled = true;
+            this.queueBox.ItemHeight = 19;
+            this.queueBox.Location = new System.Drawing.Point(12, 32);
+            this.queueBox.Name = "queueBox";
+            this.queueBox.Size = new System.Drawing.Size(680, 346);
+            this.queueBox.TabIndex = 1;
             // 
             // statusProgressBar
             // 
@@ -87,7 +87,7 @@
             this.Controls.Add(this.queueLbl);
             this.Controls.Add(this.statusLbl);
             this.Controls.Add(this.statusProgressBar);
-            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.queueBox);
             this.Controls.Add(this.addJobBtn);
             this.Name = "QueueForm";
             this.Text = "Tesseract UI Tools - Queue";
@@ -99,7 +99,7 @@
         #endregion
 
         private Button addJobBtn;
-        private ListBox listBox1;
+        private ListBox queueBox;
         private ProgressBar statusProgressBar;
         private Label statusLbl;
         private Label queueLbl;

@@ -5,16 +5,17 @@ namespace Tesseract_UI_Tools
         public TesseractUIParameters TessParams {
             get;
             private set;
-        } = new TesseractUIParameters();
+        }
         /// <summary>
         /// Initialize form
         /// </summary>
         /// Set binding sources for <see cref="TesseractUIParameters"/> with UI and events
         /// Get strategies <see cref="AOcrStrategy"/>
-        public TesseractForm()
+        public TesseractForm(TesseractUIParameters? defaults = null)
         {
             InitializeComponent();
             DialogResult = DialogResult.Cancel;
+            TessParams = defaults != null ? defaults : new TesseractUIParameters();
 
             TessParams.PropertyChanged += TessParams_PropertyChanged;
             tesseractUIParametersBindingSource.DataSource = TessParams;
