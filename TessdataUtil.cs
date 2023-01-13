@@ -234,48 +234,48 @@ namespace Tesseract_UI_Tools
 
         public string InputFolder
         {
-            get => (string)this["InputFolder"];
-            set => this["InputFolder"] = value;
+            get => (string)this[nameof(InputFolder)];
+            set => this[nameof(InputFolder)] = value;
         }
         public string OutputFolder
         {
-            get => (string)this["OutputFolder"];
-            set => this["OutputFolder"] = value;
+            get => (string)this[nameof(OutputFolder)];
+            set => this[nameof(OutputFolder)] = value;
         }
         public string Language
         {
-            get => (string)this["Language"];
-            set => this["Language"] = value;
+            get => (string)this[nameof(Language)];
+            set => this[nameof(Language)] = value;
         }
         public int Dpi
         {
-            get => (int)this["Dpi"];
-            set => this["Dpi"] = value;
+            get => (int)this[nameof(Dpi)];
+            set => this[nameof(Dpi)] = value;
         }
         public int Quality
         {
-            get => (int)this["Quality"];
-            set => this["Quality"] = value;
+            get => (int)this[nameof(Quality)];
+            set => this[nameof(Quality)] = value;
         }
         public bool Overwrite
         {
-            get => (bool)this["Overwrite"];
-            set => this["Overwrite"] = value;
+            get => (bool)this[nameof(Overwrite)];
+            set => this[nameof(Overwrite)] = value;
         }
         public bool Clear
         {
-            get => (bool)this["Clear"];
-            set => this["Clear"] = value;
+            get => (bool)this[nameof(Clear)];
+            set => this[nameof(Clear)] = value;
         }
         public float MinimumConfidence
         {
-            get => (float)this["MinimumConfidence"];
-            set => this["MinimumConfidence"] = value;
+            get => (float)this[nameof(MinimumConfidence)];
+            set => this[nameof(MinimumConfidence)] = value;
         }
         public string Strategy
         {
-            get => (string)this["Strategy"];
-            set => this["Strategy"] = value;
+            get => (string)this[nameof(Strategy)];
+            set => this[nameof(Strategy)] = value;
         }
         public void SetLanguage(string[] Languages)
         {

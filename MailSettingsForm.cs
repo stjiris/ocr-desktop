@@ -4,7 +4,7 @@ namespace Tesseract_UI_Tools
 {
     public partial class MailSettingsForm : Form
     {
-        EmailUIParameters EmailParams;
+        readonly EmailUIParameters EmailParams;
         public MailSettingsForm(EmailUIParameters parameters)
         {
             EmailParams = parameters;
@@ -17,7 +17,7 @@ namespace Tesseract_UI_Tools
             EmailParams.Save();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void SaveSettings(object sender, EventArgs e)
         {
             EmailParams.Save();
         }
@@ -29,8 +29,8 @@ namespace Tesseract_UI_Tools
         [DefaultSettingValue("")]
         public string EmailTo
         {
-            get { return (string)this["EmailTo"]; }
-            set { this["EmailTo"] = value; }
+            get { return (string)this[nameof(EmailTo)]; }
+            set { this[nameof(EmailTo)] = value; }
         }
 
 
@@ -38,24 +38,24 @@ namespace Tesseract_UI_Tools
         [DefaultSettingValue("")]
         public string EmailFrom
         {
-            get { return (string)this["EmailFrom"]; }
-            set { this["EmailFrom"] = value; }
+            get { return (string)this[nameof(EmailFrom)]; }
+            set { this[nameof(EmailFrom)] = value; }
         }
 
         [UserScopedSettingAttribute()]
         [DefaultSettingValue("")]
         public string Host
         {
-            get { return (string)this["Host"]; }
-            set { this["Host"] = value; }
+            get { return (string)this[nameof(Host)]; }
+            set { this[nameof(Host)] = value; }
         }
 
         [UserScopedSettingAttribute()]
         [DefaultSettingValue("21")]
         public int Port
         {
-            get { return (int)this["Port"]; }
-            set { this["Port"] = value; }
+            get { return (int)this[nameof(Port)]; }
+            set { this[nameof(Port)] = value; }
         }
     }
 }

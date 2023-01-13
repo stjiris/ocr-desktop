@@ -4,8 +4,8 @@
     {
         private enum AdvancedReportTableState { STARTED, PAGEAWARE, STOPPED }
 
-        StreamWriter streamWriter;
-        DateTime startTime;
+        readonly StreamWriter streamWriter;
+        readonly DateTime startTime;
         DateTime startFileTime;
         AdvancedReportTableState state;
         public string FullPath { get; private set; }

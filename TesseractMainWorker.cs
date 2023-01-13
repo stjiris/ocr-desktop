@@ -9,10 +9,10 @@ namespace Tesseract_UI_Tools
     internal class TesseractMainWorker : BackgroundWorker
     {
         // setup state and directories
-        TesseractMainWorkerProgressUserState State = new TesseractMainWorkerProgressUserState("Initialized", 0);
-        DirectoryInfo Files = Directory.CreateDirectory(Path.Combine(Application.UserAppDataPath, "Files"));
-        DirectoryInfo Reports = Directory.CreateDirectory(Path.Combine(Application.UserAppDataPath, "Reports"));
-        Progress<float> SubProgress = new Progress<float>();
+        readonly TesseractMainWorkerProgressUserState State = new("Ready", 0);
+        readonly DirectoryInfo Files = Directory.CreateDirectory(Path.Combine(Application.UserAppDataPath, "Files"));
+        readonly DirectoryInfo Reports = Directory.CreateDirectory(Path.Combine(Application.UserAppDataPath, "Reports"));
+        readonly public Progress<float> SubProgress = new();
 
         public TesseractMainWorker()
         {
@@ -42,7 +42,7 @@ namespace Tesseract_UI_Tools
         /// <param name="e"></param>
         private void SubProgress_ProgressChanged(object? sender, float e)
         {
-            Report((int)Math.Floor(e * 100));
+            VisualReport((int)Math.Floor(e * 100));
         }
 
         private void Start(object? sender, DoWorkEventArgs e)
@@ -53,8 +53,8 @@ namespace Tesseract_UI_Tools
             TesseractUIParameters Params = item.TesseractParams;
             item.Update(QueueItemStatus.RUNNING);
 
-            AdvancedReportTable report = new AdvancedReportTable(Reports.FullName, Params);
-            Report("Reading Input Folder", 0);
+            AdvancedReportTable report = new(Reports.FullName, Params);
+            VisualReport("Reading Input Folder", 0);
             foreach (string CurrentFile in Directory.EnumerateFiles(Params.InputFolder))
             {
                 string FileName = Path.GetFileNameWithoutExtension(CurrentFile);
@@ -69,29 +69,31 @@ namespace Tesseract_UI_Tools
                     if (File.Exists(OutputFile) && !Params.Overwrite) continue;
 
                     report.StartFile(FileName);
+                    Generator.SetProgress(SubProgress);
+
                     DirectoryInfo Tmp = Files.CreateSubdirectory(FileName);
-                    Report($"Spliting TIFFs of {FileName}", 0);
-                    string[] Pages = Generator.GenerateTIFFs(Tmp.FullName, Params.Overwrite, SubProgress, this);
+                    VisualReport($"Spliting TIFFs of {FileName}", 0);
+                    string[] Pages = Generator.GenerateTIFFs(Tmp.FullName, Params.Overwrite, this);
                     report.Pages(Pages.Length);
                     if (CancellationPending) return;
 
-                    Report($"Creating JPEGs of {FileName}", 0);
-                    string[] Jpegs = Generator.GenerateJPEGs(Pages, Tmp.FullName, Params.Dpi, Params.Quality, Params.Overwrite, SubProgress, this);
+                    VisualReport($"Creating JPEGs of {FileName}", 0);
+                    string[] Jpegs = Generator.GenerateJPEGs(Pages, Tmp.FullName, Params.Dpi, Params.Quality, Params.Overwrite, this);
                     if (CancellationPending) return;
 
-                    Report($"Creating HOCRs of {FileName}", 0);
-                    string[] Tsvs = Generator.GenerateTsvs(Pages, Tmp.FullName, Params.GetLanguage(), Params.Strategy, Params.Overwrite, SubProgress, this);
+                    VisualReport($"Creating HOCRs of {FileName}", 0);
+                    string[] Tsvs = Generator.GenerateTsvs(Pages, Tmp.FullName, Params.GetLanguage(), Params.Strategy, Params.Overwrite, this);
                     if (CancellationPending) return;
 
-                    Report($"Creating PDF of {FileName}", 0);
-                    Generator.GeneratePDF(Jpegs, Tsvs, Pages, OutputFile, Params.MinimumConfidence, false, SubProgress, this);
+                    VisualReport($"Creating PDF of {FileName}", 0);
+                    Generator.GeneratePDF(Jpegs, Tsvs, Pages, OutputFile, Params.MinimumConfidence, false, this);
                     if (CancellationPending) return;
 
-                    Report($"Generating Report of {FileName}", 0);
-                    Generator.GeneratePDF(Jpegs, Tsvs, Pages, ReportFile, 0, true, SubProgress, this);
+                    VisualReport($"Generating Report of {FileName}", 0);
+                    Generator.GeneratePDF(Jpegs, Tsvs, Pages, ReportFile, 0, true, this);
 
 
-                    (int, int, float, float) stats = Generator.GetStatistics(Tsvs, Params.MinimumConfidence, SubProgress, this);
+                    (int, int, float, float) stats = Generator.GetStatistics(Tsvs, Params.MinimumConfidence, this);
                     report.Stop(stats.Item1, stats.Item2, stats.Item3, stats.Item4);
             
                     if (Params.Clear && !CancellationPending)
@@ -105,30 +107,31 @@ namespace Tesseract_UI_Tools
                 }
             }
             report.Close();
-            Report("", 0);
+            VisualReport("", 0);
             e.Result = report.FullPath;
             item.Update(QueueItemStatus.FINISHED);
         }
 
 
+        private void VisualReport(string Text, int Value)
+        {
+            State.Text = Text;
+            State.Value = Value;
+            VisualReport();
+        }
 
-        private void Report(string Text, int Value)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051: Remove unused private member", Justification = "Might be needed..?")]
+        private void VisualReport(string Text)
         {
             State.Text = Text;
-            State.Value = Value;
-            Report();
+            VisualReport();
         }
-        private void Report(string Text)
-        {
-            State.Text = Text;
-            Report();
-        }
-        private void Report(int Value)
+        private void VisualReport(int Value)
         {
             State.Value = Value;
-            Report();
+            VisualReport();
         }
-        public void Report()
+        public void VisualReport()
         {
             ReportProgress(0, State);
         }

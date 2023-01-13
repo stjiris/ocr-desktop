@@ -11,7 +11,10 @@ namespace Tesseract_UI_Tools
             LanguagesString = TessdataUtil.LanguagesToString(Languages);
         }
 
-        public abstract void Dispose();
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+        }
 
         public abstract void GenerateTsv(string TiffPage, string TsvPage);
 

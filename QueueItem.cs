@@ -43,10 +43,7 @@ namespace Tesseract_UI_Tools
         {
             if( Status.Equals(progress) ) return;
             Status = progress;
-            if (PropertyChanged != null )
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs("Status"));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Status)));
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

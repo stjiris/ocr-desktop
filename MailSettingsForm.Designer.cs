@@ -36,7 +36,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.saveSettingsBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.emailUIParametersBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -94,22 +94,22 @@
             this.label3.TabIndex = 5;
             this.label3.Text = ":";
             // 
-            // button1
+            // saveSettingsBtn
             // 
-            this.button1.Location = new System.Drawing.Point(267, 76);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(214, 28);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "Save Settings";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.saveSettingsBtn.Location = new System.Drawing.Point(267, 76);
+            this.saveSettingsBtn.Name = "saveSettingsBtn";
+            this.saveSettingsBtn.Size = new System.Drawing.Size(214, 28);
+            this.saveSettingsBtn.TabIndex = 6;
+            this.saveSettingsBtn.Text = "Save Settings";
+            this.saveSettingsBtn.UseVisualStyleBackColor = true;
+            this.saveSettingsBtn.Click += new System.EventHandler(this.SaveSettings);
             // 
             // MailSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(493, 112);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.saveSettingsBtn);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.label2);
@@ -135,6 +135,6 @@
         private Label label2;
         private TextBox textBox3;
         private Label label3;
-        private Button button1;
+        private Button saveSettingsBtn;
     }
 }

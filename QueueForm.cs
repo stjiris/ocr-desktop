@@ -26,6 +26,8 @@ namespace Tesseract_UI_Tools
             worker.ProgressChanged += WorkerProgressUpdate;
             worker.RunWorkerCompleted += WorkerComplete;
             worker.RunWorkerCompleted += RunNextItem;
+
+            worker.VisualReport();
         }
 
         private void RunNextItem(object? sender, RunWorkerCompletedEventArgs e)

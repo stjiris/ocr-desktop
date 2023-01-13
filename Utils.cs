@@ -9,11 +9,11 @@ namespace Tesseract_UI_Tools
         public static void AddTextLayer(XGraphics g, string TsvPath, string Jpeg, string OriginalTiff, float MinConf = 25, bool DebugPDF = false)
         {
             float FinalRes = 1;
-            float InitialRes = 1;
             using(Image JpegImage = Image.FromFile(Jpeg))
             {
                 FinalRes = JpegImage.HorizontalResolution;
             }
+            float InitialRes = 1;
             using(Image TiffImage = Image.FromFile(OriginalTiff))
             {
                 InitialRes = TiffImage.HorizontalResolution;

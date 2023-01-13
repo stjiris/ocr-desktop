@@ -15,10 +15,4 @@
     <PackageReference Include="PdfSharp" Version="1.50.5147" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="plotly-2.14.0.min.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
