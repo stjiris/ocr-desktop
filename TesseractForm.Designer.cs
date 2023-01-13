@@ -530,7 +530,6 @@
         private NumericUpDown numericUpDown1;
         private NumericUpDown numericUpDown2;
         private NumericUpDown numericUpDown3;
-        private CheckBox checkBox1;
         private Button cancelBtn;
     }
 }

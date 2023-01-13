@@ -28,31 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.addJobBtn = new System.Windows.Forms.Button();
-            this.queueBox = new System.Windows.Forms.ListBox();
             this.statusProgressBar = new System.Windows.Forms.ProgressBar();
-            this.statusLbl = new System.Windows.Forms.Label();
+            this.statusRightLbl = new System.Windows.Forms.Label();
             this.queueLbl = new System.Windows.Forms.Label();
+            this.queueTable = new System.Windows.Forms.DataGridView();
+            this.statusLbl = new System.Windows.Forms.Label();
+            this.mailSettingsBtn = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.emailUIParametersBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.emailRightLbl = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.queueTable)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emailUIParametersBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // addJobBtn
             // 
-            this.addJobBtn.Location = new System.Drawing.Point(698, 12);
+            this.addJobBtn.Location = new System.Drawing.Point(12, 341);
             this.addJobBtn.Name = "addJobBtn";
-            this.addJobBtn.Size = new System.Drawing.Size(90, 28);
+            this.addJobBtn.Size = new System.Drawing.Size(218, 28);
             this.addJobBtn.TabIndex = 0;
             this.addJobBtn.Text = "Add Job";
             this.addJobBtn.UseVisualStyleBackColor = true;
-            this.addJobBtn.Click += new System.EventHandler(this.addJobBtn_Click);
-            // 
-            // queueBox
-            // 
-            this.queueBox.FormattingEnabled = true;
-            this.queueBox.ItemHeight = 19;
-            this.queueBox.Location = new System.Drawing.Point(12, 32);
-            this.queueBox.Name = "queueBox";
-            this.queueBox.Size = new System.Drawing.Size(680, 346);
-            this.queueBox.TabIndex = 1;
+            this.addJobBtn.Click += new System.EventHandler(this.AddJob);
             // 
             // statusProgressBar
             // 
@@ -61,14 +60,14 @@
             this.statusProgressBar.Size = new System.Drawing.Size(776, 28);
             this.statusProgressBar.TabIndex = 2;
             // 
-            // statusLbl
+            // statusRightLbl
             // 
-            this.statusLbl.AutoSize = true;
-            this.statusLbl.Location = new System.Drawing.Point(12, 381);
-            this.statusLbl.Name = "statusLbl";
-            this.statusLbl.Size = new System.Drawing.Size(52, 20);
-            this.statusLbl.TabIndex = 3;
-            this.statusLbl.Text = "Status:";
+            this.statusRightLbl.AutoSize = true;
+            this.statusRightLbl.Location = new System.Drawing.Point(12, 372);
+            this.statusRightLbl.Name = "statusRightLbl";
+            this.statusRightLbl.Size = new System.Drawing.Size(52, 20);
+            this.statusRightLbl.TabIndex = 3;
+            this.statusRightLbl.Text = "Status:";
             // 
             // queueLbl
             // 
@@ -79,18 +78,79 @@
             this.queueLbl.TabIndex = 4;
             this.queueLbl.Text = "Queue:";
             // 
+            // queueTable
+            // 
+            this.queueTable.AllowUserToAddRows = false;
+            this.queueTable.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.queueTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.queueTable.Location = new System.Drawing.Point(12, 32);
+            this.queueTable.MultiSelect = false;
+            this.queueTable.Name = "queueTable";
+            this.queueTable.RowHeadersWidth = 49;
+            this.queueTable.RowTemplate.Height = 28;
+            this.queueTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.queueTable.ShowEditingIcon = false;
+            this.queueTable.Size = new System.Drawing.Size(776, 303);
+            this.queueTable.TabIndex = 5;
+            // 
+            // statusLbl
+            // 
+            this.statusLbl.AutoSize = true;
+            this.statusLbl.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.statusLbl.Location = new System.Drawing.Point(70, 372);
+            this.statusLbl.Name = "statusLbl";
+            this.statusLbl.Size = new System.Drawing.Size(0, 20);
+            this.statusLbl.TabIndex = 6;
+            // 
+            // mailSettingsBtn
+            // 
+            this.mailSettingsBtn.Location = new System.Drawing.Point(650, 341);
+            this.mailSettingsBtn.Name = "mailSettingsBtn";
+            this.mailSettingsBtn.Size = new System.Drawing.Size(138, 28);
+            this.mailSettingsBtn.TabIndex = 7;
+            this.mailSettingsBtn.Text = "Mail Settings";
+            this.mailSettingsBtn.UseVisualStyleBackColor = true;
+            this.mailSettingsBtn.Click += new System.EventHandler(this.OpenMailSettingsClick);
+            // 
+            // textBox1
+            // 
+            this.textBox1.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.emailUIParametersBindingSource, "EmailTo", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBox1.Location = new System.Drawing.Point(348, 343);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(296, 26);
+            this.textBox1.TabIndex = 8;
+            // 
+            // emailUIParametersBindingSource
+            // 
+            this.emailUIParametersBindingSource.DataSource = typeof(Tesseract_UI_Tools.EmailUIParameters);
+            // 
+            // emailRightLbl
+            // 
+            this.emailRightLbl.AutoSize = true;
+            this.emailRightLbl.Location = new System.Drawing.Point(236, 346);
+            this.emailRightLbl.Name = "emailRightLbl";
+            this.emailRightLbl.Size = new System.Drawing.Size(106, 20);
+            this.emailRightLbl.TabIndex = 9;
+            this.emailRightLbl.Text = "Email Address:";
+            // 
             // QueueForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 444);
-            this.Controls.Add(this.queueLbl);
+            this.ClientSize = new System.Drawing.Size(800, 441);
+            this.Controls.Add(this.emailRightLbl);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.mailSettingsBtn);
             this.Controls.Add(this.statusLbl);
+            this.Controls.Add(this.queueTable);
+            this.Controls.Add(this.queueLbl);
+            this.Controls.Add(this.statusRightLbl);
             this.Controls.Add(this.statusProgressBar);
-            this.Controls.Add(this.queueBox);
             this.Controls.Add(this.addJobBtn);
             this.Name = "QueueForm";
             this.Text = "Tesseract UI Tools - Queue";
+            ((System.ComponentModel.ISupportInitialize)(this.queueTable)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emailUIParametersBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -99,9 +159,14 @@
         #endregion
 
         private Button addJobBtn;
-        private ListBox queueBox;
         private ProgressBar statusProgressBar;
-        private Label statusLbl;
+        private Label statusRightLbl;
         private Label queueLbl;
+        private DataGridView queueTable;
+        private Label statusLbl;
+        private Button mailSettingsBtn;
+        private TextBox textBox1;
+        private Label emailRightLbl;
+        private BindingSource emailUIParametersBindingSource;
     }
 }

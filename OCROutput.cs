@@ -5,10 +5,10 @@ namespace Tesseract_UI_Tools
     public class OCROutput
     {
         public Rect[] Rects = Array.Empty<Rect>();
-        public string[] Components = Array.Empty<string>();
+        public string?[] Components = Array.Empty<string>();
         public float[] Confidences = Array.Empty<float>();
         public string[] Debug = Array.Empty<string>();
-        private string DebugString;
+        private readonly string DebugString;
 
         public OCROutput(string Debug = "OCROutput")
         {
@@ -18,42 +18,42 @@ namespace Tesseract_UI_Tools
         public void Save(string OutputFile, string Extra="")
         {
             System.Diagnostics.Debug.Assert(Rects.Length == Components.Length && Components.Length == Confidences.Length);
-            using( StreamWriter writer = new StreamWriter(OutputFile, false, System.Text.Encoding.UTF8 ))
+            using StreamWriter writer = new(OutputFile, false, System.Text.Encoding.UTF8);
+            writer.WriteLine($"Origin\tX1\tY1\tX2\tY2\tConfidence\tText\t{Extra}");
+            for (int i = 0; i < Rects.Length; i++)
             {
-                writer.WriteLine($"Origin\tX1\tY1\tX2\tY2\tConfidence\tText\t{Extra}");
-                for (int i = 0; i < Rects.Length; i++)
+                if( (Components?[i]?.Trim() ?? "") == "")
                 {
-                    if(Components[i].Trim() != "")
-                    {
-                        writer.WriteLine($"{(Debug.Length > 0 ? Debug[i] : DebugString)}\t{Rects[i].TopLeft.X}\t{Rects[i].TopLeft.Y}\t{Rects[i].BottomRight.X}\t{Rects[i].BottomRight.Y}\t{Confidences[i]}\t{Components[i]}");
-                    }
+                    continue;
                 }
+                writer.WriteLine($"{(Debug.Length > 0 ? Debug[i] : DebugString)}\t{Rects[i].TopLeft.X}\t{Rects[i].TopLeft.Y}\t{Rects[i].BottomRight.X}\t{Rects[i].BottomRight.Y}\t{Confidences[i]}\t{Components?[i]}");
             }
         }
 
         public static OCROutput Load(string OutputFile)
         {
-            List<string> Lines = new List<string>();
-            using( StreamReader reader = new StreamReader(OutputFile, System.Text.Encoding.UTF8))
+            List<string> Lines = new();
+            using StreamReader reader = new(OutputFile, System.Text.Encoding.UTF8);
+            string? CurrLine;
+            reader.ReadLine(); // Drop Header
+            while((CurrLine = reader.ReadLine()) != null)
             {
-                string? CurrLine;
-                reader.ReadLine(); // Drop Header
-                while((CurrLine = reader.ReadLine()) != null)
+                if( CurrLine.Split('\t').Last().Trim() != "")
                 {
-                    if( CurrLine.Split('\t').Last().Trim() != "")
-                    {
-                        Lines.Add(CurrLine);
-                    }
+                    Lines.Add(CurrLine);
                 }
             }
-            OCROutput Output = new OCROutput();
-            Output.Rects = new Rect[Lines.Count()];
-            Output.Components = new string[Lines.Count()];
-            Output.Confidences = new float[Lines.Count()];
-            Output.Debug = new string[Lines.Count()];
-            for(int i = 0; i < Lines.Count(); i++)
+
+            OCROutput Output = new()
             {
-                string CurrLine = Lines[i];
+                Rects = new Rect[Lines.Count],
+                Components = new string[Lines.Count],
+                Confidences = new float[Lines.Count],
+                Debug = new string[Lines.Count]
+            };
+            for (int i = 0; i < Lines.Count; i++)
+            {
+                CurrLine = Lines[i];
                 string[] Values = CurrLine.Split('\t');
                 Output.Debug[i] = Values[0];
                 int X1 = int.Parse(Values[1]);
@@ -70,7 +70,7 @@ namespace Tesseract_UI_Tools
         public static OCROutput MergeBest(OCROutput AOCROutput, OCROutput BOCROutput)
         {
             // Populate map of A to B intersections
-            Dictionary<int, int> AMatchesB = new Dictionary<int, int>();
+            Dictionary<int, int> AMatchesB = new();
             for( int i = 0; i < AOCROutput.Rects.Length; i++)
             {
                 Rect ACurr = AOCROutput.Rects[i];
@@ -89,7 +89,7 @@ namespace Tesseract_UI_Tools
                 }
             }
             // Populate list of B that were not intersected
-            List<int> BToAdd = new List<int>();
+            List<int> BToAdd = new();
             for(int i = 0; i < BOCROutput.Rects.Length; i++)
             {
                 if( !AMatchesB.ContainsValue(i))
@@ -99,12 +99,14 @@ namespace Tesseract_UI_Tools
             }
             // Merge
             int NewSize = AMatchesB.Count + BToAdd.Count;
-            OCROutput Output = new OCROutput("MergeBest");
-            Output.Rects = new Rect[NewSize];
-            Output.Components = new string[NewSize];
-            Output.Confidences = new float[NewSize];
-            Output.Debug = new string[NewSize];
-            for(int i=0; i<AMatchesB.Count; i++)
+            OCROutput Output = new("MergeBest")
+            {
+                Rects = new Rect[NewSize],
+                Components = new string[NewSize],
+                Confidences = new float[NewSize],
+                Debug = new string[NewSize]
+            };
+            for (int i=0; i<AMatchesB.Count; i++)
             {
                 if( AMatchesB[i] == -1 || AOCROutput.Confidences[i] > BOCROutput.Confidences[AMatchesB[i]] )
                 {

@@ -12,22 +12,15 @@ namespace Tesseract_UI_Tools
         TesseractMainWorkerProgressUserState State = new TesseractMainWorkerProgressUserState("Initialized", 0);
         DirectoryInfo Files = Directory.CreateDirectory(Path.Combine(Application.UserAppDataPath, "Files"));
         DirectoryInfo Reports = Directory.CreateDirectory(Path.Combine(Application.UserAppDataPath, "Reports"));
-        TesseractUIParameters Params;
         Progress<float> SubProgress = new Progress<float>();
 
-        /// <summary>
-        /// Initialize worker with access to <see cref="TesseractUIParameters"/>
-        /// </summary>
-        /// <param name="Params"></param>
-        public TesseractMainWorker(TesseractUIParameters Params)
+        public TesseractMainWorker()
         {
-            this.Params = Params;
-
             WorkerReportsProgress = true;
             WorkerSupportsCancellation = true;
-            DoWork += Start;
-
             SubProgress.ProgressChanged += SubProgress_ProgressChanged;
+
+            DoWork += Start;
 
             // Fix XFont problems? https://stackoverflow.com/a/68041013/2573422
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
@@ -54,6 +47,12 @@ namespace Tesseract_UI_Tools
 
         private void Start(object? sender, DoWorkEventArgs e)
         {
+            QueueItem? item = e.Argument as QueueItem;
+            if ( item == null) throw new Exception("Missing Queue Item");
+
+            TesseractUIParameters Params = item.TesseractParams;
+            item.Update(QueueItemStatus.RUNNING);
+
             AdvancedReportTable report = new AdvancedReportTable(Reports.FullName, Params);
             Report("Reading Input Folder", 0);
             foreach (string CurrentFile in Directory.EnumerateFiles(Params.InputFolder))
@@ -108,6 +107,7 @@ namespace Tesseract_UI_Tools
             report.Close();
             Report("", 0);
             e.Result = report.FullPath;
+            item.Update(QueueItemStatus.FINISHED);
         }
 
 
@@ -144,6 +144,7 @@ namespace Tesseract_UI_Tools
         {
             Text = text;
             Value = value;
+            ReportPath = "";
         }
     }
 }

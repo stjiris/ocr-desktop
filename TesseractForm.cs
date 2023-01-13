@@ -15,7 +15,7 @@ namespace Tesseract_UI_Tools
         {
             InitializeComponent();
             DialogResult = DialogResult.Cancel;
-            TessParams = defaults != null ? defaults : new TesseractUIParameters();
+            TessParams = defaults ?? new TesseractUIParameters();
 
             TessParams.PropertyChanged += TessParams_PropertyChanged;
             tesseractUIParametersBindingSource.DataSource = TessParams;
@@ -106,11 +106,11 @@ namespace Tesseract_UI_Tools
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void LanguagesCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
+        private void LanguagesCheckedListBox_ItemCheck(object? sender, ItemCheckEventArgs e)
         {
             // This triggers BEFORE LanguagesCheckedListBox is updated there are workarounds with begin Invoke
             // TessParams also trigger this we need to prevent recursion.
-            string LangChanged = TessdataUtil.Lang2Code(LanguagesCheckedListBox.Items[e.Index].ToString());
+            string LangChanged = TessdataUtil.Lang2Code(LanguagesCheckedListBox.Items[e.Index].ToString() ?? "");
             IEnumerable<string> CurrLangs = LanguagesCheckedListBox.CheckedItems.OfType<string>().Select(l => TessdataUtil.Lang2Code(l));
             if ( e.NewValue == CheckState.Checked && !TessParams.GetLanguage().Contains(LangChanged) )
             {
@@ -131,7 +131,7 @@ namespace Tesseract_UI_Tools
         private void StrategyBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (StrategyBox.SelectedItem == null) return;
-            TessParams.Strategy = StrategyBox.SelectedItem.ToString();
+            TessParams.Strategy = StrategyBox.SelectedItem.ToString() ?? "";
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace Tesseract_UI_Tools
         /// <param name="e"></param>
         private void ResetLangs_Click(object sender, EventArgs e)
         {
-            TessParams.SetLanguage(new string[] { });
+            TessParams.SetLanguage(Array.Empty<string>());
         }
     }
 }

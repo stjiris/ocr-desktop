@@ -71,17 +71,18 @@ namespace Tesseract_UI_Tools
         public string[] GenerateTsvs(string[] TiffPages, string FolderPath, string[] Languages, string Strategy, bool Overwrite=false, IProgress<float>? Progress = null, BackgroundWorker? worker = null)
         {
             string[] TsvsPages = new string[TiffPages.Length];
-            using (AOcrStrategy OcrStrategy = AOcrStrategy.GetStrategy(Strategy,Languages))
-                for (int i = 0; i < TiffPages.Length && (worker == null || !worker.CancellationPending); i++)
-                {
-                    if (Progress != null) Progress.Report((float)i / TiffPages.Length);
+            using AOcrStrategy? OcrStrategy = AOcrStrategy.GetStrategy(Strategy, Languages);
+            if (OcrStrategy == null) throw new ArgumentException("Invalid Strategy");
+            for (int i = 0; i < TiffPages.Length && (worker == null || !worker.CancellationPending); i++)
+            {
+                if (Progress != null) Progress.Report((float)i / TiffPages.Length);
 
-                    string FullName = Path.Combine(FolderPath, TsvPage(i, Strategy, TessdataUtil.LanguagesToString(Languages)));
-                    TsvsPages[i] = FullName;
-                    if (File.Exists(FullName) && !Overwrite) continue;
+                string FullName = Path.Combine(FolderPath, TsvPage(i, Strategy, TessdataUtil.LanguagesToString(Languages)));
+                TsvsPages[i] = FullName;
+                if (File.Exists(FullName) && !Overwrite) continue;
 
-                    OcrStrategy.GenerateTsv(TiffPages[i], TsvsPages[i]);
-                }
+                OcrStrategy.GenerateTsv(TiffPages[i], TsvsPages[i]);
+            }
             return TsvsPages;
         }
 
@@ -140,16 +141,16 @@ namespace Tesseract_UI_Tools
         public static ATiffPagesGenerator? GetTiffPagesGenerator(string FilePath)
         {
             string ext = Path.GetExtension(FilePath).ToLower().Substring(1); // Remove . (dot)
-            Type? Generator = Assembly.GetAssembly(typeof(ATiffPagesGenerator)).GetTypes()
+            Type? Generator = Assembly.GetAssembly(typeof(ATiffPagesGenerator))?.GetTypes()
                 .Where(mType => mType.IsClass && !mType.IsAbstract && mType.IsSubclassOf(typeof(ATiffPagesGenerator)))
-                .FirstOrDefault(mType => ((string[])mType.GetField("FORMATS").GetValue(null)).Any(forms => forms.Equals(ext)));
+                .FirstOrDefault(mType => (mType.GetField("FORMATS")?.GetValue(null) as string[] ?? Array.Empty<string>()).Any(forms => forms.Equals(ext)));
             if (Generator == null)
             {
                 return null;
             }
 
             
-            return (ATiffPagesGenerator)Generator.GetConstructor(new Type[] { typeof(string) }).Invoke(new object[] { FilePath });
+            return Generator.GetConstructor(new Type[] { typeof(string) })?.Invoke(new object[] { FilePath }) as ATiffPagesGenerator;
         }
     }
 }

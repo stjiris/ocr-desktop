@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GroupDocs.Parser" Version="22.8.0" />
+    <PackageReference Include="GroupDocs.Parser" Version="22.11.0" />
     <PackageReference Include="OpenCvSharp4.Windows" Version="4.6.0.20220608" />
     <PackageReference Include="PdfSharp" Version="1.50.5147" />
   </ItemGroup>

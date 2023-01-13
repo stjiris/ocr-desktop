@@ -12,62 +12,140 @@ namespace Tesseract_UI_Tools
 {
     public partial class QueueForm : Form
     {
-        TesseractUIParameters LastParameters = new TesseractUIParameters();
-        BindingList<QueueItem> queue = new BindingList<QueueItem>();
+        readonly TesseractUIParameters LastParameters = new();
+        readonly EmailUIParameters EmailParams = new();
+        readonly BindingList<QueueItem> queue = new();
+        readonly TesseractMainWorker worker = new();
+        
         public QueueForm()
         {
             InitializeComponent();
-            queueBox.DataSource = queue;
-            queueBox.DisplayMember = "tesseractParams.InputFolder";
-            queueBox.ValueMember = "tesseractParams";
+            emailUIParametersBindingSource.DataSource = EmailParams;
+            queueTable.DataSource = queue;
+
+            worker.ProgressChanged += WorkerProgressUpdate;
+            worker.RunWorkerCompleted += WorkerComplete;
+            worker.RunWorkerCompleted += RunNextItem;
         }
 
-        private void addJobBtn_Click(object sender, EventArgs e)
+        private void RunNextItem(object? sender, RunWorkerCompletedEventArgs e)
+        {
+            TryRunNextItem();
+        }
+        private void TryRunNextItem()
+        {
+            var next = queue.FirstOrDefault(o => o.Status == QueueItemStatus.CREATED);
+            if( next != null && !worker.IsBusy )
+            {
+                worker.RunWorkerAsync(next);
+            }
+        }
+
+        private void AddJob(object sender, EventArgs e)
         {
             var tesseractForm = new TesseractForm(LastParameters);
             DialogResult r = tesseractForm.ShowDialog();
             if( r == DialogResult.OK )
             {
-                queue.Add(new QueueItem(LastParameters.Clone() as TesseractUIParameters));
+                queue.Add(new QueueItem((TesseractUIParameters)LastParameters.Clone()));
+                TryRunNextItem();
             }
         }
-    }
-
-    enum QueueItemStatus
-    {
-        READY,
-        RUNNING,
-        STOPPED,
-        FINISHED
-    }
-
-    class QueueItem : Control, INotifyPropertyChanged
-    {
-        public TesseractUIParameters tesseractParams { get; private set; }
-        DateTime queued;
-        QueueItemStatus queueItemStatus;
-
-        public QueueItem(TesseractUIParameters tesseractParams)
+        private void OpenMailSettingsClick(object sender, EventArgs e)
         {
-            this.tesseractParams = tesseractParams;
-            queued = DateTime.Now;
-            queueItemStatus = QueueItemStatus.READY;
-
-            var lbl = new Label();
-            lbl.Text = $"{queued} - {tesseractParams.InputFolder} - {queueItemStatus}";
-            this.Controls.Add(lbl);
+            var form = new MailSettingsForm(EmailParams);
+            form.ShowDialog();
         }
 
-        void SetStatus( QueueItemStatus status)
+        private void WorkerProgressUpdate(object? sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
-            if (queueItemStatus == status) return;
-            queueItemStatus = status;
-            if (PropertyChanged != null )
+            if (e.UserState == null) return;
+
+            TesseractMainWorkerProgressUserState State = (TesseractMainWorkerProgressUserState)e.UserState;
+            statusLbl.Text = State.Text;
+            statusProgressBar.Value = State.Value;
+        }
+
+        private void WorkerComplete(object? sender, RunWorkerCompletedEventArgs e )
+        {
+            statusProgressBar.Value = 0;
+            string report;
+
+            if (e.Cancelled)
             {
-                PropertyChanged(this, new PropertyChangedEventArgs("Status"));
+                report = "User Cancelled";
+
+            }
+            else if (e.Error != null)
+            {
+                report = "Error: " + e.Error.Message;
+                System.Diagnostics.Debug.WriteLine("Error! " + e.Error.Message);
+                SendMail("OCR Error", e.Error.Message);
+                MessageBox.Show(e.Error.ToString(), "Error Information", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                string? ReportPath = e.Result as string;
+                if( ReportPath != null && File.Exists(ReportPath))
+                {
+                    SendMail("OCR Report", File.ReadAllText(ReportPath));
+                }
+                else if(ReportPath != null)
+                {
+                    SendMail("OCR Report", $"Worker finnished with the following string: {ReportPath}");
+                }
+                report = "Terminated";
+            }
+            statusLbl.Text = report;
+        }
+
+        private void SendMail(string sub, string htmlBody)
+        {
+            EmailUIParameters Params = EmailParams;
+            if (Params.EmailTo == "") return;
+            try
+            {
+                var client = new System.Net.Mail.SmtpClient(Params.Host, Params.Port)
+                {
+                    DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network
+                };
+                client.SendCompleted += SendMailCompleted;
+                var mail = new System.Net.Mail.MailMessage(Params.EmailFrom, Params.EmailTo)
+                {
+                    IsBodyHtml = true,
+                    Body = htmlBody,
+                    Subject = sub
+                };
+                
+                client.SendAsync(mail, null);
+                MessageBox.Show($"Smtp client to {client.Host}:{client.Port}\n" +
+                    $"From: {mail.From}\n" +
+                    $"To: {mail.To}\n" +
+                    $"Subject: {mail.Subject}\n");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
             }
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        private void SendMailCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs args)
+        {
+            if (args.Error != null)
+            {
+                System.Diagnostics.Debug.WriteLine(args.Error.ToString());
+                MessageBox.Show(args.Error.ToString(), "Email Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (args.Cancelled)
+            {
+                System.Diagnostics.Debug.WriteLine("Cancelled");
+                MessageBox.Show("Mail cancelled", "Email Cancelled!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("OK");
+                MessageBox.Show("Mail sent without an error.", "Email Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
     }
 }

@@ -18,11 +18,11 @@ namespace Tesseract_UI_Tools
                 return GetLanguages();
             }
             
-            using (HttpClient client = new HttpClient())
+            using (HttpClient client = new())
             {
                 Task<Stream> request = client.GetStreamAsync(TessdataURL);
                 string TmpFile = Path.GetTempFileName();
-                using (FileStream TmpFileStream = new FileStream(TmpFile, FileMode.Open, FileAccess.Write))
+                using (FileStream TmpFileStream = new(TmpFile, FileMode.Open, FileAccess.Write))
                 {
                     (await request).CopyTo(TmpFileStream);
                 }
@@ -43,7 +43,7 @@ namespace Tesseract_UI_Tools
             return string.Join("+", Languages.Distinct() );
         }
 
-        private static Dictionary<string, string> _code2lang = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> _code2lang = new()
         {
             {"afr","Afrikaans"},
             {"amh","Amharic"},
@@ -204,17 +204,14 @@ namespace Tesseract_UI_Tools
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        private Dictionary<string, object> keyPair = new Dictionary<string, object>();
+        private Dictionary<string, object> keyPair = new();
         private object this[string prop]
         {
             get => keyPair[prop];
             set {
                 if (keyPair.ContainsKey(prop) && EqualityComparer<object>.Default.Equals(keyPair[prop], value)) return;
                 keyPair[prop] = value;
-                if( PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs(prop));
-                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
             }
         }
         public TesseractUIParameters()
@@ -237,48 +234,48 @@ namespace Tesseract_UI_Tools
 
         public string InputFolder
         {
-            get { return (string)this["InputFolder"]; }
-            set { this["InputFolder"] = value; }
+            get => (string)this["InputFolder"];
+            set => this["InputFolder"] = value;
         }
         public string OutputFolder
         {
-            get { return (string)this["OutputFolder"]; }
-            set { this["OutputFolder"] = value; }
+            get => (string)this["OutputFolder"];
+            set => this["OutputFolder"] = value;
         }
         public string Language
         {
-            get { return (string)this["Language"]; }
-            set { this["Language"] = value; }
+            get => (string)this["Language"];
+            set => this["Language"] = value;
         }
         public int Dpi
         {
-            get { return (int)this["Dpi"]; }
-            set { this["Dpi"] = value; }
+            get => (int)this["Dpi"];
+            set => this["Dpi"] = value;
         }
         public int Quality
         {
-            get { return (int)this["Quality"]; }
-            set { this["Quality"] = value; }
+            get => (int)this["Quality"];
+            set => this["Quality"] = value;
         }
         public bool Overwrite
         {
-            get { return (bool)this["Overwrite"]; }
-            set { this["Overwrite"] = value; }
+            get => (bool)this["Overwrite"];
+            set => this["Overwrite"] = value;
         }
         public bool Clear
         {
-            get { return (bool)this["Clear"]; }
-            set { this["Clear"] = value; }
+            get => (bool)this["Clear"];
+            set => this["Clear"] = value;
         }
         public float MinimumConfidence
         {
-            get { return (float)this["MinimumConfidence"]; }
-            set { this["MinimumConfidence"] = value; }
+            get => (float)this["MinimumConfidence"];
+            set => this["MinimumConfidence"] = value;
         }
         public string Strategy
         {
-            get { return (string)this["Strategy"]; }
-            set { this["Strategy"] = value; }
+            get => (string)this["Strategy"];
+            set => this["Strategy"] = value;
         }
         public void SetLanguage(string[] Languages)
         {
@@ -309,9 +306,10 @@ namespace Tesseract_UI_Tools
 
         public object Clone()
         {
-            var parameters = new TesseractUIParameters();
-            parameters.keyPair = new Dictionary<string, object>(keyPair);
-            return parameters;
+            return new TesseractUIParameters
+            {
+                keyPair = new(keyPair)
+            };
         }
     }
 }

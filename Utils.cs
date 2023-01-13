@@ -29,7 +29,8 @@ namespace Tesseract_UI_Tools
                 float Y1 = OcrObject.Rects[i].TopLeft.Y * Scale;
                 float X2 = OcrObject.Rects[i].BottomRight.X * Scale;
                 float Y2 = OcrObject.Rects[i].BottomRight.Y * Scale;
-                if( DebugPDF)
+                string text = OcrObject.Components[i] ?? "";
+                if ( DebugPDF)
                 {
                     float conf = OcrObject.Confidences[i];
                     if( conf < 0.5)
@@ -45,13 +46,16 @@ namespace Tesseract_UI_Tools
                         g.DrawRectangle(new XSolidBrush(XColor.FromArgb(255, 0, 255, 0)), X1, Y1, X2 - X1, Y2 - Y1);
                     }
                 }
-                XFont font = BestFont(g, OcrObject.Components[i], X2 - X1, Y2 - Y1);
-                g.DrawString(OcrObject.Components[i], font, brush, X1, Y1, XStringFormats.TopLeft);
+                if( text.Trim() != "")
+                {
+                    XFont font = BestFont(g, text, X2 - X1, Y2 - Y1);
+                    g.DrawString(text, font, brush, X1, Y1, XStringFormats.TopLeft);
+                }
             }
         }
         public static XFont BestFont(XGraphics g, string text, double width, double height)
         {
-            XFont font = new XFont(FontFamily.GenericSansSerif, 120, XFontStyle.Regular);
+            XFont font = new(FontFamily.GenericSansSerif, 120, XFontStyle.Regular);
             while (g.MeasureString(text, font).Width > width)
             {
                 font = new XFont(font.FontFamily.Name, font.Size - 1, XFontStyle.Regular);
@@ -82,13 +86,13 @@ namespace Tesseract_UI_Tools
         internal static Dictionary<string,string> ReadTitleProperties(string title)
         {
             string[] props = title.Split(';');
-            Dictionary<string, string> result = new Dictionary<string, string>();
+            Dictionary<string, string> result = new();
             foreach (string tprop in props)
             {
                 string prop = tprop.Trim();
                 int sepInd = prop.IndexOf(' ');
-                string key = prop.Substring(0, sepInd);
-                string value = prop.Substring(sepInd + 1);
+                string key = prop[..sepInd];
+                string value = prop[(sepInd + 1)..];
                 result.Add(key, value);
             }
             return result;
