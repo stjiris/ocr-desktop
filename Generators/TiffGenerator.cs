@@ -15,7 +15,7 @@ namespace Tesseract_UI_Tools.Generators
 
         private static readonly FrameDimension PAGE = FrameDimension.Page;
 
-        public override string[] GenerateTIFFs(string FolderPath, bool Overwrite = false, BackgroundWorker? worker = null)
+        public override string[] GenerateTIFFs(string FolderPath, bool Overwrite = false)
         {
             string[] Pages;
             using Bitmap Tiff = (Bitmap)Image.FromStream(File.OpenText(FilePath).BaseStream);

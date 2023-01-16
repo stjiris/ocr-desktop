@@ -70,30 +70,31 @@ namespace Tesseract_UI_Tools
 
                     report.StartFile(FileName);
                     Generator.SetProgress(SubProgress);
+                    Generator.SetWorker(this);
 
                     DirectoryInfo Tmp = Files.CreateSubdirectory(FileName);
                     VisualReport($"Spliting TIFFs of {FileName}", 0);
-                    string[] Pages = Generator.GenerateTIFFs(Tmp.FullName, Params.Overwrite, this);
+                    string[] Pages = Generator.GenerateTIFFs(Tmp.FullName, Params.Overwrite);
                     report.Pages(Pages.Length);
                     if (CancellationPending) return;
 
                     VisualReport($"Creating JPEGs of {FileName}", 0);
-                    string[] Jpegs = Generator.GenerateJPEGs(Pages, Tmp.FullName, Params.Dpi, Params.Quality, Params.Overwrite, this);
+                    string[] Jpegs = Generator.GenerateJPEGs(Pages, Tmp.FullName, Params.Dpi, Params.Quality, Params.Overwrite);
                     if (CancellationPending) return;
 
                     VisualReport($"Creating HOCRs of {FileName}", 0);
-                    string[] Tsvs = Generator.GenerateTsvs(Pages, Tmp.FullName, Params.GetLanguage(), Params.Strategy, Params.Overwrite, this);
+                    string[] Tsvs = Generator.GenerateTsvs(Pages, Tmp.FullName, Params.GetLanguage(), Params.Strategy, Params.Overwrite);
                     if (CancellationPending) return;
 
                     VisualReport($"Creating PDF of {FileName}", 0);
-                    Generator.GeneratePDF(Jpegs, Tsvs, Pages, OutputFile, Params.MinimumConfidence, false, this);
+                    Generator.GeneratePDF(Jpegs, Tsvs, Pages, OutputFile, Params.MinimumConfidence, false);
                     if (CancellationPending) return;
 
                     VisualReport($"Generating Report of {FileName}", 0);
-                    Generator.GeneratePDF(Jpegs, Tsvs, Pages, ReportFile, 0, true, this);
+                    Generator.GeneratePDF(Jpegs, Tsvs, Pages, ReportFile, 0, true);
 
 
-                    (int, int, float, float) stats = Generator.GetStatistics(Tsvs, Params.MinimumConfidence, this);
+                    (int, int, float, float) stats = Generator.GetStatistics(Tsvs, Params.MinimumConfidence);
                     report.Stop(stats.Item1, stats.Item2, stats.Item3, stats.Item4);
             
                     if (Params.Clear && !CancellationPending)
@@ -103,7 +104,7 @@ namespace Tesseract_UI_Tools
                 }
                 catch (Exception ex)
                 {
-                    report.SetError(ex);
+                    report.SetError(ex.InnerException ?? ex);
                 }
             }
             report.Close();

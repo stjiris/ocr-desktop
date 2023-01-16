@@ -8,7 +8,7 @@ namespace Tesseract_UI_Tools.Generators
 
         public JPGGenerator(string FilePath) : base(FilePath) { }
 
-        public override string[] GenerateTIFFs(string FolderPath, bool Overwrite = false, BackgroundWorker? worker = null)
+        public override string[] GenerateTIFFs(string FolderPath, bool Overwrite = false)
         {
             string Out = Path.Combine(FolderPath, $"1.tiff");
             using Image Curr = Image.FromFile(FilePath);

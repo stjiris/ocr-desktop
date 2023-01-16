@@ -20,6 +20,7 @@ namespace Tesseract_UI_Tools
         public bool CanRun { get { return _CanRun; } protected set { _CanRun = value; } }
 
         protected IProgress<float>? Progress;
+        protected BackgroundWorker? worker;
         public ATiffPagesGenerator(string FilePath)
         {
             this.FilePath = FilePath;
@@ -27,6 +28,7 @@ namespace Tesseract_UI_Tools
         }
 
         public void SetProgress(IProgress<float> o) => Progress = o;
+        public void SetWorker(BackgroundWorker o) => worker = o;
 
         public static string TiffPage(int I)
         {
@@ -42,8 +44,8 @@ namespace Tesseract_UI_Tools
             return $"{I}.{Strat}.{Uri.EscapeDataString(Languages)}.tsv";
         }
 
-        public abstract string[] GenerateTIFFs(string FolderPath, bool Overwrite=false, BackgroundWorker? worker=null);
-        public string[] GenerateJPEGs(string[] TiffPages, string FolderPath, int Dpi = 100, int Quality = 100, bool Overwrite=false, BackgroundWorker? worker = null)
+        public abstract string[] GenerateTIFFs(string FolderPath, bool Overwrite=false);
+        public string[] GenerateJPEGs(string[] TiffPages, string FolderPath, int Dpi = 100, int Quality = 100, bool Overwrite=false)
         {
             QualityEncoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, Quality);
             ImageCodecInfo JpegImageCodecInfo = ImageCodecInfo.GetImageEncoders().First(codec => codec.FormatID == ImageFormat.Jpeg.Guid);
@@ -68,7 +70,7 @@ namespace Tesseract_UI_Tools
             return JpegPages;
         }
 
-        public string[] GenerateTsvs(string[] TiffPages, string FolderPath, string[] Languages, string Strategy, bool Overwrite=false, BackgroundWorker? worker = null)
+        public string[] GenerateTsvs(string[] TiffPages, string FolderPath, string[] Languages, string Strategy, bool Overwrite=false)
         {
             string[] TsvsPages = new string[TiffPages.Length];
             using AOcrStrategy? OcrStrategy = AOcrStrategy.GetStrategy(Strategy, Languages);
@@ -86,7 +88,7 @@ namespace Tesseract_UI_Tools
             return TsvsPages;
         }
 
-        public void GeneratePDF(string[] Jpegs, string[] Tsvs, string[] OriginalTiffs, string OutputFile, float MinConf = 25, bool DebugPDF = false, BackgroundWorker? worker = null)
+        public void GeneratePDF(string[] Jpegs, string[] Tsvs, string[] OriginalTiffs, string OutputFile, float MinConf = 25, bool DebugPDF = false)
         {
             PdfDocument doc = new();
             doc.Info.Creator = PDF_TAG;
@@ -117,7 +119,7 @@ namespace Tesseract_UI_Tools
             }
         }
 
-        internal (int, int, float, float) GetStatistics(string[] Tsvs, float MinConf = 25, BackgroundWorker? worker = null)
+        internal (int, int, float, float) GetStatistics(string[] Tsvs, float MinConf = 25)
         {
             int wordsThresh = 0;
             int wordsTotal = 0;
