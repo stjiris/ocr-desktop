@@ -10,7 +10,7 @@ Currently the application can handle the following formats: TIFF, TIF, JPEG, JPG
 
 ## User Interface Overview
 
-![Main Screen Form](./images/main-screen-queue.png)
+![Main Screen Form](./images/main-screen.png)
 
 ![Add Job Form](./images/add-job-screen.png)
 
