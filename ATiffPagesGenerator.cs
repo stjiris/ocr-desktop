@@ -2,9 +2,6 @@
 using System.Drawing.Imaging;
 using PdfSharp.Pdf;
 using PdfSharp.Drawing;
-using System.Xml;
-using OpenCvSharp;
-using OpenCvSharp.Text;
 using System.ComponentModel;
 
 namespace Tesseract_UI_Tools

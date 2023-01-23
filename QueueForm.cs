@@ -16,7 +16,8 @@ namespace Tesseract_UI_Tools
         readonly EmailUIParameters EmailParams = new();
         readonly BindingList<QueueItem> queue = new();
         readonly TesseractMainWorker worker = new();
-        
+        readonly StreamWriter logExceptionsFile = new(Path.Combine(Application.UserAppDataPath, "exceptions.log"), true);
+
         public QueueForm()
         {
             InitializeComponent();
@@ -28,6 +29,7 @@ namespace Tesseract_UI_Tools
             worker.RunWorkerCompleted += RunNextItem;
 
             worker.VisualReport();
+            logExceptionsFile.WriteLine($"{DateTime.Now} - New QueueForm");
         }
 
         private void RunNextItem(object? sender, RunWorkerCompletedEventArgs e)
@@ -76,14 +78,14 @@ namespace Tesseract_UI_Tools
             if (e.Cancelled)
             {
                 report = "User Cancelled";
-
             }
             else if (e.Error != null)
             {
                 report = "Error: " + e.Error.Message;
                 System.Diagnostics.Debug.WriteLine("Error! " + e.Error.Message);
                 SendMail("OCR Error", e.Error.Message);
-                MessageBox.Show(e.Error.ToString(), "Error Information", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                logExceptionsFile.WriteLine($"{DateTime.Now} - WorkComplete - Error");
+                logExceptionsFile.WriteLine(e.Error.ToString());
             }
             else
             {
@@ -119,35 +121,49 @@ namespace Tesseract_UI_Tools
                     Subject = sub
                 };
                 
+                logExceptionsFile.WriteLine($"{DateTime.Now} - SendMail - Info");
+                logExceptionsFile.WriteLine($"Host: {client.Host} Port:{client.Port}");
+                logExceptionsFile.WriteLine($"From: {mail.From} To:{mail.To}");
+                logExceptionsFile.WriteLine($"Subject: {mail.Subject}");
+                
                 client.SendAsync(mail, null);
-                MessageBox.Show($"Smtp client to {client.Host}:{client.Port}\n" +
-                    $"From: {mail.From}\n" +
-                    $"To: {mail.To}\n" +
-                    $"Subject: {mail.Subject}\n");
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.ToString());
+                logExceptionsFile.WriteLine($"{DateTime.Now} - SendMail - Error");
+                logExceptionsFile.WriteLine(e);
+            }
+            try
+            {
+                GmailProvider.SendMail(Params.EmailTo, sub, htmlBody);
+            }
+            catch(Exception e)
+            {
+                logExceptionsFile.WriteLine($"{DateTime.Now} - SendMail - Google Error");
+                logExceptionsFile.WriteLine(e);
             }
         }
 
         private void SendMailCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs args)
         {
+            logExceptionsFile.WriteLine($"{DateTime.Now} - SendMailCompleted");
             if (args.Error != null)
             {
-                System.Diagnostics.Debug.WriteLine(args.Error.ToString());
-                MessageBox.Show(args.Error.ToString(), "Email Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                logExceptionsFile.WriteLine(args.Error);
             }
             else if (args.Cancelled)
             {
-                System.Diagnostics.Debug.WriteLine("Cancelled");
-                MessageBox.Show("Mail cancelled", "Email Cancelled!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                logExceptionsFile.WriteLine("Cancelled");
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("OK");
-                MessageBox.Show("Mail sent without an error.", "Email Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                logExceptionsFile.WriteLine($"No Error");
             }
+        }
+
+        private void QueueForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            logExceptionsFile.Close();
         }
     }
 }

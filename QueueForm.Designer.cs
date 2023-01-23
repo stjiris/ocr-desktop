@@ -149,6 +149,7 @@
             this.Controls.Add(this.addJobBtn);
             this.Name = "QueueForm";
             this.Text = "Tesseract UI Tools - Queue";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.QueueForm_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.queueTable)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emailUIParametersBindingSource)).EndInit();
             this.ResumeLayout(false);

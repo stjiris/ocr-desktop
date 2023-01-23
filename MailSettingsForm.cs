@@ -10,6 +10,7 @@ namespace Tesseract_UI_Tools
             EmailParams = parameters;
             InitializeComponent();
             emailUIParametersBindingSource.DataSource = EmailParams;
+            GmailProvider.LoginStatusUpdate += SetGoogleString;
         }
 
         private void MailSettingsForm_FormClosing(object? sender, FormClosingEventArgs e)
@@ -20,6 +21,30 @@ namespace Tesseract_UI_Tools
         private void SaveSettings(object sender, EventArgs e)
         {
             EmailParams.Save();
+        }
+
+        private void GoogleBtn_Click(object sender, EventArgs e)
+        {
+            if( GmailProvider.IsReady())
+            {
+                GmailProvider.LogOut();
+
+            }
+            else
+            {
+                GmailProvider.Initialize();
+            }
+        }
+
+        private void SetGoogleString() {
+            if (GmailProvider.IsReady())
+            {
+                GoogleBtn.Text = "Google Logout";
+            }
+            else
+            {
+                GoogleBtn.Text = "Google Login";
+            }
         }
     }
 
