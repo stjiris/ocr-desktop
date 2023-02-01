@@ -39,6 +39,7 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.emailUIParametersBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.emailRightLbl = new System.Windows.Forms.Label();
+            this.buttonFolder = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.queueTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emailUIParametersBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -55,7 +56,7 @@
             // 
             // statusProgressBar
             // 
-            this.statusProgressBar.Location = new System.Drawing.Point(12, 404);
+            this.statusProgressBar.Location = new System.Drawing.Point(12, 409);
             this.statusProgressBar.Name = "statusProgressBar";
             this.statusProgressBar.Size = new System.Drawing.Size(776, 28);
             this.statusProgressBar.TabIndex = 2;
@@ -63,7 +64,7 @@
             // statusRightLbl
             // 
             this.statusRightLbl.AutoSize = true;
-            this.statusRightLbl.Location = new System.Drawing.Point(12, 372);
+            this.statusRightLbl.Location = new System.Drawing.Point(12, 380);
             this.statusRightLbl.Name = "statusRightLbl";
             this.statusRightLbl.Size = new System.Drawing.Size(52, 20);
             this.statusRightLbl.TabIndex = 3;
@@ -133,11 +134,22 @@
             this.emailRightLbl.TabIndex = 9;
             this.emailRightLbl.Text = "Email Address:";
             // 
+            // buttonFolder
+            // 
+            this.buttonFolder.Location = new System.Drawing.Point(650, 375);
+            this.buttonFolder.Name = "buttonFolder";
+            this.buttonFolder.Size = new System.Drawing.Size(138, 28);
+            this.buttonFolder.TabIndex = 10;
+            this.buttonFolder.Text = "Reports Folder";
+            this.buttonFolder.UseVisualStyleBackColor = true;
+            this.buttonFolder.Click += new System.EventHandler(this.buttonFolder_Click);
+            // 
             // QueueForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 441);
+            this.Controls.Add(this.buttonFolder);
             this.Controls.Add(this.emailRightLbl);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.mailSettingsBtn);
@@ -169,5 +181,6 @@
         private TextBox textBox1;
         private Label emailRightLbl;
         private BindingSource emailUIParametersBindingSource;
+        private Button buttonFolder;
     }
 }

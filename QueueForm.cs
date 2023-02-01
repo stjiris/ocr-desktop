@@ -165,5 +165,10 @@ namespace Tesseract_UI_Tools
         {
             logExceptionsFile.Close();
         }
+
+        private void buttonFolder_Click(object sender, EventArgs e)
+        {
+            worker.OpenReportsFolder();
+        }
     }
 }

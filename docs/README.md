@@ -1,5 +1,3 @@
-# Tesseract UI Tools
-
 1. [About](#about)
 2. [User Interface Overview](#user-interface-overview)
 3. [Installation](#installation)
