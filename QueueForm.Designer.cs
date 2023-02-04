@@ -98,10 +98,11 @@
             // 
             this.statusLbl.AutoSize = true;
             this.statusLbl.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.statusLbl.Location = new System.Drawing.Point(70, 372);
+            this.statusLbl.Location = new System.Drawing.Point(70, 380);
             this.statusLbl.Name = "statusLbl";
-            this.statusLbl.Size = new System.Drawing.Size(0, 20);
+            this.statusLbl.Size = new System.Drawing.Size(15, 20);
             this.statusLbl.TabIndex = 6;
+            this.statusLbl.Text = "-";
             // 
             // mailSettingsBtn
             // 

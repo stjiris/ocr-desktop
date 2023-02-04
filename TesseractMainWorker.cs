@@ -53,6 +53,8 @@ namespace Tesseract_UI_Tools
             TesseractUIParameters Params = item.TesseractParams;
             item.Update(QueueItemStatus.RUNNING);
 
+            FileErrorManager em = new(Params.OutputFolder);
+            
             AdvancedReportTable report = new(Reports.FullName, Params);
             VisualReport("Reading Input Folder", 0);
             foreach (string CurrentFile in Directory.EnumerateFiles(Params.InputFolder))
@@ -60,6 +62,11 @@ namespace Tesseract_UI_Tools
                 string FileName = Path.GetFileNameWithoutExtension(CurrentFile);
                 string OutputFile = Path.Combine(Params.OutputFolder, $"{FileName}.pdf");
                 string ReportFile = Path.Combine(Reports.FullName, $"{FileName}.{Uri.EscapeDataString(Params.Language)}.{Params.Strategy}.pdf");
+
+                if( em.Contains($"{FileName}.pdf"))
+                {
+                    continue;
+                }
                 try
                 {
                     if (CancellationPending) break;
@@ -105,12 +112,14 @@ namespace Tesseract_UI_Tools
                 catch (Exception ex)
                 {
                     report.SetError(ex.InnerException ?? ex);
+                    em.Add($"{FileName}.pdf");
                 }
             }
             report.Close();
             VisualReport("", 0);
             e.Result = report.FullPath;
             item.Update(QueueItemStatus.FINISHED);
+            em.Save();
         }
 
 
