@@ -15,7 +15,7 @@ Esta aplicação foi desenhada para correr um simples ficheiro de cada vez, o fi
 
 ## Instalação
 
-1. Descarregar a [última versão da aplicação](https://github.com/stjiris/simple-ocr/releases/).
+1. Descarregar a [última versão da aplicação](https://github.com/stjiris/ocr-desktop/releases/).
 2. Descomprimir os ficheiros.
 3. Correr o ficheiro `IRIS OCR Desktop.exe`.
     - **Notas:** Durante a primeira execução do programa:
