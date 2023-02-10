@@ -1,6 +1,7 @@
-﻿using System.ComponentModel;
+﻿using IRIS_OCR_Desktop;
+using System.ComponentModel;
 
-namespace Tesseract_UI_Tools.Generators
+namespace IRIS_OCR_Desktop.Generators
 {
     public class JPGGenerator : ATiffPagesGenerator
     {

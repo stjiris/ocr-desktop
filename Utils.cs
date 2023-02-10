@@ -2,19 +2,19 @@
 using System.Xml;
 using System.Drawing.Imaging;
 
-namespace Tesseract_UI_Tools
+namespace IRIS_OCR_Desktop
 {
     public static class PdfUtil
     {
         public static void AddTextLayer(XGraphics g, string TsvPath, string Jpeg, string OriginalTiff, float MinConf = 25, bool DebugPDF = false)
         {
             float FinalRes = 1;
-            using(Image JpegImage = Image.FromFile(Jpeg))
+            using (Image JpegImage = Image.FromFile(Jpeg))
             {
                 FinalRes = JpegImage.HorizontalResolution;
             }
             float InitialRes = 1;
-            using(Image TiffImage = Image.FromFile(OriginalTiff))
+            using (Image TiffImage = Image.FromFile(OriginalTiff))
             {
                 InitialRes = TiffImage.HorizontalResolution;
             }
@@ -22,22 +22,22 @@ namespace Tesseract_UI_Tools
             XBrush brush = !DebugPDF ? new XSolidBrush(XColor.FromArgb(0, 0, 0, 0)) : XBrushes.Black;
 
             OCROutput OcrObject = OCROutput.Load(TsvPath);
-            for( int i= 0; i < OcrObject.Rects.Length; i++)
+            for (int i = 0; i < OcrObject.Rects.Length; i++)
             {
-                if (OcrObject.Confidences[i] < MinConf && !DebugPDF) continue;
+                if (OcrObject.Confidences[i] < MinConf/100 && !DebugPDF) continue;
                 float X1 = OcrObject.Rects[i].TopLeft.X * Scale;
                 float Y1 = OcrObject.Rects[i].TopLeft.Y * Scale;
                 float X2 = OcrObject.Rects[i].BottomRight.X * Scale;
                 float Y2 = OcrObject.Rects[i].BottomRight.Y * Scale;
                 string text = OcrObject.Components[i] ?? "";
-                if ( DebugPDF)
+                if (DebugPDF)
                 {
                     float conf = OcrObject.Confidences[i];
-                    if( conf < 0.5)
+                    if (conf < 0.5)
                     {
-                        g.DrawRectangle(new XSolidBrush(XColor.FromArgb(255, 255, 0, 0)), X1,Y1, X2-X1, Y2-Y1);
+                        g.DrawRectangle(new XSolidBrush(XColor.FromArgb(255, 255, 0, 0)), X1, Y1, X2 - X1, Y2 - Y1);
                     }
-                    else if( conf < 0.75)
+                    else if (conf < 0.75)
                     {
                         g.DrawRectangle(new XSolidBrush(XColor.FromArgb(255, 255, 255, 0)), X1, Y1, X2 - X1, Y2 - Y1);
                     }
@@ -46,7 +46,7 @@ namespace Tesseract_UI_Tools
                         g.DrawRectangle(new XSolidBrush(XColor.FromArgb(255, 0, 255, 0)), X1, Y1, X2 - X1, Y2 - Y1);
                     }
                 }
-                if( text.Trim() != "")
+                if (text.Trim() != "")
                 {
                     XFont font = BestFont(g, text, X2 - X1, Y2 - Y1);
                     g.DrawString(text, font, brush, X1, Y1, XStringFormats.TopLeft);
@@ -70,7 +70,7 @@ namespace Tesseract_UI_Tools
 
     public static class HocrUtil
     {
-        internal static void FloatArrayFromProp(Dictionary<string,string> props, string key, float[] result, float scale = 1)
+        internal static void FloatArrayFromProp(Dictionary<string, string> props, string key, float[] result, float scale = 1)
         {
             if (props.ContainsKey(key))
             {
@@ -83,7 +83,7 @@ namespace Tesseract_UI_Tools
             }
         }
 
-        internal static Dictionary<string,string> ReadTitleProperties(string title)
+        internal static Dictionary<string, string> ReadTitleProperties(string title)
         {
             string[] props = title.Split(';');
             Dictionary<string, string> result = new();

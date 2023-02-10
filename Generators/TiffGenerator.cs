@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing.Imaging;
 using System.ComponentModel;
+using IRIS_OCR_Desktop;
 
-namespace Tesseract_UI_Tools.Generators
+namespace IRIS_OCR_Desktop.Generators
 {
     internal class TiffGenerator : ATiffPagesGenerator
     {

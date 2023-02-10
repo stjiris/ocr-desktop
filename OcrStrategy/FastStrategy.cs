@@ -1,7 +1,7 @@
 ﻿using OpenCvSharp;
 using OpenCvSharp.Text;
 
-namespace Tesseract_UI_Tools.OcrStrategy
+namespace IRIS_OCR_Desktop.OcrStrategy
 {
     public class FastStrategy : AOcrStrategy
     {
@@ -24,13 +24,13 @@ namespace Tesseract_UI_Tools.OcrStrategy
 
             var watch = new System.Diagnostics.Stopwatch();
             using ResourcesTracker t = new();
-            
+
             watch.Start();
             Mat TiffMat = t.T(Cv2.ImRead(TiffPage));
             Mat RedMat = t.T(TiffMat.Resize(new OpenCvSharp.Size(0, 0), 0.5, 0.5));
             OpenCvEngineInstance.Run(RedMat, out string Text, out PlainOcrOutput.Rects, out PlainOcrOutput.Components, out PlainOcrOutput.Confidences, ComponentLevels.Word);
-            
-            for( int i = 0; i < PlainOcrOutput.Rects.Length; i++)
+
+            for (int i = 0; i < PlainOcrOutput.Rects.Length; i++)
             {
                 Rect Curr = PlainOcrOutput.Rects[i];
                 PlainOcrOutput.Rects[i] = new Rect(Curr.X * 2, Curr.Y * 2, Curr.Width * 2, Curr.Height * 2);

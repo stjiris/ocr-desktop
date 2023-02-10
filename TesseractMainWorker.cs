@@ -1,17 +1,16 @@
 ﻿using System.ComponentModel;
 using OpenCvSharp;
 using System.Drawing.Imaging;
-using Tesseract_UI_Tools.OcrStrategy;
+using IRIS_OCR_Desktop.OcrStrategy;
 using System.Threading;
 
-namespace Tesseract_UI_Tools
+namespace IRIS_OCR_Desktop
 {
     internal class TesseractMainWorker : BackgroundWorker
     {
         // setup state and directories
-        readonly TesseractMainWorkerProgressUserState State = new("Ready", 0);
+        readonly TesseractMainWorkerProgressUserState State = new("Pronto", 0);
         readonly DirectoryInfo Files = Directory.CreateDirectory(Path.Combine(Application.UserAppDataPath, "Files"));
-        readonly DirectoryInfo Reports = Directory.CreateDirectory(Path.Combine(Application.UserAppDataPath, "Reports"));
         readonly public Progress<float> SubProgress = new();
 
         public TesseractMainWorker()
@@ -27,15 +26,6 @@ namespace Tesseract_UI_Tools
         }
 
         /// <summary>
-        /// Open file explorer on <see cref="Reports"/> folder
-        /// </summary>
-        public void OpenReportsFolder()
-        {
-            System.Diagnostics.Process.Start("explorer.exe", Reports.FullName);
-        }
-
-
-        /// <summary>
         /// Emit subprogress
         /// </summary>
         /// <param name="sender"></param>
@@ -47,79 +37,56 @@ namespace Tesseract_UI_Tools
 
         private void Start(object? sender, DoWorkEventArgs e)
         {
-            QueueItem? item = e.Argument as QueueItem;
-            if ( item == null) throw new Exception("Missing Queue Item");
+            TesseractUIParameters? Params = e.Argument as TesseractUIParameters;
+            if (Params == null) throw new Exception("Parametros em falta.");
+            if (!Params.Validate()) throw new Exception("Parametros inválidos.");
 
-            TesseractUIParameters Params = item.TesseractParams;
-            item.Update(QueueItemStatus.RUNNING);
-
-            FileErrorManager em = new(Params.OutputFolder);
+            VisualReport("A verificar ficheiro.", 0);
             
-            AdvancedReportTable report = new(Reports.FullName, Params);
-            VisualReport("Reading Input Folder", 0);
-            foreach (string CurrentFile in Directory.EnumerateFiles(Params.InputFolder))
+            string FileName = Path.GetFileNameWithoutExtension(Params.InputFile);
+            string OutputFilePDF = Path.Combine(Files.FullName, $"{FileName}.pdf");
+            string OutputFileTXT = Path.Combine(Files.FullName, $"{FileName}.txt");
+            
+
+            ATiffPagesGenerator? Generator = TiffPagesGeneratorProvider.GetTiffPagesGenerator(Params.InputFile);
+            if (Generator == null || !Generator.CanRun)
             {
-                string FileName = Path.GetFileNameWithoutExtension(CurrentFile);
-                string OutputFile = Path.Combine(Params.OutputFolder, $"{FileName}.pdf");
-                string ReportFile = Path.Combine(Reports.FullName, $"{FileName}.{Uri.EscapeDataString(Params.Language)}.{Params.Strategy}.pdf");
+                throw new Exception("Não é possível correr este ficheiro.");
+            };
+            try
+            {
+                Generator.SetProgress(SubProgress);
+                Generator.SetWorker(this);
 
-                if( em.Contains($"{FileName}.pdf"))
+                DirectoryInfo Tmp = Files.CreateSubdirectory(FileName);
+                VisualReport($"A separar páginas", 0);
+                string[] Pages = Generator.GenerateTIFFs(Tmp.FullName, Params.Overwrite);
+
+                VisualReport($"A criar camada visual", 0);
+                string[] Jpegs = Generator.GenerateJPEGs(Pages, Tmp.FullName, Params.Dpi, Params.Quality, Params.Overwrite);
+                if (CancellationPending) return;
+
+                VisualReport($"A criar camada de texto", 0);
+                string[] Tsvs = Generator.GenerateTsvs(Pages, Tmp.FullName, Params.GetLanguage(), Params.Strategy, Params.Overwrite);
+                if (CancellationPending) return;
+
+                VisualReport($"A criar PDF", 0);
+                Generator.GeneratePDF(Jpegs, Tsvs, Pages, OutputFilePDF, Params.MinimumConfidence, false);
+                Generator.GenerateTXT(Tsvs, OutputFileTXT, Params.MinimumConfidence);
+                if (CancellationPending) return;
+
+                if (Params.Clear && !CancellationPending)
                 {
-                    continue;
-                }
-                try
-                {
-                    if (CancellationPending) break;
-                    ATiffPagesGenerator? Generator = TiffPagesGeneratorProvider.GetTiffPagesGenerator(CurrentFile);
-                    if (Generator == null || !Generator.CanRun ) continue;
-
-                    if (File.Exists(OutputFile) && !Params.Overwrite) continue;
-
-                    report.StartFile(FileName);
-                    Generator.SetProgress(SubProgress);
-                    Generator.SetWorker(this);
-
-                    DirectoryInfo Tmp = Files.CreateSubdirectory(FileName);
-                    VisualReport($"Spliting TIFFs of {FileName}", 0);
-                    string[] Pages = Generator.GenerateTIFFs(Tmp.FullName, Params.Overwrite);
-                    report.Pages(Pages.Length);
-                    if (CancellationPending) return;
-
-                    VisualReport($"Creating JPEGs of {FileName}", 0);
-                    string[] Jpegs = Generator.GenerateJPEGs(Pages, Tmp.FullName, Params.Dpi, Params.Quality, Params.Overwrite);
-                    if (CancellationPending) return;
-
-                    VisualReport($"Creating HOCRs of {FileName}", 0);
-                    string[] Tsvs = Generator.GenerateTsvs(Pages, Tmp.FullName, Params.GetLanguage(), Params.Strategy, Params.Overwrite);
-                    if (CancellationPending) return;
-
-                    VisualReport($"Creating PDF of {FileName}", 0);
-                    Generator.GeneratePDF(Jpegs, Tsvs, Pages, OutputFile, Params.MinimumConfidence, false);
-                    if (CancellationPending) return;
-
-                    VisualReport($"Generating Report of {FileName}", 0);
-                    Generator.GeneratePDF(Jpegs, Tsvs, Pages, ReportFile, 0, true);
-
-
-                    (int, int, float, float) stats = Generator.GetStatistics(Tsvs, Params.MinimumConfidence);
-                    report.Stop(stats.Item1, stats.Item2, stats.Item3, stats.Item4);
-            
-                    if (Params.Clear && !CancellationPending)
-                    {
-                        Tmp.Delete(true);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    report.SetError(ex.InnerException ?? ex);
-                    em.Add($"{FileName}.pdf");
+                    Tmp.Delete(true);
                 }
             }
-            report.Close();
-            VisualReport("", 0);
-            e.Result = report.FullPath;
-            item.Update(QueueItemStatus.FINISHED);
-            em.Save();
+            catch (Exception ex)
+            {
+                VisualReport($"Erro: {ex}", 0);
+                throw;
+            }
+            VisualReport("Terminado", 0);
+            e.Result = new string[] { OutputFilePDF, OutputFileTXT };
         }
 
 

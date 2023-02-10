@@ -1,6 +1,6 @@
 ﻿using OpenCvSharp;
 
-namespace Tesseract_UI_Tools
+namespace IRIS_OCR_Desktop
 {
     public class OCROutput
     {
@@ -15,14 +15,14 @@ namespace Tesseract_UI_Tools
             DebugString = Debug;
         }
 
-        public void Save(string OutputFile, string Extra="")
+        public void Save(string OutputFile, string Extra = "")
         {
             System.Diagnostics.Debug.Assert(Rects.Length == Components.Length && Components.Length == Confidences.Length);
             using StreamWriter writer = new(OutputFile, false, System.Text.Encoding.UTF8);
             writer.WriteLine($"Origin\tX1\tY1\tX2\tY2\tConfidence\tText\t{Extra}");
             for (int i = 0; i < Rects.Length; i++)
             {
-                if( (Components?[i]?.Trim() ?? "") == "")
+                if ((Components?[i]?.Trim() ?? "") == "")
                 {
                     continue;
                 }
@@ -36,9 +36,9 @@ namespace Tesseract_UI_Tools
             using StreamReader reader = new(OutputFile, System.Text.Encoding.UTF8);
             string? CurrLine;
             reader.ReadLine(); // Drop Header
-            while((CurrLine = reader.ReadLine()) != null)
+            while ((CurrLine = reader.ReadLine()) != null)
             {
-                if( CurrLine.Split('\t').Last().Trim() != "")
+                if (CurrLine.Split('\t').Last().Trim() != "")
                 {
                     Lines.Add(CurrLine);
                 }
@@ -71,28 +71,28 @@ namespace Tesseract_UI_Tools
         {
             // Populate map of A to B intersections
             Dictionary<int, int> AMatchesB = new();
-            for( int i = 0; i < AOCROutput.Rects.Length; i++)
+            for (int i = 0; i < AOCROutput.Rects.Length; i++)
             {
                 Rect ACurr = AOCROutput.Rects[i];
-                for( int j = 0; j < BOCROutput.Rects.Length; j++)
+                for (int j = 0; j < BOCROutput.Rects.Length; j++)
                 {
                     Rect BCurr = BOCROutput.Rects[j];
-                    if( ACurr.IntersectsWith(BCurr))
+                    if (ACurr.IntersectsWith(BCurr))
                     {
                         AMatchesB.Add(i, j);
                         break;
                     }
                 }
-                if( !AMatchesB.ContainsKey(i))
+                if (!AMatchesB.ContainsKey(i))
                 {
                     AMatchesB.Add(i, -1);
                 }
             }
             // Populate list of B that were not intersected
             List<int> BToAdd = new();
-            for(int i = 0; i < BOCROutput.Rects.Length; i++)
+            for (int i = 0; i < BOCROutput.Rects.Length; i++)
             {
-                if( !AMatchesB.ContainsValue(i))
+                if (!AMatchesB.ContainsValue(i))
                 {
                     BToAdd.Add(i);
                 }
@@ -106,9 +106,9 @@ namespace Tesseract_UI_Tools
                 Confidences = new float[NewSize],
                 Debug = new string[NewSize]
             };
-            for (int i=0; i<AMatchesB.Count; i++)
+            for (int i = 0; i < AMatchesB.Count; i++)
             {
-                if( AMatchesB[i] == -1 || AOCROutput.Confidences[i] > BOCROutput.Confidences[AMatchesB[i]] )
+                if (AMatchesB[i] == -1 || AOCROutput.Confidences[i] > BOCROutput.Confidences[AMatchesB[i]])
                 {
                     Output.Rects[i] = AOCROutput.Rects[i];
                     Output.Components[i] = AOCROutput.Components[i];
@@ -124,7 +124,7 @@ namespace Tesseract_UI_Tools
                 }
             }
             int Index = AMatchesB.Count;
-            foreach(int BIndex in BToAdd)
+            foreach (int BIndex in BToAdd)
             {
                 Output.Rects[Index] = BOCROutput.Rects[BIndex];
                 Output.Components[Index] = BOCROutput.Components[BIndex];

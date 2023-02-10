@@ -4,32 +4,25 @@ using System.Configuration;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
-namespace Tesseract_UI_Tools
+namespace IRIS_OCR_Desktop
 {
     public class TessdataUtil
     {
-        public static readonly string TessdataURL = "https://github.com/tesseract-ocr/tessdata_fast/archive/refs/heads/main.zip";
+        public static readonly string TessdataURL = "https://github.com/tesseract-ocr/tessdata_fast/raw/main/por.traineddata";
         public static readonly string TessdataPath = Path.Combine(Application.CommonAppDataPath, "tessdata_fast-main/");
 
         public static async Task<string[]> Setup()
         {
-            if( Directory.Exists(TessdataPath))
+            if (Directory.Exists(TessdataPath))
             {
                 return GetLanguages();
             }
-            
-            using (HttpClient client = new())
-            {
-                Task<Stream> request = client.GetStreamAsync(TessdataURL);
-                string TmpFile = Path.GetTempFileName();
-                using (FileStream TmpFileStream = new(TmpFile, FileMode.Open, FileAccess.Write))
-                {
-                    (await request).CopyTo(TmpFileStream);
-                }
-                ZipFile.ExtractToDirectory(TmpFile, Application.CommonAppDataPath);
-                File.Delete(TmpFile);
-            }
 
+            using HttpClient client = new();
+            using Stream st = await client.GetStreamAsync(TessdataURL);
+            Directory.CreateDirectory(TessdataPath);
+            using FileStream fs = new(Path.Combine(TessdataPath, "por.traineddata"), FileMode.CreateNew);
+            await st.CopyToAsync(fs);
             return GetLanguages();
         }
 
@@ -40,7 +33,7 @@ namespace Tesseract_UI_Tools
 
         public static string LanguagesToString(string[] Languages)
         {
-            return string.Join("+", Languages.Distinct() );
+            return string.Join("+", Languages.Distinct());
         }
 
         private static readonly Dictionary<string, string> _code2lang = new()
@@ -184,9 +177,9 @@ namespace Tesseract_UI_Tools
 
         public static string Lang2Code(string Lang)
         {
-            foreach( KeyValuePair<string, string> codeLang in _code2lang)
+            foreach (KeyValuePair<string, string> codeLang in _code2lang)
             {
-                if( codeLang.Value == Lang)
+                if (codeLang.Value == Lang)
                 {
                     return codeLang.Key;
                 }
@@ -208,7 +201,8 @@ namespace Tesseract_UI_Tools
         private object this[string prop]
         {
             get => keyPair[prop];
-            set {
+            set
+            {
                 if (keyPair.ContainsKey(prop) && EqualityComparer<object>.Default.Equals(keyPair[prop], value)) return;
                 keyPair[prop] = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
@@ -217,12 +211,11 @@ namespace Tesseract_UI_Tools
         public TesseractUIParameters()
         {
             Reset();
-        } 
+        }
 
         public void Reset()
         {
-            InputFolder = "";
-            OutputFolder = "";
+            InputFile = "";
             Language = "eng";
             Dpi = 100;
             Quality = 100;
@@ -232,16 +225,12 @@ namespace Tesseract_UI_Tools
             Strategy = "";
         }
 
-        public string InputFolder
+        public string InputFile
         {
-            get => (string)this[nameof(InputFolder)];
-            set => this[nameof(InputFolder)] = value;
+            get => (string)this[nameof(InputFile)];
+            set => this[nameof(InputFile)] = value;
         }
-        public string OutputFolder
-        {
-            get => (string)this[nameof(OutputFolder)];
-            set => this[nameof(OutputFolder)] = value;
-        }
+
         public string Language
         {
             get => (string)this[nameof(Language)];
@@ -290,8 +279,7 @@ namespace Tesseract_UI_Tools
         public bool Validate()
         {
             return
-                Directory.Exists(InputFolder) &&
-                Directory.Exists(OutputFolder) &&
+                File.Exists(InputFile) &&
                 Language != string.Empty &&
                 Strategy != string.Empty &&
                 Dpi >= 70 && Dpi <= 300 &&

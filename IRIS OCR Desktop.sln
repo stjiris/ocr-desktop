@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tesseract UI Tools", "Tesseract UI Tools.csproj", "{7B408414-A22D-462B-B95E-FF7CD409108D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IRIS OCR Desktop", "IRIS OCR Desktop.csproj", "{7B408414-A22D-462B-B95E-FF7CD409108D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

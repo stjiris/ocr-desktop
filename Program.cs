@@ -1,4 +1,6 @@
-namespace Tesseract_UI_Tools
+using Tesseract_UI_Tools;
+
+namespace IRIS_OCR_Desktop
 {
     internal static class Program
     {
@@ -11,7 +13,7 @@ namespace Tesseract_UI_Tools
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new QueueForm());
+            Application.Run(new SimpleForm());
         }
     }
 }

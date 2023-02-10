@@ -1,16 +1,18 @@
 ﻿using System.ComponentModel;
 using GroupDocs.Parser;
 using GroupDocs.Parser.Options;
+using IRIS_OCR_Desktop;
 
-namespace Tesseract_UI_Tools.Generators
+namespace IRIS_OCR_Desktop.Generators
 {
     public class PdfGenerator : ATiffPagesGenerator
     {
         public static readonly new string[] FORMATS = new string[] { "pdf" };
 
-        public PdfGenerator(string FilePath) : base(FilePath){
+        public PdfGenerator(string FilePath) : base(FilePath)
+        {
             using Parser PDFParser = new(FilePath);
-            CanRun = !PDFParser.GetMetadata().Any(o => o.Name == "application" && o.Value == PDF_TAG);    
+            CanRun = !PDFParser.GetMetadata().Any(o => o.Name == "application" && o.Value == PDF_TAG);
         }
 
         private static string BmpFile(int i)
@@ -25,9 +27,9 @@ namespace Tesseract_UI_Tools.Generators
             using Parser PDFParser = new(FilePath);
             int PagesNumber = PDFParser.GetDocumentInfo().PageCount;
             Pages = new string[PagesNumber];
-            for(int i = 0; i < PagesNumber && (worker == null || !worker.CancellationPending); i++)
+            for (int i = 0; i < PagesNumber && (worker == null || !worker.CancellationPending); i++)
             {
-                if (Progress != null) Progress.Report((float)i / (float)PagesNumber);
+                if (Progress != null) Progress.Report(i / (float)PagesNumber);
                 string FullName = Path.Combine(FolderPath, TiffPage(i));
                 Pages[i] = FullName;
                 if (File.Exists(FullName) && !Overwrite) continue;

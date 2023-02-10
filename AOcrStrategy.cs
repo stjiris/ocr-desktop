@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
-namespace Tesseract_UI_Tools
+
+namespace IRIS_OCR_Desktop
 {
     public abstract class AOcrStrategy : IDisposable
     {
@@ -20,7 +21,7 @@ namespace Tesseract_UI_Tools
 
         public static AOcrStrategy? GetStrategy(string Strategy, string[] Languages)
         {
-            Type? mType = StrategiesTypes().FirstOrDefault(mType => (mType.GetField("StrategyName")?.GetValue(null) as string) == Strategy);
+            Type? mType = StrategiesTypes().FirstOrDefault(mType => mType.GetField("StrategyName")?.GetValue(null) as string == Strategy);
             if (mType == null) return null;
             try
             {
@@ -35,7 +36,7 @@ namespace Tesseract_UI_Tools
             }
         }
 
-        public static string[] Strategies() => StrategiesTypes().Select(mType => mType.GetField("StrategyName")?.GetValue(null) as string ?? "").Where(o => o != "").ToArray<string>();
+        public static string[] Strategies() => StrategiesTypes().Select(mType => mType.GetField("StrategyName")?.GetValue(null) as string ?? "").Where(o => o != "").ToArray();
 
         private static IEnumerable<Type> StrategiesTypes()
         {
